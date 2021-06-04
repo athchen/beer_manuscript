@@ -152,8 +152,6 @@ roc_interp <- interpolate %>%
           axis.text = element_text(size = 8), 
           plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
 
-roc_interp
-
 prc_interp <- interpolate %>%
     group_by(group, group_lab, method, num_beads, x) %>%
     summarize(n_point = n(), 
@@ -190,7 +188,7 @@ roc_prc_interp <- ggarrange(roc_interp,
                             ncol = 1, nrow = 2)
 
 ggsave("figures/simulation_roc_prc_interp.png", roc_prc_interp, 
-       units = "in", height = 6)
+       units = "in", height = 6, width = 6.6)
 
 # Figure: simulation_roc_prc.png ------------
 roc <- roc_by_fc %>%

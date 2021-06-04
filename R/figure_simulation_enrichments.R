@@ -68,7 +68,8 @@ sim_tidy %>%
     guides(color = guide_legend(ncol = 1)) +
     theme(legend.position = "bottom")
 
-ggsave("figures/simulation_enrichments_e.png", units = "in", width = 7.5)
+ggsave("figures/simulation_enrichments_e.png", units = "in", 
+       height = 6.75, width = 6)
 
 # Figure: simulation_enrichments_ne.png ------------
 sim_tidy %>% 
@@ -99,4 +100,5 @@ sim_tidy %>%
     guides(color = guide_legend(ncol = 1)) +
     theme(legend.position = "bottom")
 
-ggsave("figures/simulation_enrichments_ne.png", units = "in", width = 7.5)
+ggsave("figures/simulation_enrichments_ne.png", units = "in",
+       height = 6.75, width = 6)
