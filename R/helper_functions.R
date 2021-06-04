@@ -123,7 +123,8 @@ as_df <- function(phip_obj, metadata = FALSE){
     
     bind_cols(data.frame(sample = rep(colnames(phip_obj), each = n_peps), 
                          peptide = rep(rownames(phip_obj), times = n_samples),
-                         beads = rep(phip_obj$group, each = n_peps)),
+                         beads = rep(phip_obj$group, each = n_peps), 
+                         n = rep(librarySize(phip_obj), each = n_peps)),
               metadata_df, 
               as_tibble(assay_df))
 }

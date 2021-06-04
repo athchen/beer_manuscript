@@ -125,7 +125,7 @@ roc_interp <- interpolate %>%
               mean_sens = mean(sens, na.rm = TRUE), 
               mean_ppv = mean(ppv, na.rm = TRUE)) %>%
     ggplot(aes(x = x, y = mean_sens, group = method)) +
-    geom_line(aes(color = method), size = 0.3) +
+    geom_line(aes(color = method), size = 0.5) +
     facet_grid(num_beads ~ group_lab, 
                labeller = labeller(group_lab = label_parsed, 
                                    num_beads = c("4" = "4 beads", 
@@ -135,16 +135,24 @@ roc_interp <- interpolate %>%
          color = "method") +
     scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
                                   "BEER_edgeR", "edgeR"),
-                       values = c(brewer.pal(5, "Blues")[2:5],
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
                                   brewer.pal(3, "Greys")[c(3)])) +
     scale_y_continuous(breaks = seq(0, 1, 0.2)) +
     scale_x_continuous(breaks = seq(0, 1, 0.2)) +
     theme_bw() +
-    theme(legend.text = element_text(size = 8), 
-          legend.title = element_text(size = 8), 
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, "lines"), 
+          legend.background = element_rect(color = "black", size = 0.3),  
+          legend.position = c(0.92, 0.725), 
           axis.title = element_text(size = 8), 
           axis.text = element_text(size = 8), 
           plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
+
+roc_interp
 
 prc_interp <- interpolate %>%
     group_by(group, group_lab, method, num_beads, x) %>%
@@ -155,7 +163,7 @@ prc_interp <- interpolate %>%
               mean_ppv = mean(ppv, na.rm = TRUE), 
               .groups = "drop") %>%
     ggplot(aes(x = x, y = mean_ppv, group = method)) +
-    geom_line(aes(color = method), size = 0.3) +
+    geom_line(aes(color = method), size = 0.5) +
     facet_grid(num_beads ~ group_lab, 
                labeller = labeller(group_lab = label_parsed, 
                                    num_beads = c("4" = "4 beads", 
@@ -165,7 +173,10 @@ prc_interp <- interpolate %>%
          color = "method") +
     scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
                                   "BEER_edgeR", "edgeR"),
-                       values = c(brewer.pal(5, "Blues")[2:5],
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
                                   brewer.pal(3, "Greys")[c(3)])) +
     scale_y_continuous(breaks = seq(0, 1, 0.2)) +
     scale_x_continuous(breaks = seq(0, 1, 0.2)) +
@@ -174,17 +185,12 @@ prc_interp <- interpolate %>%
           axis.title = element_text(size = 8), 
           plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
 
-roc_prc_interp <- grid.arrange(grobs = list(roc_interp + 
-                                                theme(legend.position = "none"), 
-                                            prc_interp + 
-                                                theme(legend.position = "none"), 
-                                            get_legend(roc_interp)), 
-                               ncol = 2, nrow = 2, 
-                               layout_matrix = rbind(c(1, 3), c(2, 3)), 
-                               widths = c(6.5, 1.5), height = c(2.5, 2.5))
+roc_prc_interp <- ggarrange(roc_interp, 
+                            prc_interp + theme(legend.position = "none"), 
+                            ncol = 1, nrow = 2)
 
 ggsave("figures/simulation_roc_prc_interp.png", roc_prc_interp, 
-       units = "in", width = 7, height = 5)
+       units = "in", height = 6)
 
 # Figure: simulation_roc_prc.png ------------
 roc <- roc_by_fc %>%
@@ -198,16 +204,22 @@ roc <- roc_by_fc %>%
     labs(x = "1 - specificity", y = "sensitivity", color = "method") +
     scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
                                   "BEER_edgeR", "edgeR"),
-                       values = c(brewer.pal(5, "Blues")[2:5],
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
                                   brewer.pal(3, "Greys")[c(3)])) +
     scale_y_continuous(breaks = seq(0, 1, 0.2)) +
     scale_x_continuous(breaks = seq(0, 1, 0.2)) +
     theme_bw() +
-    theme(legend.text = element_text(size = 8), 
-          legend.title = element_text(size = 8), 
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, "lines"), 
+          legend.background = element_rect(color = "black", size = 0.3),  
+          legend.position = c(0.93, 0.74), 
           axis.title = element_text(size = 8), 
           axis.text = element_text(size = 8), 
-          plot.margin = unit(c(0, 0, 0.1, 0), "cm"))
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
 
 prc <- roc_by_fc %>%
     ggplot(aes(x = sens, y = ppv, group = paste0(sim_num, method))) +
@@ -220,21 +232,19 @@ prc <- roc_by_fc %>%
     labs(x = "sensitivity", y = "PPV", color = "method") +
     scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
                                   "BEER_edgeR", "edgeR"),
-                       values = c(brewer.pal(5, "Blues")[2:5],
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
                                   brewer.pal(3, "Greys")[c(3)])) +
     scale_y_continuous(breaks = seq(0, 1, 0.2)) +
     scale_x_continuous(breaks = seq(0, 1, 0.2)) +
     theme_bw() +
     theme(axis.text = element_text(size = 8), 
           axis.title = element_text(size = 8), 
-          plot.margin = unit(c(0, 0, 0.1, 0), "cm"))
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
 
-roc_prc <- grid.arrange(grobs = list(roc + theme(legend.position = "none"), 
-                                     prc + theme(legend.position = "none"), 
-                                     get_legend(roc)), 
-                        ncol = 2, nrow = 2, 
-                        layout_matrix = rbind(c(1, 3), c(2, 3)), 
-                        widths = c(7.5, 1.5), height = c(2, 2))
+roc_prc <- ggarrange(roc, prc + theme(legend.position = "none"), ncol = 1, nrow = 2)
 
 ggsave("figures/simulation_roc_prc.png", roc_prc, 
-       units = "in", width = 8, height = 5)
+       units = "in", height = 6)
