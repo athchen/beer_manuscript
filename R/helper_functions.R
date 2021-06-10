@@ -117,8 +117,8 @@ as_df <- function(phip_obj, metadata = FALSE){
     
     assay_df <- vapply(assays(phip_obj), as.vector, numeric(prod(dim(phip_obj))))
     metadata_df <- if(metadata){
-        data.frame(true_c = rep(phip_obj$c, each = n_peps), 
-                   true_pi = rep(phip_obj$pi, each = n_peps))
+        data.frame(est_c = rep(phip_obj$c, each = n_peps), 
+                   est_pi = rep(phip_obj$pi, each = n_peps))
     } else { NULL }
     
     bind_cols(data.frame(sample = rep(colnames(phip_obj), each = n_peps), 

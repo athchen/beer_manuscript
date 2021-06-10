@@ -12,7 +12,7 @@ sim_out <- readRDS(file.path("data_processed", "simulation_8beads_edgeR",
 sim_tidy <- as_df(sim_out, metadata = TRUE) %>%
     group_by(peptide) %>%
     mutate(sample = factor(sample, 1:ncol(sim_out)), 
-           is_se = ifelse(sample != "beads" & is.na(beer_prob), TRUE, FALSE), 
+           is_se = ifelse(beads != "beads" & is.na(beer_prob), TRUE, FALSE), 
            expected_prop = mean(counts[beads == "beads"]/n[beads == "beads"]), 
            expected_rc = expected_prop*n) %>%
     ungroup()
@@ -29,7 +29,7 @@ sim_tidy %>%
     ggplot(aes(x = log10(expected_rc + 1), y = log10(counts + 1),
                color = beer_prob, group = sample)) +
     geom_point(size = 1) +
-    geom_abline(aes(slope = 1, intercept = log10(true_c)), 
+    geom_abline(aes(slope = 1, intercept = log10(est_c)), 
                 size = 0.25, color = "black") +
     facet_wrap(sample ~., ncol = 4, 
                labeller = labeller(sample = sample_names)) +
