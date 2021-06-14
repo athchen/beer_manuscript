@@ -1,4 +1,10 @@
-# Title
+# BEER Manuscript Repository
+
+# TO DO
+
+* Add code to load/install Bioconductor packages
+
+Note: all code is relative to the parent repo, not the repo the code is located. 
 
 # Directory structure
 

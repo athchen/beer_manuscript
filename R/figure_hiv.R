@@ -80,10 +80,10 @@ prop_reads <- hiv_tidy %>%
          x = "sample, log10(proportion)", 
          y = "replicate, log10(proportion)") +
     scale_x_continuous(breaks = seq(-5, -1, by = 1),
-                       minor_breaks = seq(-5, 1, by = 0.5), 
+                       minor_breaks = seq(-5, -1, by = 0.5), 
                        labels = TeX(paste0("$10^{", -5:-1, "}$"))) +
     scale_y_continuous(breaks = seq(-5, -1, by = 1),
-                       minor_breaks = seq(-5, 1, by = 0.5), 
+                       minor_breaks = seq(-5, -1, by = 0.5), 
                        labels = TeX(paste0("$10^{", -5:-1, "}$"))) +
     theme_bw() +
     theme(aspect.ratio = 1, 
@@ -201,7 +201,7 @@ beer_ranks <- hiv_tidy %>%
     filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
     group_by(sample_id) %>%
     arrange(desc(beer_prob), desc(beer_logfc), peptide, .by_group = TRUE) %>%
-    mutate(rank_se = 8 + cumsum(!peptide %in% se_peps$peptide)) %>%
+    mutate(rank_se = nrow(se_peps) + cumsum(!peptide %in% se_peps$peptide)) %>%
     left_join(se_peps %>% select(peptide, rank), by = c("peptide")) %>%
     mutate(rank = ifelse(peptide %in% se_peps$peptide, rank, rank_se)) %>%
     ungroup() %>%
@@ -232,7 +232,8 @@ edgeR_ranks <- hiv_tidy %>%
     arrange(rank)
 
 edgeR_conc <- sapply(1:nrow(edgeR_ranks), function(rank){
-    length(intersect(edgeR_ranks$sample_1[1:rank], edgeR_ranks$sample_2[1:rank]))/rank
+    length(intersect(edgeR_ranks$sample_1[edgeR_ranks$rank <= rank], 
+                     edgeR_ranks$sample_2[edgeR_ranks$rank <= rank]))/rank
 })
 
 cat_plot <- data.frame(rank = 1:length(beer_conc), 
@@ -244,8 +245,8 @@ cat_plot <- data.frame(rank = 1:length(beer_conc),
     ggplot(aes(x = rank, y = concordance, color = approach)) +
     geom_line() +
     labs(title = "Concordance at the top", 
-         y = "Concordance", 
-         x = "Rank") +
+         y = "concordance", 
+         x = "rank") +
     coord_cartesian(ylim = c(0, 1), xlim = c(0, 200)) +
     scale_x_continuous(breaks = seq(0, 200, by = 25)) +
     scale_y_continuous(breaks = seq(0, 1, by = 0.2)) +

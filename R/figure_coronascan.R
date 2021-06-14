@@ -75,10 +75,16 @@ prop_reads <- cs_tidy %>%
     ggplot(aes(x = log10(pair_1), 
                y = log10(pair_2))) + 
     geom_point(size = 1) +
-    geom_abline(aes(intercept = 0, slope = 1), color ="red", size = 0.25) + 
+    geom_abline(aes(intercept = 0, slope = 1)) + 
     labs(title = "Proportion of reads pulled", 
          x = "peptide pair #1, log10(proportion)", 
          y = "peptide pair #2, log10(proportion)") +
+    scale_x_continuous(breaks = seq(-5, -2, by = 1),
+                       minor_breaks = seq(-5, -2, by = 0.5), 
+                       labels = TeX(paste0("$10^{", -5:-2, "}$"))) +
+    scale_y_continuous(breaks = seq(-5, -2, by = 1),
+                       minor_breaks = seq(-5, -2, by = 0.5), 
+                       labels = TeX(paste0("$10^{", -5:-2, "}$"))) +
     theme_bw() +
     theme(aspect.ratio = 1, 
           title = element_text(size = 8))
@@ -163,7 +169,7 @@ edgeR_pval <- cs_tidy %>%
     rename(pair_1 = `1`, pair_2 = `2`) %>%
     ggplot(aes(x = pair_1, y = pair_2)) + 
     geom_point() +
-    labs(title = "edgeR p-values", 
+    labs(title = "edgeR -log10(p-values)", 
          x = "peptide pair #1", 
          y = "peptide pair #2") +
     geom_hline(aes(yintercept = edgeR_prob),
@@ -185,6 +191,73 @@ edgeR_pval <- cs_tidy %>%
     theme(title = element_text(size = 10), 
           aspect.ratio = 1)
 
-ggarrange(prop_reads, post_prob, edgeR_pval, ncol = 3, widths = c(1.035, 1, 1))
+# CAT curve for BEER posterior probabilities
+#   For a fair comparison, set super-enriched peptides in the replicate sample
+#   to have a rank of 1 as all of these peptides are identified as enriched
+#   by BEER and edgeR. 
+se_peps <- cs_tidy %>% 
+    filter(sample_id == cs_sample & is_se & pair_num == 1) %>%
+    mutate(rank = 1:n())
 
-ggsave("figures/coronascan_replicates.png", units = "in", width = 12, height = 4)
+#   Ties are broken by the posterior marginal estimates of phi
+beer_ranks <- cs_tidy %>%
+    filter(sample_id == cs_sample) %>%
+    group_by(pair_num) %>%
+    arrange(desc(beer_prob), desc(beer_logfc), pair_id, .by_group = TRUE) %>%
+    mutate(rank_se = nrow(se_peps) + cumsum(!pair_id %in% se_peps$pair_id)) %>%
+    left_join(se_peps %>% select(pair_id, rank), by = c("pair_id")) %>%
+    mutate(rank = ifelse(pair_id %in% se_peps$pair_id, rank, rank_se)) %>%
+    select(pair_id, pair_num, rank) %>%
+    pivot_wider(names_from = "pair_num", 
+                values_from = "pair_id") %>%
+    rename(pair_1 = `1`, pair_2 = `2`) %>%
+    arrange(rank)
+
+beer_conc <- sapply(1:nrow(beer_ranks), function(rank){
+    length(intersect(beer_ranks$pair_1[beer_ranks$rank <= rank], 
+                     beer_ranks$pair_2[beer_ranks$rank <= rank]))/rank
+})
+
+# CAT curve for edgeR p-values
+edgeR_ranks <- cs_tidy %>%
+    filter(sample_id == cs_sample) %>%
+    group_by(pair_num) %>%
+    arrange(edgeR_bh, desc(edgeR_logfc), pair_id, .by_group = TRUE) %>%
+    mutate(rank_se = nrow(se_peps) + cumsum(!pair_id %in% se_peps$pair_id)) %>%
+    left_join(se_peps %>% select(pair_id, rank), by = c("pair_id")) %>%
+    mutate(rank = ifelse(pair_id %in% se_peps$pair_id, rank, rank_se)) %>%
+    select(pair_id, pair_num, rank) %>%
+    pivot_wider(names_from = "pair_num", 
+                values_from = "pair_id") %>%
+    rename(pair_1 = `1`, pair_2 = `2`) %>%
+    arrange(rank)
+
+edgeR_conc <- sapply(1:nrow(edgeR_ranks), function(rank){
+    length(intersect(edgeR_ranks$pair_1[edgeR_ranks$rank <= rank], 
+                     edgeR_ranks$pair_2[edgeR_ranks$rank <= rank]))/rank
+})
+
+cat_plot <- data.frame(rank = 1:length(beer_conc), 
+                       BEER = beer_conc, 
+                       edgeR = edgeR_conc) %>%
+    pivot_longer(cols = c("BEER", "edgeR"), 
+                 names_to = "approach", 
+                 values_to = "concordance") %>%
+    ggplot(aes(x = rank, y = concordance, color = approach)) +
+    geom_line() +
+    labs(title = "Concordance at the top", 
+         y = "Concordance", 
+         x = "Rank") +
+    coord_cartesian(ylim = c(0, 1), xlim = c(0, 100)) +
+    scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+    scale_y_continuous(breaks = seq(0, 1, by = 0.2)) +
+    scale_color_manual(values = c("red", "black")) +
+    theme_bw() + 
+    theme(aspect.ratio = 1, 
+          legend.background = element_rect(color = "black", size = 0.3), 
+          legend.position = c(0.8, 0.2))
+
+ggarrange(prop_reads, cat_plot, post_prob, edgeR_pval, 
+          nrow = 2, ncol = 2)
+
+ggsave("figures/coronascan_replicates.png", units = "in", width = 8, height = 8)
