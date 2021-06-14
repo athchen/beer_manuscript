@@ -73,37 +73,147 @@ prop_reads <- hiv_tidy %>%
     pivot_wider(names_from = "sample_id", 
                 values_from = "prop_reads") %>%
     rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
-    ggplot(aes(x = 0.5*(sample_1 + sample_2), 
-               y = sample_1 - sample_2)) + 
+    ggplot(aes(x = log10(sample_1), y = log10(sample_2))) + 
+    geom_abline(aes(intercept = 0, slope = 1)) +
     geom_point() +
-    labs(title = "Agreement in the proportion of reads pulled", 
-         x = "average proportion of reads pulled", 
-         y = "difference in proportion of reads pulled") +
-    scale_x_continuous(breaks = seq(0, 0.03, by = 0.005), 
-                       minor_breaks = seq(0, 0.03, by = 0.001)) +
-    scale_y_continuous(breaks = seq(-0.006, 0.001, by = 0.001), 
-                       minor_breaks = seq(-0.006, 0.001, by = 0.0005)) +
+    labs(title = "Proportion of reads pulled", 
+         x = "sample, log10(proportion)", 
+         y = "replicate, log10(proportion)") +
+    scale_x_continuous(breaks = seq(-5, -1, by = 1),
+                       minor_breaks = seq(-5, 1, by = 0.5), 
+                       labels = TeX(paste0("$10^{", -5:-1, "}$"))) +
+    scale_y_continuous(breaks = seq(-5, -1, by = 1),
+                       minor_breaks = seq(-5, 1, by = 0.5), 
+                       labels = TeX(paste0("$10^{", -5:-1, "}$"))) +
     theme_bw() +
     theme(aspect.ratio = 1, 
           title = element_text(size = 10))
 
+# Plot for BEER posterior probabilities
+concordance_beer <- hiv_tidy %>%
+    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
+    select(sample_id, peptide, beer_hits) %>%
+    pivot_wider(names_from = "sample_id", 
+                values_from = "beer_hits") %>%
+    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    group_by(sample_1, sample_2) %>%
+    summarize(num_peps = n(), .groups = "drop") %>%
+    bind_cols(xpos = c(-0.03, -0.03, 1.03, 1.03),
+              ypos =  c(-0.05, 1.05,-0.05, 1.05),
+              hjustvar = c(0, 0, 1, 1),
+              vjustvar = c(0, 1, 0, 1)) %>%
+    mutate(annotation = paste0(c("Not enriched in both (", 
+                                 "Not enriched in one (", 
+                                 "Not enriched in one (", 
+                                 "Enriched in both ("),
+                               num_peps, rep(")", 4)))
+
+post_prob <- hiv_tidy %>%
+    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
+    select(sample_id, peptide, beer_prob) %>%
+    pivot_wider(names_from = "sample_id", 
+                values_from = "beer_prob") %>%
+    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    ggplot(aes(x = sample_1, y = sample_2)) + 
+    geom_point() +
+    labs(title = "BEER posterior probabilities", 
+         x = "HIV EC 15", 
+         y = "replicate of HIV EC 15") +
+    geom_hline(aes(yintercept = 0.5), linetype = "dashed") +
+    geom_vline(aes(xintercept = 0.5), linetype = "dashed") +
+    geom_text(aes(x = xpos, y = ypos, 
+                  hjust = hjustvar, vjust = vjustvar,
+                  label = annotation), color = "red", size = 3, 
+              data = concordance_beer) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    scale_x_continuous(breaks = seq(0, 1, by = 0.2), 
+                       minor_breaks = seq(0, 1, by = 0.1), 
+                       expand = c(0.035, 0.035)) +
+    scale_y_continuous(breaks = seq(0, 1, by = 0.2), 
+                       minor_breaks = seq(0, 1, by = 0.1), 
+                       expand = c(0.035, 0.035)) +
+    theme_bw() + 
+    theme(title = element_text(size = 10))
+
+# Plot for edgeR p-values
+concordance_edgeR <- hiv_tidy %>%
+    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
+    select(sample_id, peptide, edgeR_hits) %>%
+    pivot_wider(names_from = "sample_id", 
+                values_from = "edgeR_hits") %>%
+    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    group_by(sample_1, sample_2) %>%
+    summarize(num_peps = n(), .groups = "drop") %>%
+    bind_cols(xpos = c(-0.25, -0.25, 6.25, 6.25),
+              ypos =  c(-0.25, 6.25, -0.25, 6.25),
+              hjustvar = c(0, 0, 1, 1),
+              vjustvar = c(0, 1, 0, 1)) %>%
+    mutate(annotation = paste0(c("Not enriched in both (", 
+                                 "Not enriched in one (", 
+                                 "Not enriched in one (", 
+                                 "Enriched in both ("),
+                               num_peps, rep(")", 4)))
+bh_cutoffs <- hiv_tidy %>%
+    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
+    group_by(sample_id) %>%
+    filter(edgeR_bh == max(edgeR_bh[edgeR_bh < 0.05])) %>%
+    select(sample_id, edgeR_prob)
+
+edgeR_pval <- hiv_tidy %>%
+    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
+    select(sample_id, peptide, edgeR_prob) %>%
+    pivot_wider(names_from = "sample_id", 
+                values_from = "edgeR_prob") %>%
+    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    ggplot(aes(x = sample_1, y = sample_2)) + 
+    geom_point() +
+    labs(title = "edgeR -log10(p-values)", 
+         x = "HIV EC 15", 
+         y = "replicate of HIV EC 15") +
+    geom_hline(aes(yintercept = edgeR_prob), 
+               linetype = "dashed", data = bh_cutoffs) +
+    geom_vline(aes(xintercept = edgeR_prob), 
+               linetype = "dashed", data = bh_cutoffs) +
+    geom_text(aes(x = xpos, y = ypos, 
+                  hjust = hjustvar, vjust = vjustvar,
+                  label = annotation), color = "red", size = 3,
+              data = concordance_edgeR) +
+    coord_fixed(xlim = c(-0.3, 6.3), ylim = c(-0.3, 6.3)) +
+    scale_x_continuous(breaks = seq(0, 6, by = 1), 
+                       minor_breaks = seq(0, 6, by = 0.5), 
+                       expand = c(0.01, 0.01)) +
+    scale_y_continuous(breaks = seq(0, 6, by = 1), 
+                       minor_breaks = seq(0, 6, by = 0.5), 
+                       expand = c(0.01, 0.01)) +
+    theme_bw() +
+    theme(title = element_text(size = 10))
+
 # CAT curve for BEER posterior probabilities
-# Ties are broken by the posterior marginal estimates of phi
+#   For a fair comparison, set super-enriched peptides in the replicate sample
+#   to have a rank of 1 as all of these peptides are identified as enriched
+#   by BEER and edgeR. 
+se_peps <- hiv_tidy %>% 
+    filter(is_se & grepl("replicate", sample_id)) %>%
+    mutate(rank = 1:n())
+
+#   Ties are broken by the posterior marginal estimates of phi
 beer_ranks <- hiv_tidy %>%
     filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
-    mutate(beer_prob = ifelse(is.na(beer_prob), 1, beer_prob), 
-           beer_logfc = ifelse(is.na(beer_prob), Inf, beer_logfc)) %>%
     group_by(sample_id) %>%
-    arrange(desc(beer_prob), desc(beer_logfc), .by_group = TRUE) %>%
-    mutate(rank = 1:n()) %>%
+    arrange(desc(beer_prob), desc(beer_logfc), peptide, .by_group = TRUE) %>%
+    mutate(rank_se = 8 + cumsum(!peptide %in% se_peps$peptide)) %>%
+    left_join(se_peps %>% select(peptide, rank), by = c("peptide")) %>%
+    mutate(rank = ifelse(peptide %in% se_peps$peptide, rank, rank_se)) %>%
     ungroup() %>%
     select(sample_id, peptide, rank) %>%
     pivot_wider(names_from = "sample_id", 
                 values_from = "peptide") %>%
-    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) 
+    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    arrange(rank)
 
 beer_conc <- sapply(1:nrow(beer_ranks), function(rank){
-    length(intersect(beer_ranks$sample_1[1:rank], beer_ranks$sample_2[1:rank]))/rank
+    length(intersect(beer_ranks$sample_1[beer_ranks$rank <= rank], 
+                     beer_ranks$sample_2[beer_ranks$rank <= rank]))/rank
 })
 
 # CAT curve for edgeR p-values
@@ -111,35 +221,41 @@ edgeR_ranks <- hiv_tidy %>%
     filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
     group_by(sample_id) %>%
     arrange(edgeR_bh, desc(edgeR_logfc), .by_group = TRUE) %>%
-    mutate(rank = 1:n()) %>%
+    mutate(rank_se = 8 + cumsum(!peptide %in% se_peps$peptide)) %>%
+    left_join(se_peps %>% select(peptide, rank), by = c("peptide")) %>%
+    mutate(rank = ifelse(peptide %in% se_peps$peptide, rank, rank_se)) %>%
     ungroup() %>%
     select(sample_id, peptide, rank) %>%
     pivot_wider(names_from = "sample_id", 
                 values_from = "peptide") %>%
-    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) 
+    rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    arrange(rank)
 
 edgeR_conc <- sapply(1:nrow(edgeR_ranks), function(rank){
     length(intersect(edgeR_ranks$sample_1[1:rank], edgeR_ranks$sample_2[1:rank]))/rank
 })
 
 cat_plot <- data.frame(rank = 1:length(beer_conc), 
-           BEER = beer_conc, 
-           edgeR = edgeR_conc) %>%
+                       BEER = beer_conc, 
+                       edgeR = edgeR_conc) %>%
     pivot_longer(cols = c("BEER", "edgeR"), 
                  names_to = "approach", 
                  values_to = "concordance") %>%
     ggplot(aes(x = rank, y = concordance, color = approach)) +
     geom_line() +
-    labs(title = "Concordance between technical replicates", 
+    labs(title = "Concordance at the top", 
          y = "Concordance", 
          x = "Rank") +
-    coord_cartesian(ylim = c(0, 1)) +
-    # scale_x_continuous(breaks = seq(0, 150, by = 25)) +
+    coord_cartesian(ylim = c(0, 1), xlim = c(0, 200)) +
+    scale_x_continuous(breaks = seq(0, 200, by = 25)) +
     scale_y_continuous(breaks = seq(0, 1, by = 0.2)) +
     scale_color_manual(values = c("red", "black")) +
     theme_bw() + 
-    theme(aspect.ratio = 1)
+    theme(aspect.ratio = 1, 
+          legend.background = element_rect(color = "black", size = 0.3), 
+          legend.position = c(0.8, 0.2))
 
-ggarrange(prop_reads, cat_plot, nrow = 1, widths = c(1, 1.25))
+ggarrange(prop_reads, cat_plot, post_prob, edgeR_pval, 
+          nrow = 2, ncol = 2)
 
-ggsave("figures/hiv_replicates.png", units = "in", width = 9, height = 4)
+ggsave("figures/hiv_replicates.png", units = "in", width = 8, height = 8)
