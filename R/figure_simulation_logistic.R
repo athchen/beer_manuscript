@@ -6,14 +6,20 @@
 
 # Set-up --------------
 # Get posterior probability cutoff with FDR rate of around 5\%
+# Comment out lines 21 & 22 to see variation in cutoffs by simulation
 source(file.path("R", "load_curves.R"))
 beer_fdr <- beer_roc_by_fc %>%
-    filter(ab_method == "edgeR" & approach == "BEER" & group == "full data" &
-               sim_num == 1 & num_beads == 8) %>%
+    filter(approach == "BEER" & ab_method == "edgeR" &
+               group == "full data" & num_beads == 8) %>%
+    group_by(approach, ab_method, sim_num, num_beads) %>%
     mutate(dist_fdr = abs(ppv - 0.95)) %>%
     filter(dist_fdr == min(dist_fdr, na.rm = TRUE)) %>%
-    pull(cutoff) %>%
-    mean()
+    summarize(mean_cutoff = mean(cutoff),
+              median_cutoff = median(cutoff), 
+              range_cutoff = max(cutoff) - min(cutoff), 
+              .groups = "drop") %>%
+    filter(sim_num == 1) %>%
+    pull(mean_cutoff)
 
 rm(list = setdiff(ls(), c("beer_fdr", lsf.str())))
 
@@ -42,7 +48,7 @@ beer_pred <- penriched_fit(beer_fit,
     mutate(approach = "BEER", 
            threshold = "FDR - 0.05")
 
-# edgeR - BH 0.05
+# edgeR - Bonferroni
 edgeR_bon_fit <- glm(edgeR_hits ~ true_phi, family = binomial(link = "logit"),
                     data = sim_tidy %>% 
                         mutate(edgeR_hits = ifelse(edgeR_prob > -log10(5e-5), 1, 0)) %>%
@@ -64,18 +70,7 @@ edgeR_05_pred <- penriched_fit(edgeR_05_fit,
     mutate(approach = "edgeR", 
            threshold = "BH - 0.05")
 
-# edgeR - BH 0.10
-edgeR_10_fit <- glm(edgeR_hits ~ true_phi, family = binomial(link = "logit"),
-                    data = sim_tidy %>% 
-                        mutate(edgeR_hits = ifelse(edgeR_bh < 0.10, 1, 0)) %>%
-                        filter(true_Z == 1))
-
-edgeR_10_pred <- penriched_fit(edgeR_10_fit, 
-                               data.frame(true_phi = seq(1, 100, length = 1000))) %>%
-    mutate(approach = "edgeR", 
-           threshold = "BH - 0.10")
-
-logistic_fc <- bind_rows(beer_pred, edgeR_bon_pred, edgeR_05_pred, edgeR_10_pred) %>%
+logistic_fc <- bind_rows(beer_pred, edgeR_bon_pred, edgeR_05_pred) %>%
     ggplot(aes(x = log2(true_phi), y = predict_p, group = paste0(approach, threshold))) +
     geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci, fill = approach), alpha = 0.2) +
     geom_line(aes(color = approach, linetype = threshold)) +
@@ -92,9 +87,8 @@ logistic_fc <- bind_rows(beer_pred, edgeR_bon_pred, edgeR_05_pred, edgeR_10_pred
                        minor_breaks = seq(0, 1, 0.05)) +
     scale_x_continuous(breaks = 0:6,
                        labels = 2^(0:6)) +
-    scale_linetype_manual(values = c("solid", "solid", "dashed", "dotted"), 
-                          breaks = c("FDR - 0.05", "BH - 0.05", "BH - 0.10", 
-                                     "Bonferroni")) +
+    scale_linetype_manual(values = c("dashed", "dotted", "solid"), 
+                          breaks = c("FDR - 0.05", "BH - 0.05", "Bonferroni")) +
     theme_bw() +
     theme(aspect.ratio = 1)
 
@@ -112,7 +106,7 @@ beer_pred <- penriched_fit(beer_fit,
     mutate(approach = "BEER", 
            threshold = "FDR - 0.05")
 
-# edgeR - BH 0.05
+# edgeR - Bonferroni
 edgeR_bon_fit <- glm(edgeR_hits ~ rpm, family = binomial(link = "logit"),
                      data = sim_tidy %>% 
                          mutate(edgeR_hits = ifelse(edgeR_prob > -log10(5e-5), 1, 0), 
@@ -136,19 +130,7 @@ edgeR_05_pred <- penriched_fit(edgeR_05_fit,
     mutate(approach = "edgeR", 
            threshold = "BH - 0.05")
 
-# edgeR - BH 0.10
-edgeR_10_fit <- glm(edgeR_hits ~ rpm, family = binomial(link = "logit"),
-                    data = sim_tidy %>% 
-                        mutate(edgeR_hits = ifelse(edgeR_bh < 0.10, 1, 0), 
-                               rpm = counts/n*1e6) %>%
-                        filter(true_Z == 1))
-
-edgeR_10_pred <- penriched_fit(edgeR_10_fit, 
-                               data.frame(rpm = seq(1, 2.5*1e5, length = 1000))) %>%
-    mutate(approach = "edgeR", 
-           threshold = "BH - 0.10")
-
-logistic_rc <- bind_rows(beer_pred, edgeR_bon_pred, edgeR_05_pred, edgeR_10_pred) %>%
+logistic_rc <- bind_rows(beer_pred, edgeR_bon_pred, edgeR_05_pred) %>%
     ggplot(aes(x = log10(rpm), y = predict_p, group = paste0(approach, threshold))) +
     geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci, fill = approach), alpha = 0.2) +
     geom_line(aes(color = approach, linetype = threshold)) +
@@ -166,9 +148,8 @@ logistic_rc <- bind_rows(beer_pred, edgeR_bon_pred, edgeR_05_pred, edgeR_10_pred
     scale_x_continuous(breaks = 0:5,
                        minor_breaks = seq(0, 5, 0.5),
                        labels = c(1, 10, 100, sapply(paste0("$10^{", 3:5, "}$"), TeX))) +
-    scale_linetype_manual(values = c("solid", "solid", "dashed", "dotted"), 
-                          breaks = c("FDR - 0.05", "BH - 0.05", "BH - 0.10", 
-                                     "Bonferroni")) +
+    scale_linetype_manual(values = c("dashed", "dotted", "solid"), 
+                          breaks = c("FDR - 0.05", "BH - 0.05", "Bonferroni")) +
     theme_bw() +
     theme(aspect.ratio = 1)
 
