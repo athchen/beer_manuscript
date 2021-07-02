@@ -44,10 +44,10 @@ beer_roc_by_fc <- lapply(sim_data, function(sim){
                                              TeX("$16<\\phi_{ij}\\leq 32$"))))
 }) %>% plyr::ldply(.id = NULL)
 
-# Simulation output for edgeR data is run for each method of estimating a_0, b_0,
-# so to avoid duplication, we just use the data from the "truth" runs with
-# 4 and 8 beads-only samples. 
-edgeR_roc_by_fc <- lapply(sim_data[c(1:10, 41:50)], function(sim){
+# edgeR is run with every BEER condition (i.e. MLE/MOM/edgeR and 2, 4, 8 
+# beads-only samples) so to avoid duplication, we just use the edgeR output
+# from the "truth" runs for 2, 4, and 8 beads-only samples. 
+edgeR_roc_by_fc <- lapply(sim_data[grepl("truth", names(sim_data))], function(sim){
     
     roc_by_fc <- map_dfr(2:length(fc_thresholds), function(pos){
         
@@ -113,3 +113,5 @@ interpolate <- roc_by_fc %>%
                    sens = sens_approx, 
                    ppv = ppv_approx)
     })
+
+save.image("data_processed/simulation_curves.rda")
