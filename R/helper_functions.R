@@ -2,6 +2,29 @@
 #' 
 #' functions used to help process and analyze ouput from BEER simulations
 
+#' integrate_vector()
+#' 
+#' Function to perform trapezoidal approximation given two vectors. 
+#' 
+#' @param x numeric vector of x values
+#' @param y numeric vector with the same length as x
+#' 
+#' @return numeric value of the trapezoidal approximation 
+integrate_vector <- function(x, y){
+    
+    if (length(y) != length(x)) {
+        stop("The length of the vectors must be equal.")
+    }
+    
+    n_points <- length(y)
+    sorted_ind <- sort(x, index.return = TRUE)$ix
+    sorted_x <- x[sorted_ind]
+    sorted_y <- y[sorted_ind]
+    
+    # trapezoidal rule
+    sum(0.5 * (sorted_y[-1] + sorted_y[-n_points]) * 
+            (sorted_x[-1] - sorted_x[-n_points]))
+}
 
 #' get_roc()
 #' 
@@ -51,16 +74,14 @@ get_roc <- function(data, min_cutoff = 0, max_cutoff = 1 - 1e-6,
     })
     
     # Get AUC for ROC
-    #npoints <- length(sens)
-    #area_roc <- sum(0.5 * (sens[-1] + sens[-npoints]) * ((1-spec[-1]) - (1-spec[-npoints])), na.rm = TRUE)
-    
-    # Get AUC for PRC
-    #area_prc <- sum(0.5 * (ppv[-1] + ppv[-npoints]) * (sens[-1] - sens[-npoints]), na.rm = TRUE)
+    npoints <- length(sens)
+    area_roc <- integrate_vector(1-spec, sens)
     
     return(cutoffs = data.frame(cutoff = cutoffs,
                                 ppv = ppv,
                                 sens = sens,
-                                spec = spec))
+                                spec = spec, 
+                                area_roc = area_roc))
 }
 
 #' get_legend()
@@ -128,3 +149,5 @@ as_df <- function(phip_obj, metadata = FALSE){
               metadata_df, 
               as_tibble(assay_df))
 }
+
+
