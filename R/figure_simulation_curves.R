@@ -30,7 +30,7 @@ curves_summary <- interpolate %>%
 
 # Table: simulation_auc_roc_interp ------------
 curves_summary %>%
-    filter(grepl("edgeR", method)) %>%
+    filter(!grepl("truth", method)) %>%
     group_by(method, group, num_beads) %>%
     arrange(x, .by_group = TRUE) %>%
     summarize(auc_roc = integrate_vector(x, mean_sens),

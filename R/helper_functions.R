@@ -98,6 +98,20 @@ get_legend <- function(myggplot){
     return(legend)
 }
 
+#' mysqrt_trans()
+#' 
+#' Function given [here](https://stackoverflow.com/questions/47944992/ggplot2-removes-zero-when-using-scale-x-sqrt)
+#' to add zero to the plot after sqrt transforming the x-axis
+#' 
+#' @param plot ggplot
+#' @return ggplot legend
+mysqrt_trans <- function() {
+    scales::trans_new("mysqrt", 
+                      transform = base::sqrt,
+                      inverse = function(x) ifelse(x<0, 0, x^2),
+                      domain = c(0, Inf))
+}
+
 #' penriched_fit()
 #' 
 #' Function that returns a data frame with the point estimate, and 95\% 
