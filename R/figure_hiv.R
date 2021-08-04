@@ -203,7 +203,7 @@ hiv_tidy %>%
     labs(x = "rank", 
          y = "-log10(p-values)", 
          color = "sample") +
-    coord_cartesian(xlim = c(0, 400), ylim = c(0, 6)) +
+    coord_cartesian(xlim = c(0, 400)) +
     scale_color_manual(values = c("red", "black")) +
     theme_bw() +
     theme(aspect.ratio = 1, 
