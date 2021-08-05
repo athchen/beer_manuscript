@@ -174,8 +174,8 @@ ggarrange(prop_reads, cat_plot,
 
 ggsave("figures/coronascan_replicates.png", units = "in", width = 8, height = 4)
 
-# Figure: coronascan_postprob.png -----------
-cs_tidy %>%
+# Figure: coronascan_ranked_prob.png -----------
+post_prob <- cs_tidy %>%
     filter(sample_id == cs_sample) %>%
     select(pair_num, beer_prob) %>%
     group_by(pair_num) %>%
@@ -185,7 +185,8 @@ cs_tidy %>%
     geom_point(size = 1) +
     geom_line() +
     coord_cartesian(xlim = c(0, 100), ylim = c(0, 1)) +
-    labs(x = "rank", 
+    labs(title = "BEER", 
+         x = "rank", 
          y = "posterior probabilities", 
          color = "peptide") +
     scale_color_manual(values = c("red", "black")) +
@@ -193,12 +194,9 @@ cs_tidy %>%
     theme(aspect.ratio = 1, 
           title = element_text(size = 10), 
           legend.background = element_rect(color = "black", size = 0.3), 
-          legend.position = c(0.825, 0.825))
+          legend.position = "none")
 
-ggsave("figures/coronascan_postprob.png", units = "in", width = 4, height = 4)
-
-# Figure: coronascan_pvalues.png -----------
-cs_tidy %>%
+p_value <- cs_tidy %>%
     filter(sample_id == cs_sample) %>%
     select(pair_num, edgeR_prob) %>%
     group_by(pair_num) %>%
@@ -207,7 +205,8 @@ cs_tidy %>%
     ggplot(aes(x = rank, y = edgeR_prob, group = pair_num, color = pair_num)) + 
     geom_point(size = 1) +
     geom_line() +
-    labs(x = "rank", 
+    labs(title = "edgeR", 
+         x = "rank", 
          y = "-log10(p-values)", 
          color = "peptide") +
     coord_cartesian(xlim = c(0, 100)) +
@@ -218,4 +217,6 @@ cs_tidy %>%
           legend.background = element_rect(color = "black", size = 0.3), 
           legend.position = c(0.825, 0.825))
 
-ggsave("figures/coronascan_pvalues.png", units = "in", width = 4, height = 4)
+ggarrange(post_prob, p_value, nrow = 1)
+
+ggsave("figures/coronascan_ranked_prob.png", units = "in", width = 8, height = 4)

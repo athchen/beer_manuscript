@@ -176,8 +176,8 @@ ggarrange(prop_reads, cat_plot, align = "hv",
 
 ggsave("figures/hiv_replicates.png", units = "in", width = 8, height = 4)
 
-# Figure: hiv_postprob.png -----------
-hiv_tidy %>%
+# Figure: hiv_ranked_prob.png -----------
+post_prob <- hiv_tidy %>%
     filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
     select(sample_id, peptide, beer_prob) %>%
     group_by(sample_id) %>%
@@ -187,7 +187,8 @@ hiv_tidy %>%
     geom_point(size = 1) +
     geom_line() +
     coord_cartesian(xlim = c(0, 400), ylim = c(0, 1)) +
-    labs(x = "rank", 
+    labs(title = "BEER", 
+         x = "rank", 
          y = "posterior probabilities", 
          color = "sample") +
     scale_color_manual(values = c("red", "black")) +
@@ -195,12 +196,9 @@ hiv_tidy %>%
     theme(aspect.ratio = 1, 
           title = element_text(size = 10), 
           legend.background = element_rect(color = "black", size = 0.3), 
-          legend.position = c(0.725, 0.825))
+          legend.position = "none")
 
-ggsave("figures/hiv_postprob.png", units = "in", width = 4, height = 4)
-
-# Figure: hiv_pvalues.png -----------
-hiv_tidy %>%
+p_values <- hiv_tidy %>%
     filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
     select(sample_id, peptide, edgeR_prob) %>%
     group_by(sample_id) %>%
@@ -209,7 +207,8 @@ hiv_tidy %>%
     ggplot(aes(x = rank, y = edgeR_prob, group = sample_id, color = sample_id)) + 
     geom_point(size = 1) +
     geom_line() +
-    labs(x = "rank", 
+    labs(title = "edgeR", 
+         x = "rank", 
          y = "-log10(p-values)", 
          color = "sample") +
     coord_cartesian(xlim = c(0, 400)) +
@@ -220,4 +219,6 @@ hiv_tidy %>%
           legend.background = element_rect(color = "black", size = 0.3), 
           legend.position = c(0.725, 0.825))
 
-ggsave("figures/hiv_pvalues.png", units = "in", width = 4, height = 4)
+ggarrange(post_prob, p_values, nrow = 1)
+
+ggsave("figures/hiv_ranked_prob.png", units = "in", width = 8, height = 4)
