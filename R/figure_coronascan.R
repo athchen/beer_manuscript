@@ -25,10 +25,17 @@ cs_tidy <- as_df(cs) %>%
            sample_id = factor(sample_id, levels = sample_names),
            beer_hits = ifelse(beer_prob > 0.5 | is_se, 1, 0), 
            edgeR_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
-           edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0)) %>%
+           edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0), 
+           organism = ifelse(grepl("Severe acute respiratory syndrome", organism), 
+                             "Human SARS coronavirus 2 (SARS-CoV2)", 
+                             organism)) %>%
     ungroup()
 
 # Figure: coronascan_protein.png ------------
+grey_palette <- palette(gray(seq(0.1,0.8,len = 10)))
+cs_species <- unique(cs_tidy$organism)
+num_sarscov2 <- grep("SARS-CoV2", cs_species)
+
 cs_tidy %>%
     filter(beads != "beads") %>%
     select(sample, sample_id, peptide, organism, protein_name, beer_hits, edgeR_hits) %>%
@@ -44,14 +51,17 @@ cs_tidy %>%
     facet_wrap(sample_id ~., ncol = 5) +
     geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
     geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
-    geom_point() +
-    scale_x_continuous(trans = "mysqrt", 
-                       limits = c(0, 1), 
-                       breaks = seq(0, 1, by = 0.2)) +
+    geom_point(alpha = 0.8) +
     labs(x = TeX("$\\frac{1}{2}$ (BEER + edgeR)"),
          y = "BEER - edgeR",
          color = "Organism",
          size = "# peptides") +
+    scale_x_continuous(trans = "mysqrt", 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_color_manual(values = c(grey_palette[1:(num_sarscov2 - 1)], "firebrick2", 
+                                  grey_palette[-(1:(num_sarscov2 - 1))]), 
+                       breaks = cs_species) +
     theme_bw() +
     theme(aspect.ratio = 1, 
           legend.title = element_text(size = 10), 
@@ -187,7 +197,7 @@ cs_tidy %>%
 
 ggsave("figures/coronascan_postprob.png", units = "in", width = 4, height = 4)
 
-# Figure: hiv_pvalues.png -----------
+# Figure: coronascan_pvalues.png -----------
 cs_tidy %>%
     filter(sample_id == cs_sample) %>%
     select(pair_num, edgeR_prob) %>%

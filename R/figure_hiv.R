@@ -33,8 +33,14 @@ hiv_tidy <- as_df(hiv) %>%
     ungroup()
 
 # Figure: hiv_protein.png ------------
+grey_palette <- palette(gray(seq(0.1,0.8,len = 14)))
+hiv_subtype <- unique(hiv_tidy$hiv_species)
+num_B <- grep("HIV type 1 group M subtype B", hiv_subtype)
+    
 hiv_tidy %>%
     filter(!grepl("BEADS", sample)) %>%
+    mutate(hiv_species = factor(hiv_species, 
+                                levels = c(hiv_subtype[6], hiv_subtype[-6]))) %>%
     select(sample, sample_id, peptide, UniProt_acc, hiv_species, beer_hits, edgeR_hits) %>%
     group_by(sample, sample_id, UniProt_acc, hiv_species) %>%
     summarize(prot_prop_Bayes = mean(beer_hits),
@@ -48,16 +54,19 @@ hiv_tidy %>%
     facet_wrap(sample_id ~., ncol = 5) +
     geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
     geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
-    geom_point() +
-    scale_x_continuous(trans = "mysqrt", 
-                       limits = c(0, 1), 
-                       breaks = seq(0, 1, by = 0.2)) +
+    geom_point(alpha = 0.8) +
     labs(x = TeX("$\\frac{1}{2}$ (BEER + edgeR)"),
          y = "BEER - edgeR",
          color = "HIV strain",
          size = "# peptides") +
+    scale_x_continuous(trans = "mysqrt", 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
     scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
                        limits = c(-0.25, 1)) +
+    scale_color_manual(values = c(grey_palette[1:(num_B - 1)], "firebrick2", 
+                                  grey_palette[-(1:(num_B - 1))]), 
+                       breaks = hiv_subtype) +
     theme_bw() +
     theme(legend.title = element_text(size = 10), 
           legend.text = element_text(size = 8), 
