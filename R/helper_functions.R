@@ -1,6 +1,6 @@
 #' helper_functions.R 
 #' 
-#' functions used to help process and analyze ouput from BEER simulations
+#' functions used to help process and analyze output from BEER simulations
 
 #' integrate_vector()
 #' 
@@ -139,29 +139,3 @@ penriched_fit <- function(model, covariates){
                          lower_ci = plower, 
                          upper_ci = pupper))
 }
-
-#' as_df()
-#' 
-#' Function to convert a PhIPData object into a tidy data frame 
-#' @param phip_obj PhIPData object
-#' @return a tibble 
-as_df <- function(phip_obj, metadata = FALSE){
-    
-    n_samples <- ncol(phip_obj)
-    n_peps <- nrow(phip_obj)
-    
-    assay_df <- vapply(assays(phip_obj), as.vector, numeric(prod(dim(phip_obj))))
-    metadata_df <- if(metadata){
-        data.frame(est_c = rep(phip_obj$c, each = n_peps), 
-                   est_pi = rep(phip_obj$pi, each = n_peps))
-    } else { NULL }
-    
-    bind_cols(data.frame(sample = rep(colnames(phip_obj), each = n_peps), 
-                         peptide = rep(rownames(phip_obj), times = n_samples),
-                         beads = rep(phip_obj$group, each = n_peps), 
-                         n = rep(librarySize(phip_obj), each = n_peps)),
-              metadata_df, 
-              as_tibble(assay_df))
-}
-
-

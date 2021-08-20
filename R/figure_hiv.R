@@ -11,47 +11,44 @@ source(file.path("R", "load_packages.R"))
 source(file.path("R", "helper_functions.R"))
 
 # Read in data
-hiv <- readRDS(file.path("data_processed", "hiv_2e4.rds"))
+hiv <- readRDS(file.path("data_processed", "hiv_results.rds"))
 
-sample_names <- c(paste0("HIV EC ", 1:(ncol(hiv) -1)), 
-                  paste0("replicate of HIV EC ", ncol(hiv) - 1))
-names(sample_names) <- colnames(hiv)
-
-# Add peptide information, add hits for each approach
-hiv_tidy <- as_df(hiv) %>%
-    left_join(as_tibble(mcols(peptideInfo(hiv))), 
-              by = c("peptide" = "pep_id")) %>%
+# Convert to tidy format and add hits for each approach
+hiv_tidy <- as(hiv, "DataFrame") %>%
+    as_tibble() %>%
     group_by(sample) %>%
     mutate(is_se = ifelse(sample != "beads" & is.na(beer_prob), TRUE, FALSE), 
-           sample_id = sample_names[sample], 
-           sample_id = factor(sample_id, levels = sample_names),
-           hiv_species = gsub("Human immunodeficiency virus", 
-                              "HIV", taxon_species),
+           sample = factor(sample, levels = colnames(hiv)),
            beer_hits = ifelse(beer_prob > 0.5 | is_se, 1, 0), 
            edgeR_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
            edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0)) %>%
     ungroup()
 
 # Figure: hiv_protein.png ------------
-grey_palette <- palette(gray(seq(0.1,0.8,len = 14)))
-hiv_subtype <- unique(hiv_tidy$hiv_species)
+# Color palette
+hiv_subtype <- unique(hiv_tidy$taxon_species)
+grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(hiv_subtype) - 1))))
 num_B <- grep("HIV type 1 group M subtype B", hiv_subtype)
-    
+
+# Facet labels
+facet_labels <- paste0(colnames(hiv), " (subtype ", sampleInfo(hiv)$subtype, ")")
+names(facet_labels) <- colnames(hiv)
+
 hiv_tidy %>%
-    filter(!grepl("BEADS", sample)) %>%
-    mutate(hiv_species = factor(hiv_species, 
-                                levels = c(hiv_subtype[6], hiv_subtype[-6]))) %>%
-    select(sample, sample_id, peptide, UniProt_acc, hiv_species, beer_hits, edgeR_hits) %>%
-    group_by(sample, sample_id, UniProt_acc, hiv_species) %>%
+    filter(group != "beads") %>%
+    select(sample, peptide, UniProt_acc, taxon_species,
+           beer_hits, edgeR_hits) %>%
+    group_by(sample, UniProt_acc, taxon_species) %>%
     summarize(prot_prop_Bayes = mean(beer_hits),
               prot_prop_edgeR = mean(edgeR_hits),
               num_peptides = n(), .groups = "drop") %>%
     arrange(desc(num_peptides)) %>%
     ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
                y = prot_prop_Bayes - prot_prop_edgeR,
-               color = hiv_species,
+               color = taxon_species,
                size = num_peptides)) +
-    facet_wrap(sample_id ~., ncol = 5) +
+    facet_wrap(sample ~., ncol = 5, 
+               labeller = labeller(sample = facet_labels)) +
     geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
     geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
     geom_point(alpha = 0.8) +
@@ -81,11 +78,11 @@ ggsave("figures/hiv_protein.png", units = "in", width = 10.5, height = 6.5)
 # Plot for proportion of reads
 prop_reads <- hiv_tidy %>%
     mutate(prop_reads = counts/n) %>%
-    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
-    select(sample_id, peptide, prop_reads) %>%
-    pivot_wider(names_from = "sample_id", 
+    filter(sample %in% c("HIV EC 9", "replicate of HIV EC 9")) %>%
+    select(sample, peptide, prop_reads) %>%
+    pivot_wider(names_from = "sample", 
                 values_from = "prop_reads") %>%
-    dplyr::rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    dplyr::rename(sample_1 = `HIV EC 9`, sample_2 = `replicate of HIV EC 9`) %>%
     ggplot(aes(x = log10(sample_1), y = log10(sample_2))) + 
     geom_abline(aes(intercept = 0, slope = 1)) +
     geom_point() +
@@ -107,22 +104,25 @@ prop_reads <- hiv_tidy %>%
 #   to have a rank of 1 as all of these peptides are identified as enriched
 #   by BEER and edgeR. 
 se_peps <- hiv_tidy %>% 
-    filter(is_se & grepl("replicate", sample_id)) %>%
+    filter(is_se & grepl("9", sample)) %>%
+    group_by(peptide) %>%
+    filter(row_number() == 1) %>%
+    ungroup() %>%
     mutate(rank = 1:n())
 
 #   Ties are broken by the posterior marginal estimates of phi
 beer_ranks <- hiv_tidy %>%
-    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
-    group_by(sample_id) %>%
+    filter(sample %in% c("HIV EC 9", "replicate of HIV EC 9")) %>%
+    group_by(sample) %>%
     arrange(desc(beer_prob), desc(beer_logfc), peptide, .by_group = TRUE) %>%
     mutate(rank_se = nrow(se_peps) + cumsum(!peptide %in% se_peps$peptide)) %>%
     left_join(se_peps %>% select(peptide, rank), by = c("peptide")) %>%
     mutate(rank = ifelse(peptide %in% se_peps$peptide, rank, rank_se)) %>%
     ungroup() %>%
-    select(sample_id, peptide, rank) %>%
-    pivot_wider(names_from = "sample_id", 
+    select(sample, peptide, rank) %>%
+    pivot_wider(names_from = "sample", 
                 values_from = "peptide") %>%
-    dplyr::rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    dplyr::rename(sample_1 = `HIV EC 9`, sample_2 = `replicate of HIV EC 9`) %>%
     arrange(rank)
 
 beer_conc <- sapply(1:nrow(beer_ranks), function(rank){
@@ -132,17 +132,17 @@ beer_conc <- sapply(1:nrow(beer_ranks), function(rank){
 
 # CAT curve for edgeR p-values
 edgeR_ranks <- hiv_tidy %>%
-    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
-    group_by(sample_id) %>%
+    filter(sample %in% c("HIV EC 9", "replicate of HIV EC 9")) %>%
+    group_by(sample) %>%
     arrange(edgeR_bh, desc(edgeR_logfc), .by_group = TRUE) %>%
     mutate(rank_se = 8 + cumsum(!peptide %in% se_peps$peptide)) %>%
     left_join(se_peps %>% select(peptide, rank), by = c("peptide")) %>%
     mutate(rank = ifelse(peptide %in% se_peps$peptide, rank, rank_se)) %>%
     ungroup() %>%
-    select(sample_id, peptide, rank) %>%
-    pivot_wider(names_from = "sample_id", 
+    select(sample, peptide, rank) %>%
+    pivot_wider(names_from = "sample", 
                 values_from = "peptide") %>%
-    dplyr::rename(sample_1 = `HIV EC 15`, sample_2 = `replicate of HIV EC 15`) %>%
+    dplyr::rename(sample_1 = `HIV EC 9`, sample_2 = `replicate of HIV EC 9`) %>%
     arrange(rank)
 
 edgeR_conc <- sapply(1:nrow(edgeR_ranks), function(rank){
@@ -178,12 +178,12 @@ ggsave("figures/hiv_replicates.png", units = "in", width = 8, height = 4)
 
 # Figure: hiv_ranked_prob.png -----------
 post_prob <- hiv_tidy %>%
-    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
-    select(sample_id, peptide, beer_prob) %>%
-    group_by(sample_id) %>%
+    filter(sample %in% c("HIV EC 9", "replicate of HIV EC 9")) %>%
+    select(sample, peptide, beer_prob) %>%
+    group_by(sample) %>%
     arrange(desc(beer_prob), .by_group = TRUE) %>%
     mutate(rank = 1:n()) %>%
-    ggplot(aes(x = rank, y = beer_prob, group = sample_id, color = sample_id)) + 
+    ggplot(aes(x = rank, y = beer_prob, group = sample, color = sample)) + 
     geom_point(size = 1) +
     geom_line() +
     coord_cartesian(xlim = c(0, 400), ylim = c(0, 1)) +
@@ -199,12 +199,12 @@ post_prob <- hiv_tidy %>%
           legend.position = "none")
 
 p_values <- hiv_tidy %>%
-    filter(sample_id %in% c("HIV EC 15", "replicate of HIV EC 15")) %>%
-    select(sample_id, peptide, edgeR_prob) %>%
-    group_by(sample_id) %>%
+    filter(sample %in% c("HIV EC 9", "replicate of HIV EC 9")) %>%
+    select(sample, peptide, edgeR_prob) %>%
+    group_by(sample) %>%
     arrange(desc(edgeR_prob), .by_group = TRUE) %>%
     mutate(rank = 1:n()) %>%
-    ggplot(aes(x = rank, y = edgeR_prob, group = sample_id, color = sample_id)) + 
+    ggplot(aes(x = rank, y = edgeR_prob, group = sample, color = sample)) + 
     geom_point(size = 1) +
     geom_line() +
     labs(title = "edgeR", 
