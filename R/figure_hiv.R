@@ -2,16 +2,17 @@
 #' 
 #' Code to generate figures:
 #' - hiv_protein.png
+#' - hiv_protein_noB.png
+#' - hiv_protein_A.png
 #' - hiv_replicates.png
-#' - hiv_postprob.png
-#' - hiv_pvalues.png
+#' - hiv_ranked_prob.png
 
 # Set-up --------------
-source(file.path("R", "load_packages.R"))
-source(file.path("R", "helper_functions.R"))
+source(here("R", "load_packages.R"))
+source(here("R", "helper_functions.R"))
 
 # Read in data
-hiv <- readRDS(file.path("data_processed", "hiv_results.rds"))
+hiv <- readRDS(here("data_processed", "hiv_results.rds"))
 
 # Convert to tidy format and add hits for each approach
 hiv_tidy <- as(hiv, "DataFrame") %>%

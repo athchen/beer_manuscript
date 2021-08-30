@@ -12,11 +12,11 @@
 #' - simulation_prc_bybeads.png
 
 # Set-up --------------
-if(file.exists("data_processed/simulation_curves.rda")){
-    load("data_processed/simulation_curves.rda")
+if(file.exists(here("data_processed", "simulation_curves.rda"))){
+    load(here("data_processed", "simulation_curves.rda"))
 } else {
     # Takes a while to run - only need to run once. 
-    source(file.path("R", "load_curves.R"))
+    source(here("R", "load_curves.R"))
 }
 
 curves_summary <- interpolate %>%

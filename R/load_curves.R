@@ -3,8 +3,8 @@
 #' Code to process and load sens/spec/ppv data.
 
 # Set-up ----------
-source(file.path("R", "load_simulations.R"))
-source(file.path("R", "helper_functions.R"))
+source(here("R", "load_simulations.R"))
+source(here("R", "helper_functions.R"))
 
 # Create ROC/PRC data for each data set and simulation condition ------------
 # Note: the following code takes a while to run. 

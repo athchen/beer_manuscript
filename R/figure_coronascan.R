@@ -6,11 +6,11 @@
 #' - coronascan_ranked_prob.png
 
 # Set-up --------------
-source(file.path("R", "load_packages.R"))
-source(file.path("R", "helper_functions.R"))
+source(here("R", "load_packages.R"))
+source(here("R", "helper_functions.R"))
 
 # Read in data
-cs <- readRDS(file.path("data_processed", "coronascan_results.rds"))
+cs <- readRDS(here("data_processed", "coronascan_results.rds"))
 
 # Convert to tidy format and add hits for each approach
 cs_tidy <- as(cs, "DataFrame") %>%

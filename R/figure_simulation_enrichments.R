@@ -5,8 +5,8 @@
 #' - simulation_enrichments_ne.png
 
 # Set-up --------------
-source(file.path("R", "load_packages.R"))
-source(file.path("R", "helper_functions.R"))
+source(here("R", "load_packages.R"))
+source(here("R", "helper_functions.R"))
 
 # Define colors and facet names
 sample_names <- c("beads_only", paste0("sample ", 1:10), "replicate of 10")

@@ -1,7 +1,7 @@
 #' Code to load required packages to reproduce the results and figures in 
 #' the manuscript. 
-required_packages <- c('here', 'tidyverse', 'ggpubr', 'gridExtra', 'latex2exp', 
-                       'kableExtra', 'RColorBrewer', 'BiocManager')
+required_packages <- c('here', 'tidyverse', 'plyr', 'ggpubr', 'gridExtra', 
+                       'latex2exp', 'kableExtra', 'RColorBrewer', 'BiocManager')
 for (pkg in required_packages) {
     if (!(pkg %in% rownames(installed.packages()))) {
         install.packages(pkg)

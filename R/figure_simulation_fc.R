@@ -4,11 +4,11 @@
 #' - simulation_fc.png
 
 # Set-up --------------
-source(file.path("R", "load_packages.R"))
-source(file.path("R", "helper_functions.R"))
+source(here("R", "load_packages.R"))
+source(here("R", "helper_functions.R"))
 
-sim_out <- readRDS(file.path("data_processed", "simulation_8beads_edgeR",
-                             "sim_001.rds"))
+sim_out <- readRDS(here("data_processed", "simulation_8beads_edgeR",
+                        "sim_001.rds"))
 
 sim_tidy <- as_df(sim_out, metadata = TRUE) %>%
     group_by(peptide) %>%
