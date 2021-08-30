@@ -29,26 +29,23 @@ hiv_tidy <- as(hiv, "DataFrame") %>%
 hiv_subtype <- unique(hiv_tidy$taxon_species)
 grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(hiv_subtype) - 1))))
 num_B <- grep("HIV type 1 group M subtype B", hiv_subtype)
-
-# Facet labels
-facet_labels <- paste0(colnames(hiv), " (subtype ", sampleInfo(hiv)$subtype, ")")
-names(facet_labels) <- colnames(hiv)
+subtype_order <- c(hiv_subtype[num_B], hiv_subtype[-num_B])
 
 hiv_tidy %>%
-    filter(group != "beads") %>%
+    filter(group != "beads" & !grepl("9", sample)) %>%
     select(sample, peptide, UniProt_acc, taxon_species,
            beer_hits, edgeR_hits) %>%
     group_by(sample, UniProt_acc, taxon_species) %>%
     summarize(prot_prop_Bayes = mean(beer_hits),
               prot_prop_edgeR = mean(edgeR_hits),
               num_peptides = n(), .groups = "drop") %>%
-    arrange(desc(num_peptides)) %>%
+    mutate(taxon_species = factor(taxon_species, subtype_order)) %>%
+    arrange(desc(taxon_species), desc(num_peptides)) %>%
     ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
                y = prot_prop_Bayes - prot_prop_edgeR,
                color = taxon_species,
                size = num_peptides)) +
-    facet_wrap(sample ~., ncol = 5, 
-               labeller = labeller(sample = facet_labels)) +
+    facet_wrap(sample ~., ncol = 4) +
     geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
     geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
     geom_point(alpha = 0.8) +
@@ -61,9 +58,8 @@ hiv_tidy %>%
                        breaks = seq(0, 1, by = 0.2)) +
     scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
                        limits = c(-0.25, 1)) +
-    scale_color_manual(values = c(grey_palette[1:(num_B - 1)], "firebrick2", 
-                                  grey_palette[-(1:(num_B - 1))]), 
-                       breaks = hiv_subtype) +
+    scale_color_manual(values = c( "firebrick2", grey_palette),
+                       breaks = subtype_order) +
     theme_bw() +
     theme(legend.title = element_text(size = 10), 
           legend.text = element_text(size = 8), 
@@ -72,7 +68,92 @@ hiv_tidy %>%
     guides(size = guide_legend(ncol = 1), 
            color = guide_legend(ncol = 2))
 
-ggsave("figures/hiv_protein.png", units = "in", width = 10.5, height = 6.5)
+ggsave("figures/hiv_protein.png", units = "in", width = 8.5, height = 6.5)
+
+# Figure: hiv_protein_noB.png ----------
+hiv_tidy %>%
+    filter(group != "beads" & !grepl("9", sample) &
+               !grepl("HIV type 1 group M subtype B", taxon_species)) %>%
+    select(sample, peptide, UniProt_acc, taxon_species,
+           beer_hits, edgeR_hits) %>%
+    group_by(sample, UniProt_acc, taxon_species) %>%
+    summarize(prot_prop_Bayes = mean(beer_hits),
+              prot_prop_edgeR = mean(edgeR_hits),
+              num_peptides = n(), .groups = "drop") %>%
+    mutate(taxon_species = factor(taxon_species, subtype_order)) %>%
+    arrange(desc(taxon_species), desc(num_peptides)) %>%
+    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
+               y = prot_prop_Bayes - prot_prop_edgeR,
+               color = taxon_species,
+               size = num_peptides)) +
+    facet_wrap(sample ~., ncol = 4) +
+    geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
+    geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
+    geom_point(alpha = 0.8) +
+    labs(x = TeX("$\\frac{1}{2}$ (BEER + edgeR)"),
+         y = "BEER - edgeR",
+         color = "HIV strain",
+         size = "# peptides") +
+    scale_x_continuous(trans = "mysqrt", 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
+                       limits = c(-0.25, 1)) +
+    scale_color_manual(values = c( "firebrick2", grey_palette),
+                       breaks = subtype_order) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 10), 
+          legend.text = element_text(size = 8), 
+          legend.key.size = unit(0.75, "lines"), 
+          legend.position = "bottom") +
+    guides(size = guide_legend(ncol = 1), 
+           color = guide_legend(ncol = 2))
+
+ggsave("figures/hiv_protein_noB.png", units = "in", width = 8.5, height = 6.5)
+
+# Figure: hiv_protein_A.png ----------
+# Color palette
+num_A <- grep("HIV type 1 group M subtype A", hiv_subtype)
+subtype_order <- c(hiv_subtype[c(num_B, num_A)], hiv_subtype[-c(num_B, num_A)])
+
+hiv_tidy %>%
+    filter(grepl("9", sample)) %>%
+    select(sample, peptide, UniProt_acc, taxon_species,
+           beer_hits, edgeR_hits) %>%
+    group_by(sample, UniProt_acc, taxon_species) %>%
+    summarize(prot_prop_Bayes = mean(beer_hits),
+              prot_prop_edgeR = mean(edgeR_hits),
+              num_peptides = n(), .groups = "drop") %>%
+    mutate(taxon_species = factor(taxon_species, subtype_order)) %>%
+    arrange(desc(taxon_species), desc(num_peptides)) %>%
+    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
+               y = prot_prop_Bayes - prot_prop_edgeR,
+               color = taxon_species,
+               size = num_peptides)) +
+    facet_wrap(sample ~., ncol = 4) +
+    geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
+    geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
+    geom_point(alpha = 0.8) +
+    labs(x = TeX("$\\frac{1}{2}$ (BEER + edgeR)"),
+         y = "BEER - edgeR",
+         color = "HIV strain",
+         size = "# peptides") +
+    scale_x_continuous(trans = "mysqrt", 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
+                       limits = c(-0.25, 1)) +
+    scale_color_manual(values = c("firebrick2", "blue", grey_palette[-num_A]),
+                       breaks = subtype_order) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 10), 
+          legend.text = element_text(size = 8), 
+          legend.key.size = unit(0.75, "lines"), 
+          legend.position = "bottom") +
+    guides(size = guide_legend(ncol = 1), 
+           color = guide_legend(ncol = 2))
+
+ggsave("figures/hiv_protein_A.png", units = "in", width = 8.5, height = 6.5)
 
 # Figure: hiv_replicates.png -----------
 # Plot for proportion of reads
