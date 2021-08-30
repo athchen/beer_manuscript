@@ -1,0 +1,82 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# BEER Manuscript
+
+This repository contains all of the data and code to reproduce the work presented in, _Detecting Enriched Antibody Peptides in Phage-Immunoprecipitation Sequencing Data_.
+
+The session info, including all packages used in the analyses and their respective versions can be found in the [Session Info](#session-info) section of this README.md. All code used to generate the results of the manuscript are mapped in the [section below](#mapping-of-manuscript-content-to-repository-files). A detailed description of the contents of each file in the directory is provided in the [Directory Structure](#directory-structure) section. 
+
+In particular, these results were generated using the `R` package [`beer`](https://github.com/athchen/beer) version `0.99.0`.
+
+# TO DO
+
+* Change `beer` hyperlink to Bioclink once accepted
+* Add hyperlink to paper once it's been uploaded/submitted. 
+
+# Directory structure
+
+### **`data_raw`**
+
+Contains `PhIPData` objects of normalized read counts and relevant sample and peptide annotation for example data sets and code to generate simulated data sets.  
+
+* **`coronascan.rds`**: coronascan data set.
+* **`hiv.rds`**: HIV elite controller data set.
+* **`simulations.R`**: script to generate simulated data sets. 
+
+### **`data_processed`**
+
+Generated output used in later parts of the analyses.
+
+* **`kpep_list.rds`**: sorted data frame of the top 10 peptide pairs, along with their optimal cutoffs. Generated in `R/run-ktsp.R`.
+* **`slopes.rda`**: regression results obtained using code in `R/run-slopes.R`. 
+* **`validation_tsp.rds`**: ktsp results obtained using code in `R/run-validation.R`.
+
+### **`figures`**
+
+Contains png/pdfs of the manuscript figures. 
+
+### **`R`**
+
+R scripts used to generate the objects in `data_processed` and the figure files in `figures`. 
+
+* **`figure_coronascan.R`** generates figures:
+    + 
+* **`figure_hiv.R`**
+* **`figure_simulation_curves.R`**
+* **`figure_simulation_enrichments.R`**
+* **`figure_simulation_fc.R`**
+* **`figure_simulation_logistic.R`**
+* **`figure_simulation_postprob.R`**
+* **`helper_functions.R`** contains helper functions for processing and analyzing output.
+* **`load_curves.R`**
+* **`load_packages.R`**
+* **`load_simulations.R`**
+* **`run_coronascan.R`** runs edgeR and BEER on CoronaScan data.
+* **`run_hiv.R`** runs edgeR and BEER on HIV EC data.
+
+# Mapping of manuscript content to repository files
+
+## Methods
+
+## Mapping of Figures and Tables
+
+### Main Text
+
+### Supplementary Material
+
+# Session Info
+
+```{r}
+devtools::session_info()
+```
