@@ -8,11 +8,11 @@
 #' - hiv_ranked_prob.png
 
 # Set-up --------------
-source(here("R", "load_packages.R"))
+source(file.path("R", "load_packages.R"))
 source(here("R", "helper_functions.R"))
 
 # Read in data
-hiv <- readRDS(here("data_processed", "hiv_results.rds"))
+hiv <- readRDS(here::here("data_processed", "hiv_results.rds"))
 
 # Convert to tidy format and add hits for each approach
 hiv_tidy <- as(hiv, "DataFrame") %>%
@@ -37,7 +37,7 @@ hiv_tidy %>%
     select(sample, peptide, UniProt_acc, taxon_species,
            beer_hits, edgeR_hits) %>%
     group_by(sample, UniProt_acc, taxon_species) %>%
-    summarize(prot_prop_Bayes = mean(beer_hits),
+    dplyr::summarize(prot_prop_Bayes = mean(beer_hits),
               prot_prop_edgeR = mean(edgeR_hits),
               num_peptides = n(), .groups = "drop") %>%
     mutate(taxon_species = factor(taxon_species, subtype_order)) %>%
@@ -293,7 +293,7 @@ p_values <- hiv_tidy %>%
          x = "rank", 
          y = "-log10(p-values)", 
          color = "sample") +
-    coord_cartesian(xlim = c(0, 400)) +
+    coord_cartesian(xlim = c(0, 400), ylim = c(0, 6)) +
     scale_color_manual(values = c("red", "black")) +
     theme_bw() +
     theme(aspect.ratio = 1, 
@@ -303,4 +303,5 @@ p_values <- hiv_tidy %>%
 
 ggarrange(post_prob, p_values, nrow = 1)
 
-ggsave("figures/hiv_ranked_prob.png", units = "in", width = 8, height = 4)
+ggsave("figures/hiv_ranked_prob.png", units = "in", width = 8, height = 4, 
+       bg = "white")

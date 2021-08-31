@@ -5,8 +5,8 @@
 #' - simulation_logistic_rc.png
 
 # Set-up --------------
-if(file.exists("data_processed/simulation_curves.rda")){
-    load("data_processed/simulation_curves.rda")
+if(file.exists(here("data_processed", "simulation_curves.rda"))){
+    load(here("data_processed", "simulation_curves.rda"))
 } else {
     # Takes a while to run - only need to run once. 
     source(file.path("R", "load_curves.R"))
@@ -18,8 +18,8 @@ beer_fdr <- beer_roc_by_fc %>%
     filter(approach == "BEER" & ab_method == "edgeR" &
                group == "full data" & num_beads == 8) %>%
     group_by(approach, ab_method, sim_num, num_beads) %>%
-    mutate(dist_fdr = abs(ppv - 0.95)) %>%
-    filter(dist_fdr == min(dist_fdr, na.rm = TRUE)) %>%
+    # mutate(dist_fdr = abs(ppv - 0.95)) %>%
+    # filter(dist_fdr == min(dist_fdr, na.rm = TRUE)) %>%
     summarize(mean_cutoff = mean(cutoff),
               median_cutoff = median(cutoff), 
               range_cutoff = max(cutoff) - min(cutoff), 
