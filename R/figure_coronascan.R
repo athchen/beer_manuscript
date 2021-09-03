@@ -214,7 +214,8 @@ p_value <- cs_tidy %>%
          x = "rank", 
          y = "-log10(p-values)", 
          color = "peptide") +
-    coord_cartesian(xlim = c(0, 100)) +
+    coord_cartesian(xlim = c(0, 100), ylim = c(0, 6)) +
+    scale_y_continuous(oob = scales::oob_censor_any) +
     scale_color_manual(values = c("red", "black")) +
     theme_bw() +
     theme(aspect.ratio = 1, 
@@ -225,3 +226,24 @@ p_value <- cs_tidy %>%
 ggarrange(post_prob, p_value, nrow = 1)
 
 ggsave("figures/coronascan_ranked_prob.png", units = "in", width = 8, height = 4)
+
+# Table: coronascan_replicates
+cs_tidy %>%
+    select(sample, pair_id, pair_num, beer_hits, edgeR_hits) %>%
+    pivot_longer(cols = contains("hits"), 
+                 names_to = "method", 
+                 values_to = "hits", 
+                 names_pattern = "([A-Za-z]*)_hits") %>%
+    pivot_wider(names_from = pair_num, values_from = hits) %>%
+    mutate(concordant = ifelse(`1` == `2`, 1, 0))%>%
+    group_by(sample, method) %>%
+    summarize(num = sum(concordant), 
+              total_pep = n(), 
+              prop = num/total_pep, .groups = "drop") %>%
+    pivot_longer(cols = c("num", "prop"), 
+                 names_to = "param", 
+                 values_to = "value") %>%
+    unite("method_param", method, param) %>%
+    pivot_wider(names_from = "method_param", values_from = "value") %>%
+    select(-total_pep) %>%
+    mutate(across(contains(c("beer", "edgeR")), round, digits = 3))

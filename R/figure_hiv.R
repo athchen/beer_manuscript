@@ -305,3 +305,29 @@ ggarrange(post_prob, p_values, nrow = 1)
 
 ggsave("figures/hiv_ranked_prob.png", units = "in", width = 8, height = 4, 
        bg = "white")
+
+# Table: hiv_replicates -----------
+hiv_tidy %>%
+    filter(sample %in% c("HIV EC 9", "replicate of HIV EC 9")) %>%
+    mutate(subtype_a = ifelse(taxon_species == "HIV type 1 group M subtype A", 1, 0)) %>%
+    select(subtype_a, sample, peptide, beer_hits, edgeR_hits) %>%
+    pivot_longer(cols = contains("hits"), 
+                 names_to = "method", 
+                 names_pattern = "([a-zA-Z]*)_hits", 
+                 values_to = "hits") %>%
+    pivot_wider(names_from = sample, values_from = hits) %>%
+    dplyr::rename(sample_1 = `HIV EC 9`, 
+                  sample_2 = `replicate of HIV EC 9`) %>%
+    mutate(concordance = case_when(sample_1 == 1 & sample_2 == 1 ~ "both enriched", 
+                                   sample_1 == 0 & sample_2 == 0 ~ "both not enriched", 
+                                   TRUE ~ "discordant")) %>%
+    group_by(subtype_a, method, concordance) %>%
+    summarize(n = n(), .groups = "drop_last") %>%
+    mutate(total_peps = sum(n), 
+           proportion = n/total_peps) %>%
+    pivot_longer(cols = c("n", "proportion"), 
+                 names_to = "param_name", 
+                 values_to = "value") %>%
+    unite("param", method, param_name) %>%
+    pivot_wider(names_from = "param", values_from = "value") %>%
+    arrange(desc(subtype_a))
