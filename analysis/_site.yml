@@ -9,9 +9,14 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right: 
+  - icon: fa-github
+  - href: "https://github.com/athchen/beer_manuscript"
 output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
     theme: cosmo
     highlight: textmate
+    includes:
+      in_header: partials/header.html
