@@ -13,11 +13,12 @@ source(here("R", "helper_functions.R"))
 cs <- readRDS(here("data_processed", "coronascan_results.rds"))
 
 # Convert to tidy format and add hits for each approach
+# Order samples by BEADS, VRC, then days since infection
 cs_tidy <- as(cs, "DataFrame") %>%
     as_tibble() %>%
     group_by(sample) %>%
     mutate(is_se = ifelse(sample != "beads" & is.na(beer_prob), TRUE, FALSE), 
-           sample = factor(sample, levels = colnames(cs)),
+           sample = factor(sample, levels = colnames(cs)[c(1:14, 16, 15, 18, 17)]),
            beer_hits = ifelse(beer_prob > 0.5 | is_se, 1, 0), 
            edgeR_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
            edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0)) %>%
@@ -28,12 +29,15 @@ cs_tidy <- as(cs, "DataFrame") %>%
 cs_species <- unique(cs_tidy$organism)
 grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(cs_species) - 1))))
 num_sarscov2 <- grep("SARS-CoV2", cs_species)
+cs_order <- c(cs_species[num_sarscov2], cs_species[-num_sarscov2])
 
 # Facet labels
-facet_labels <- paste0(colnames(cs), " (", 
-                       ifelse(sampleInfo(cs)$group == "vrc", 
-                              "VRC", sampleInfo(cs)$group), 
-                       ")")
+facet_labels <- case_when(
+    sampleInfo(cs)$group == "beads" ~ colnames(cs), 
+    sampleInfo(cs)$group == "vrc" ~ 
+        paste0("VRC ", gsub("CS ", "", colnames(cs))), 
+    TRUE ~ paste0("SARS-CoV2, D", sampleInfo(cs)$days_since_infection, 
+                  " Ab", ifelse(sampleInfo(cs)$ab_test == "pos", "+", "-")))
 names(facet_labels) <- colnames(cs)
 
 cs_tidy %>%
@@ -43,7 +47,8 @@ cs_tidy %>%
     summarize(prot_prop_Bayes = mean(beer_hits),
               prot_prop_edgeR = mean(edgeR_hits),
               num_peptides = n(), .groups = "drop") %>%
-    arrange(desc(num_peptides)) %>%
+    mutate(organism = factor(organism, levels = cs_order)) %>%
+    arrange(desc(organism), desc(num_peptides)) %>%
     ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR),
                y = prot_prop_Bayes - prot_prop_edgeR,
                color = organism,
