@@ -66,8 +66,8 @@ hiv_tidy %>%
           legend.text = element_text(size = 8), 
           legend.key.size = unit(0.75, "lines"), 
           legend.position = "bottom") +
-    guides(size = guide_legend(ncol = 1), 
-           color = guide_legend(ncol = 2))
+    guides(color = guide_legend(ncol = 2, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))
 
 ggsave("figures/hiv_protein.png", units = "in", width = 8.5, height = 6.5)
 
@@ -107,8 +107,8 @@ hiv_tidy %>%
           legend.text = element_text(size = 8), 
           legend.key.size = unit(0.75, "lines"), 
           legend.position = "bottom") +
-    guides(size = guide_legend(ncol = 1), 
-           color = guide_legend(ncol = 2))
+    guides(color = guide_legend(ncol = 2, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))
 
 ggsave("figures/hiv_protein_noB.png", units = "in", width = 8.5, height = 6.5)
 
@@ -151,8 +151,8 @@ hiv_tidy %>%
           legend.text = element_text(size = 8), 
           legend.key.size = unit(0.75, "lines"), 
           legend.position = "bottom") +
-    guides(size = guide_legend(ncol = 1), 
-           color = guide_legend(ncol = 2))
+    guides(color = guide_legend(ncol = 2, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))
 
 ggsave("figures/hiv_protein_A.png", units = "in", width = 8.5, height = 6.5)
 
