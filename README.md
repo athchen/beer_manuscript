@@ -28,6 +28,7 @@ In particular, these results were generated using the `R` package
     -   Update `beer` hyperlink to Bioc URL once accepted
     -   Review of figure/table legends and captions on each page
     -   Update CS data description
+    -   Update HIV data description
 
 # Directory structure
 
@@ -140,7 +141,7 @@ devtools::session_info()
 #>  collate  en_US.UTF-8                 
 #>  ctype    en_US.UTF-8                 
 #>  tz       America/New_York            
-#>  date     2021-09-14                  
+#>  date     2021-09-15                  
 #> 
 #> ─ Packages ───────────────────────────────────────────────────────────────────
 #>  package     * version date       lib source        

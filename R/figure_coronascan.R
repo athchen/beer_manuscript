@@ -28,6 +28,10 @@ cs_tidy <- as(cs, "DataFrame") %>%
 # Color palette
 cs_species <- unique(cs_tidy$organism)
 grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(cs_species) - 1))))
+# Make `grey_palette` is of the correct length. Not sure why this has to be run twice
+grey_palette <- if(length(grey_palette) < (length(cs_species) - 1)){
+    palette(gray(seq(0.1, 0.8, length.out = (length(cs_species) - 1))))
+} else grey_palette
 num_sarscov2 <- grep("SARS-CoV2", cs_species)
 cs_order <- c(cs_species[num_sarscov2], cs_species[-num_sarscov2])
 
@@ -232,7 +236,7 @@ ggarrange(post_prob, p_value, nrow = 1)
 
 ggsave("figures/coronascan_ranked_prob.png", units = "in", width = 8, height = 4)
 
-# Table: coronascan_replicates
+# Table: coronascan_replicates ----------
 cs_tidy %>%
     select(sample, pair_id, pair_num, beer_hits, edgeR_hits) %>%
     pivot_longer(cols = contains("hits"), 
