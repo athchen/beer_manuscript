@@ -405,7 +405,7 @@ curves_summary %>%
 Posterior probability of enrichment for one simulated data set. Expected read counts for each peptide are derived by taking the average proportion of reads pulled in beads-only samples and multiplying the proportion by the library size of the sample. Peptides categorized as super-enriched are colored in grey. Warmer colors indicate that the peptide has over a 50\% chance of being enriched. Points are plotted such that points with posterior probabilities closer to 0.5 are on top. Sample 9 is a
 beads-only sample encoded as a serum sample in the data set
 
-```{r figure_simulation_post_prob, fig.width = 9, fig.height = 6}
+```{r figure_simulation_post_prob, fig.width = 9, fig.height = 8}
 sim_out_001 <- readRDS(here("data_processed", "simulation_8beads_edgeR",
                             "sim_001.rds"))
 sim_tidy_001 <- as_df(sim_out_001, metadata = TRUE) %>%
