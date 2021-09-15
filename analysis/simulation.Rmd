@@ -400,6 +400,273 @@ curves_summary %>%
           plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
 ```
 
+### Figure S7
+
+Posterior probability of enrichment for one simulated data set. Expected read counts for each peptide are derived by taking the average proportion of reads pulled in beads-only samples and multiplying the proportion by the library size of the sample. Peptides categorized as super-enriched are colored in grey. Warmer colors indicate that the peptide has over a 50\% chance of being enriched. Points are plotted such that points with posterior probabilities closer to 0.5 are on top. Sample 9 is a
+beads-only sample encoded as a serum sample in the data set
+
+```{r figure_simulation_post_prob, fig.width = 9, fig.height = 6}
+sim_out_001 <- readRDS(here("data_processed", "simulation_8beads_edgeR",
+                            "sim_001.rds"))
+sim_tidy_001 <- as_df(sim_out_001, metadata = TRUE) %>%
+    group_by(peptide) %>%
+    mutate(sample = factor(sample, 1:ncol(sim_out_001)), 
+           is_se = ifelse(beads != "beads" & is.na(beer_prob), TRUE, FALSE), 
+           expected_prop = mean(counts[beads == "beads"]/n[beads == "beads"]), 
+           expected_rc = expected_prop*n) %>%
+    ungroup()
+
+# Peptides from beads-only samples are excluded below. Super-enriched peptides 
+# are colored in grey. 
+sim_tidy_001 %>% 
+    filter(beads != "beads") %>%
+    arrange(beer_prob) %>%
+    ggplot(aes(x = log10(expected_rc + 1), y = log10(counts + 1),
+               color = beer_prob, group = sample)) +
+    geom_point(size = 1) +
+    geom_abline(aes(slope = 1, intercept = log10(est_c)), 
+                size = 0.25, color = "black") +
+    facet_wrap(sample ~., ncol = 4, 
+               labeller = labeller(sample = sample_names)) +
+    coord_fixed(xlim = c(0, 6), ylim = c(0, 6)) +
+    labs(title = "Posterior probabilities of enrichment for simulated data",
+         x = "log10(expected read counts + 1)",
+         y = "log10(observed read counts + 1)",
+         color = "posterior probability of enrichment") +
+    scale_color_gradientn(colors = hot_cold_cols,
+                          values = c(0, 0.15, 0.35, 0.45, 0.49, 0.51, 0.75, 1)) +
+    theme_bw() +
+    theme(legend.position = "bottom")
+```
+
+### Figure S8
+
+Comparison of estimated fold-changes to true fold-changes for one simulated data set. Only peptides from serum samples are included in each plot, and each peptide is represented by a point. Note that by construction, there are 120 peptides between each $\log_2$ increment, and super-enriched peptides are not included in the above plots. Warm colors indicate high probability of enrichment (posterior probability of enrichment > 0.5 or $−\log_{10}$(p-value) > 20).
+
+```{r figure_simulation_fc, fig.width = 8, fig.height = 9}
+# Calculate true_c
+true_c <- sim_tidy_001 %>%
+    group_by(sample) %>%
+    group_split() %>%
+    map_dfr(function(df){
+        c_coef <- if(unique(df$beads) != "beads" &
+                     as.numeric(unique(df$sample)) != 9){
+            lm_fit <- lm(counts ~ expected_rc, data = df %>% filter(true_Z == 0))
+            coef(lm_fit)[["expected_rc"]]
+        } else 1
+        data.frame(sample = unique(df$sample), 
+                   true_c = c_coef)
+    }) %>%
+    arrange(as.numeric(sample))
+
+# Figure: simulation_fc.png ------------
+# Peptides from beads-only samples and super-enriched peptides are excluded
+# from the following plots
+beer_phi <- sim_tidy_001 %>%
+    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    mutate(cond_fc = ifelse(beer_prob < 0.5, 1, beer_fcZ)) %>%
+    arrange(beer_prob) %>%
+    ggplot(aes(x = log2(true_phi), y = log2(cond_fc), color = beer_prob)) +
+    geom_point(alpha = 0.75) +
+    labs(title = "BEER with edgeR", 
+         x = TeX("$\\log_2$ actual fold change"),
+         y = TeX("$\\log_2$ predicted fold change | $\\hat{Z}_{ij}$ "),
+         color = "posterior probability") +
+    geom_abline(aes(intercept = 0, slope = 1), color = "black") +
+    geom_hline(aes(yintercept = log2(1)), linetype = "dashed") +
+    geom_vline(aes(xintercept = log2(1)), linetype = "dashed") +
+    scale_y_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_x_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_color_gradientn(colors = hot_cold_cols,
+                          values = c(0, 0.15, 0.35, 0.45, 0.49, 0.51, 0.75, 1)) +
+    coord_fixed(ratio = 1) +
+    guides(color = guide_colorbar(barwidth = unit(1.75, "in"))) +
+    theme_bw() +
+    theme(legend.position = "none")
+
+beer_cphi <- sim_tidy_001 %>%
+    left_join(true_c, by = c("sample")) %>%
+    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    mutate(cond_fc = ifelse(beer_prob < 0.5, 1, beer_fcZ)) %>%
+    arrange(beer_prob) %>%
+    ggplot(aes(x = log2(true_phi*true_c), y = log2(cond_fc*est_c), 
+               color = beer_prob)) +
+    geom_point(alpha = 0.75) +
+    labs(title = "BEER with edgeR", 
+         x = TeX("$c_{j}\\cdot\\log_2$ actual fold change"),
+         y = TeX("$\\hat{c}_{j}\\cdot\\log_2$ predicted fold change | $\\hat{Z}_{ij}$ "),
+         color = "posterior probability") +
+    geom_abline(aes(intercept = 0, slope = 1), color = "black") +
+    geom_hline(aes(yintercept = log2(1)), linetype = "dashed") +
+    geom_vline(aes(xintercept = log2(1)), linetype = "dashed") +
+    scale_y_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_x_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_color_gradientn(colors = hot_cold_cols,
+                          values = c(0, 0.15, 0.35, 0.45, 0.49, 0.51, 0.75, 1)) +
+    coord_fixed(ratio = 1) +
+    guides(color = guide_colorbar(barwidth = unit(1.75, "in"))) +
+    theme_bw() +
+    theme(legend.position = "bottom", 
+          legend.text = element_text(size = 8, angle = 45, hjust = 1), 
+          legend.title = element_text(vjust = 0.85))
+
+edgeR_phi <- sim_tidy_001 %>%
+    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    group_by(sample) %>%
+    mutate(edgeR_prob_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
+           edgeR_logprob_bh = -log10(edgeR_prob_bh)) %>%
+    arrange(edgeR_logprob_bh) %>%
+    ggplot(aes(x = log2(true_phi), y = edgeR_logfc, color = edgeR_logprob_bh)) +
+    geom_point(alpha = 0.75) +
+    labs(title = "edgeR", 
+         x = TeX("$\\log_2$ actual fold change"),
+         y = TeX("$\\log_2$ predicted fold change"),
+         color = "BH adjusted p-values") +
+    geom_abline(aes(intercept = 0, slope = 1), color = "black") +
+    geom_hline(aes(yintercept = log2(1)), linetype = "dashed") +
+    geom_vline(aes(xintercept = log2(1)), linetype = "dashed") +
+    scale_y_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_x_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_color_gradientn(colors = hot_cold_cols,
+                          limits = c(0, 3), 
+                          breaks = c(0, 1, -log10(0.05), 2, 3),
+                          labels = c(1, 0.1, 0.05, 0.01, 0.001), 
+                          values = scales::rescale(c(0, 0.5, 0.75, 1, 1.25, 1.5, 2, 3)), 
+                          oob = scales::squish) +
+    coord_fixed(ratio = 1) +
+    guides(color = guide_colorbar(barwidth = unit(1.75, "in"))) +
+    theme_bw() +
+    theme(legend.position = "none")
+
+edgeR_cphi <- sim_tidy_001 %>%
+    left_join(true_c, by = c("sample")) %>%
+    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    group_by(sample) %>%
+    mutate(edgeR_prob_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
+           edgeR_logprob_bh = -log10(edgeR_prob_bh)) %>%
+    arrange(edgeR_logprob_bh) %>%
+    ggplot(aes(x = log2(true_phi*true_c), y = edgeR_logfc, color = edgeR_logprob_bh)) +
+    geom_point(alpha = 0.75) +
+    labs(title = "edgeR", 
+         x = TeX("$c_{j}\\cdot\\log_2$ actual fold change"),
+         y = TeX("$\\log_2$ predicted fold change"),
+         color = "BH adjusted p-values") +
+    geom_abline(aes(intercept = 0, slope = 1), color = "black") +
+    geom_hline(aes(yintercept = log2(1)), linetype = "dashed") +
+    geom_vline(aes(xintercept = log2(1)), linetype = "dashed") +
+    scale_y_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_x_continuous(limits = c(0, 4.5), oob = scales::squish) +
+    scale_color_gradientn(colors = hot_cold_cols,
+                          limits = c(0, 3), 
+                          breaks = c(0, 1, -log10(0.05), 2, 3),
+                          labels = c(1, 0.1, 0.05, 0.01, 0.001), 
+                          values = scales::rescale(c(0, 0.5, 0.75, 1, 1.25, 1.5, 2, 3)), 
+                          oob = scales::squish) +
+    coord_fixed(ratio = 1) +
+    guides(color = guide_colorbar(barwidth = unit(1.75, "in"))) +
+    theme_bw() +
+    theme(legend.position = "bottom", 
+          legend.text = element_text(size = 8, angle = 45, hjust = 1), 
+          legend.title = element_text(vjust = 0.85))
+
+ggarrange(beer_phi, edgeR_phi, beer_cphi, edgeR_cphi, 
+          nrow = 2, ncol = 2, align = "v", 
+          heights = c(4, 4.9), labels = "AUTO")
+```
+
+### Figure S16
+
+Identified enrichments for enriched peptides by BEER and edgeR using data from one simulation. Each point represents a peptide. Non-enriched peptides are shown in light grey while enriched peptides are colored by which method identified each peptide as enriched. edgeR estimated values for $a_{i0}, b_{i0}$ were used to detect enrichments with BEER. Peptides with posterior probability $\geq 0.5$ were identified as enriched. For edgeR, we used the Benjamini-Hochberg correction to control the false discovery rate (FDR) at 0.05 and 0.1.
+
+```{r figure_sim_enrichment_e, fig.width = 9, fig.height = 10}
+color_vector <- c("red4", "red", "blue", "grey50", "grey80")
+names(color_vector) <- c("both", "both at 0.1", "BEER only", 
+                         "not enriched in both", "not highlighted")
+
+# BH correction and label predictions
+sim_tidy_001 <- as_df(sim_out_001, metadata = TRUE) %>%
+    group_by(peptide) %>%
+    mutate(sample = factor(sample, levels = 1:ncol(sim_out_001)), 
+           is_se = ifelse(sample != "beads" & is.na(beer_prob), TRUE, FALSE), 
+           expected_prop = mean(counts[beads == "beads"]/n[beads == "beads"]), 
+           expected_rc = expected_prop*n) %>%
+    ungroup() %>%
+    group_by(sample) %>%
+    mutate(bh_pvalues = p.adjust(10^(-edgeR_prob), method = "BH"), 
+           edgeR_vs_Bayes = case_when(
+             (beer_prob > 0.5 | is_se) & bh_pvalues < 0.05 ~ "both", 
+             (beer_prob > 0.5 | is_se) & bh_pvalues < 0.1 ~ "both at 0.1", 
+             (beer_prob > 0.5 | is_se) ~ "BEER only", 
+             beer_prob <= 0.5 & bh_pvalues < 0.05 ~ "edgeR only", 
+             beer_prob <= 0.5 & bh_pvalues < 0.1 ~ "edgeR only, 0.1",
+             TRUE ~ "not enriched in both"))
+
+# Figure: simulation_enrichments_e.png ------------
+sim_tidy_001 %>% 
+    filter(beads != "beads") %>%
+    mutate(point_color = ifelse(true_Z == 1, edgeR_vs_Bayes, 
+                                "not highlighted")) %>%
+    arrange(desc(point_color)) %>%
+    ggplot(aes(x = log10(expected_rc + 1), y = log10(counts + 1), 
+               color = point_color, group = sample)) +
+    geom_point(size = 1, alpha = 0.75) +
+    geom_abline(aes(slope = 1, intercept = log10(true_c)),
+                data = true_c %>% filter(sample %in% 9:20), 
+                size = 0.25, color = "black") +
+    coord_fixed(xlim = c(0, 6), ylim = c(0, 6)) +
+    facet_wrap(sample ~., ncol = 4, 
+               labeller = labeller(sample = sample_names)) +
+    labs(title = "Enriched peptides",
+         x = "log10(expected read count + 1)",
+         y = "log10(observed read count + 1)",
+         color = "predicted enrichment") +
+    scale_color_manual(values = color_vector,
+                       breaks = c("both", "both at 0.1", "BEER only",
+                                  "not enriched in both"), 
+                       labels = c("enriched in BEER and edgeR (FDR 0.05)", 
+                                  "enriched in BEER and edgeR (FDR 0.10)", 
+                                  "enriched in BEER only", 
+                                  "not enriched in BEER and not enriched in edgeR")) +
+    theme_bw() +
+    guides(color = guide_legend(ncol = 1)) +
+    theme(legend.position = "bottom")
+```
+
+### Figure S17
+False positives by BEER with edgeR estimated parameters and edgeR using data from one simulation. Each point represents a peptide. Enriched peptides are shown in light grey while non-enriched peptides are colored by which method identified each peptide as enriched. Peptides with posterior probability $\geq$ 0.5 were identified as enriched. For edgeR, we used the Benjamini-Hochberg correction to control the false discovery rate (FDR) at 0.05 and 0.1.
+
+```{r figure_simulation_enrichments_ne, fig.width = 9, fig.height = 10}
+sim_tidy_001 %>% 
+    filter(beads != "beads") %>%
+    mutate(point_color = ifelse(true_Z == 0, edgeR_vs_Bayes,
+                                "not highlighted")) %>%
+    arrange(desc(point_color)) %>%
+    ggplot(aes(x = log10(expected_rc + 1), y = log10(counts + 1), 
+               color = point_color, group = sample)) +
+    geom_point(size = 1) +
+    geom_abline(aes(slope = 1, intercept = log10(true_c)),
+                data = true_c %>% filter(sample %in% 9:20), 
+                size = 0.25, color = "black") +
+    coord_fixed(xlim = c(0, 6), ylim = c(0, 6)) +
+    facet_wrap(sample ~., ncol = 4, 
+               labeller = labeller(sample = sample_names)) +
+    labs(title = "Non-enriched peptides",
+         x = "log10(expected read count + 1)",
+         y = "log10(observed read count + 1)",
+         color = "predicted enrichment") +
+    scale_color_manual(values = color_vector,
+                       breaks = c("both", "both at 0.1", "BEER only",
+                                  "not enriched in both"), 
+                       labels = c("enriched in BEER and edgeR (FDR 0.05)", 
+                                  "enriched in BEER and edgeR (FDR 0.10)", 
+                                  "enriched in BEER only", 
+                                  "not enriched in BEER and not enriched in edgeR")) +
+    theme_bw() +
+    guides(color = guide_legend(ncol = 1)) +
+    theme(legend.position = "bottom")
+```
+
+
 ## Tables
 
 ### Table S1
