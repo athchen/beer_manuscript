@@ -28,4 +28,11 @@ This webpage details all analyses and methods used to produce the work presented
  
 #### HIV Elite Controllers
 
+* [Figure 3](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_3)
+* [Figure S9](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S9)
+* [Figure S10](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S10)
+* [Figure S11](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S11)
+* [Figure S12](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S12)
+* [Table S3](https://athchen.github.io/beer_manuscript/hiv_ec.html#Table_S3)
+
 #### CoronaScan Samples
