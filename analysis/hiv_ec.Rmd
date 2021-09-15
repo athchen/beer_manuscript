@@ -24,6 +24,8 @@ The HIV EC data consists of read counts for 3394 HIV peptides in the VirScan lib
 
 ```{r load_hiv, message = FALSE}
 hiv <- readRDS(here::here("data_raw", "hiv.rds"))
+
+sampleInfo(hiv)
 ```
 
 ## Running BEER and edgeR
@@ -396,6 +398,7 @@ hiv_tidy %>%
     pivot_wider(names_from = "param", values_from = "value") %>%
     arrange(desc(subtype_a)) %>%
     ungroup() %>%
+    mutate(across(contains("proportion"), ~ round(.x, 3))) %>%
     select(-subtype_a, -total_peps) %>%
     kbl(col.names = c("concordance", rep(c("n", "p"), times = 2))) %>%
     kable_styling(

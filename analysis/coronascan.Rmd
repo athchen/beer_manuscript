@@ -5,6 +5,13 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r knitr_setup, include = FALSE, echo = FALSE}
+knitr::opts_chunk$set(
+    fig.align = 'center', 
+    out.width = "100%"
+)
+```
+
 ## Introduction
 
 The CoronaScan PhIP-seq antigen library consists of 3466 unique peptides tiling proteins belonging to various coronaviruses, including SARS-CoV2, viruses associated with the common cold, and bat coronaviruses. Each peptide is present in duplicate, resulting in a total of 6932 peptides in the library.
@@ -12,6 +19,9 @@ The CoronaScan PhIP-seq antigen library consists of 3466 unique peptides tiling 
 This data set consists of eight beads-only samples and ten serum samples all run on the same plate. Of the ten serum samples, six samples are from individuals who participated in a vaccine research study prior to the discovery of SARS-CoV2. The remaining four samples are serum samples from various time points from one individual who was infected with SARS-CoV2. These samples were also tested for SARS-CoV2 antibodies.
 
 ```{r setup_packages, message = FALSE, code = readLines("../R/load_packages.R")}
+```
+
+```{r setup_helperfunc, message = FALSE, code = readLines("../R/helper_functions.R")}
 ```
 
 ```{r load_data}
@@ -37,6 +47,277 @@ cs_out <- brew(cs_out, assay.names = beer_assays, beadsRR = TRUE,
                 parallel = "multisession")
 ```
 
-### Protein-specific predictions
+```{r load_results, include = FALSE}
+# The above code takes a while to run, so we load the results in here. 
+cs_out <- readRDS(here("data_processed", "coronascan_results.rds"))
+```
 
-### Peptide replicates
+For plotting convenience, we convert the PhIPData object to a tidy dataframe. 
+
+```{r tidy_results}
+# Convert to tidy format and add hits for each approach
+# Order samples by BEADS, VRC, then days since infection
+cs_tidy <- as(cs_out, "DataFrame") %>%
+    as_tibble() %>%
+    group_by(sample) %>%
+    mutate(is_se = ifelse(sample != "beads" & is.na(beer_prob), TRUE, FALSE), 
+           sample = factor(sample, levels = colnames(cs)[c(1:14, 16, 15, 18, 17)]),
+           beer_hits = ifelse(beer_prob > 0.5 | is_se, 1, 0), 
+           edgeR_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
+           edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0)) %>%
+    ungroup()
+```
+
+## Figures
+
+### Figure S13
+
+MA plots for the proportion of enriched peptides by protein for six pre-pandemic samples and four samples from one individual infected with SARS-CoV2. Samples from this individual were collected at various days since symptom onset (labels D10-D13) and were additionally tested for SARSCoV2 antibodies using (Ben) Ab test. Antibody test results (positive or negative) are indicated by Ab+ or Ab-, respectively. Points represent individual proteins; point colors indicate virus types; and point diameters indicate the number of peptides tiling the respective proteins. In the CoronaScan library, peptides are present in duplicate, so the number of peptides is double the number of unique peptides.
+
+```{r figure_coronascan_protein, fig.width = 10.7, fig.height = 7}
+# Color palette
+cs_species <- unique(cs_tidy$organism)
+grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(cs_species) - 1))))
+# Make `grey_palette` is of the correct length. Not sure why this has to be run twice
+grey_palette <- if(length(grey_palette) < (length(cs_species) - 1)){
+    palette(gray(seq(0.1, 0.8, length.out = (length(cs_species) - 1))))
+} else grey_palette
+num_sarscov2 <- grep("SARS-CoV2", cs_species)
+cs_order <- c(cs_species[num_sarscov2], cs_species[-num_sarscov2])
+
+# Facet labels
+facet_labels <- case_when(
+    sampleInfo(cs)$group == "beads" ~ colnames(cs), 
+    sampleInfo(cs)$group == "vrc" ~ 
+        paste0("VRC ", gsub("CS ", "", colnames(cs))), 
+    TRUE ~ paste0("SARS-CoV2, D", sampleInfo(cs)$days_since_infection, 
+                  " Ab", ifelse(sampleInfo(cs)$ab_test == "pos", "+", "-")))
+names(facet_labels) <- colnames(cs)
+
+cs_tidy %>%
+    filter(group != "beads") %>%
+    select(sample, peptide, organism, protein_name, beer_hits, edgeR_hits) %>%
+    group_by(sample, organism, protein_name) %>%
+    summarize(prot_prop_Bayes = mean(beer_hits),
+              prot_prop_edgeR = mean(edgeR_hits),
+              num_peptides = n(), .groups = "drop") %>%
+    mutate(organism = factor(organism, levels = cs_order)) %>%
+    arrange(desc(organism), desc(num_peptides)) %>%
+    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR),
+               y = prot_prop_Bayes - prot_prop_edgeR,
+               color = organism,
+               size = num_peptides/2)) +
+    facet_wrap(sample ~., ncol = 5, 
+               labeller = labeller(sample = facet_labels)) +
+    geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
+    geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
+    geom_point(alpha = 0.8) +
+    labs(x = TeX("$\\frac{1}{2}$ (BEER + edgeR)"),
+         y = "BEER - edgeR",
+         color = "Organism",
+         size = "# peptides") +
+    scale_x_continuous(trans = "mysqrt", 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_color_manual(values = c(grey_palette[1:(num_sarscov2 - 1)], 
+                                  "firebrick2", 
+                                  grey_palette[-(1:(num_sarscov2 - 1))]), 
+                       breaks = cs_species) +
+    theme_bw() +
+    theme(aspect.ratio = 1, 
+          legend.title = element_text(size = 10), 
+          legend.text = element_text(size = 8), 
+          legend.key.size = unit(0.75, "lines"), 
+          legend.position = "bottom") +
+    guides(color = guide_legend(ncol = 1, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))
+```
+
+### Figure S14
+
+Concordance of paired peptides in CS sample 9. For each unique peptide sequence, the proportion of reads pulled for peptide 1 with the same sequence is plotted against the proportion of reads pulled for peptide 2 of the same sequence (top left). For BEER with edgeR estimates peptides are ranked by decreasing posterior probability of enrichment, with ties broken by the estimated fold-change. For edgeR, peptides are ranked by increasing p-values, with ties again broken by estimated fold-changes. The concordance between the rankings for the top $k$ ranks (x-axis) between all peptide 1’s and all peptide 2’s for each method is shown in the top right panel.
+
+```{r figure_coronascan_replicates, fig.width = 8, fig.height = 4}
+# Define sample to look at
+cs_sample <- "CS 1"
+
+# Plot for proportion of reads
+prop_reads <- cs_tidy %>% 
+    filter(sample == cs_sample) %>%
+    mutate(prop_reads = counts/n) %>%
+    select(pair_id, pair_num, prop_reads) %>%
+    pivot_wider(names_from = "pair_num", 
+                values_from = "prop_reads") %>%
+    dplyr::rename(pair_1 = `1`, pair_2 = `2`) %>%
+    ggplot(aes(x = log10(pair_1), 
+               y = log10(pair_2))) + 
+    geom_point(size = 1) +
+    geom_abline(aes(intercept = 0, slope = 1)) + 
+    labs(title = "Proportion of reads pulled", 
+         x = "peptide pair #1, log10(proportion)", 
+         y = "peptide pair #2, log10(proportion)") +
+    scale_x_continuous(breaks = seq(-5, -2, by = 1),
+                       minor_breaks = seq(-5, -2, by = 0.5), 
+                       labels = TeX(paste0("$10^{", -5:-2, "}$"))) +
+    scale_y_continuous(breaks = seq(-5, -2, by = 1),
+                       minor_breaks = seq(-5, -2, by = 0.5), 
+                       labels = TeX(paste0("$10^{", -5:-2, "}$"))) +
+    theme_bw() +
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10))
+
+# CAT curve for BEER posterior probabilities
+#   For a fair comparison, set super-enriched peptides in the replicate sample
+#   to have a rank of 1 as all of these peptides are identified as enriched
+#   by BEER and edgeR. 
+se_peps <- cs_tidy %>% 
+    filter(sample == cs_sample & is_se) %>%
+    group_by(pair_id) %>%
+    filter(row_number() == 1) %>%
+    ungroup() %>%
+    mutate(rank = 1:n())
+
+#   Ties are broken by the posterior marginal estimates of phi
+beer_ranks <- cs_tidy %>%
+    filter(sample == cs_sample) %>%
+    group_by(pair_num) %>%
+    arrange(desc(beer_prob), desc(beer_logfc), pair_id, .by_group = TRUE) %>%
+    mutate(rank_se = nrow(se_peps) + cumsum(!pair_id %in% se_peps$pair_id)) %>%
+    left_join(se_peps %>% select(pair_id, rank), by = c("pair_id")) %>%
+    mutate(rank = ifelse(pair_id %in% se_peps$pair_id, rank, rank_se)) %>%
+    select(pair_id, pair_num, rank) %>%
+    pivot_wider(names_from = "pair_num", 
+                values_from = "pair_id") %>%
+    dplyr::rename(pair_1 = `1`, pair_2 = `2`) %>%
+    arrange(rank)
+
+beer_conc <- sapply(1:nrow(beer_ranks), function(rank){
+    length(intersect(beer_ranks$pair_1[beer_ranks$rank <= rank], 
+                     beer_ranks$pair_2[beer_ranks$rank <= rank]))/rank
+})
+
+# CAT curve for edgeR p-values
+edgeR_ranks <- cs_tidy %>%
+    filter(sample == cs_sample) %>%
+    group_by(pair_num) %>%
+    arrange(edgeR_bh, desc(edgeR_logfc), pair_id, .by_group = TRUE) %>%
+    mutate(rank_se = nrow(se_peps) + cumsum(!pair_id %in% se_peps$pair_id)) %>%
+    left_join(se_peps %>% select(pair_id, rank), by = c("pair_id")) %>%
+    mutate(rank = ifelse(pair_id %in% se_peps$pair_id, rank, rank_se)) %>%
+    select(pair_id, pair_num, rank) %>%
+    pivot_wider(names_from = "pair_num", 
+                values_from = "pair_id") %>%
+    dplyr::rename(pair_1 = `1`, pair_2 = `2`) %>%
+    arrange(rank)
+
+edgeR_conc <- sapply(1:nrow(edgeR_ranks), function(rank){
+    length(intersect(edgeR_ranks$pair_1[edgeR_ranks$rank <= rank], 
+                     edgeR_ranks$pair_2[edgeR_ranks$rank <= rank]))/rank
+})
+
+cat_plot <- data.frame(rank = 1:length(beer_conc), 
+                       BEER = beer_conc, 
+                       edgeR = edgeR_conc) %>%
+    pivot_longer(cols = c("BEER", "edgeR"), 
+                 names_to = "approach", 
+                 values_to = "concordance") %>%
+    ggplot(aes(x = rank, y = concordance, color = approach)) +
+    geom_line() +
+    labs(title = "Concordance at the top", 
+         y = "Concordance", 
+         x = "Rank") +
+    coord_cartesian(ylim = c(0, 1), xlim = c(0, 100)) +
+    scale_x_continuous(breaks = seq(0, 100, by = 10)) +
+    scale_y_continuous(breaks = seq(0, 1, by = 0.2)) +
+    scale_color_manual(values = c("red", "black")) +
+    theme_bw() + 
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10),
+          legend.background = element_rect(color = "black", size = 0.3), 
+          legend.position = c(0.8, 0.2))
+
+ggarrange(prop_reads, cat_plot, nrow = 1, ncol = 2)
+```
+
+### Figure S15
+
+Coronascan peptide pairs by rank. For each set of unique peptides, peptides are sorted in decreasing order by posterior probability and -log10 edgeR p-values.
+
+```{r figure_coronascan_ranked_prob, fig.width = 8, fig.height = 4}
+post_prob <- cs_tidy %>%
+    filter(sample == cs_sample) %>%
+    select(pair_num, beer_prob) %>%
+    group_by(pair_num) %>%
+    arrange(desc(beer_prob), .by_group = TRUE) %>%
+    mutate(rank = 1:n()) %>%
+    ggplot(aes(x = rank, y = beer_prob, group = pair_num, color = pair_num)) + 
+    geom_point(size = 1) +
+    geom_line() +
+    coord_cartesian(xlim = c(0, 100), ylim = c(0, 1)) +
+    labs(title = "BEER", 
+         x = "rank", 
+         y = "posterior probabilities", 
+         color = "peptide") +
+    scale_color_manual(values = c("red", "black")) +
+    theme_bw() + 
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10), 
+          legend.background = element_rect(color = "black", size = 0.3), 
+          legend.position = "none")
+
+p_value <- cs_tidy %>%
+    filter(sample == cs_sample) %>%
+    select(pair_num, edgeR_prob) %>%
+    group_by(pair_num) %>%
+    arrange(desc(edgeR_prob), .by_group = TRUE) %>%
+    mutate(rank = 1:n()) %>%
+    ggplot(aes(x = rank, y = edgeR_prob, group = pair_num, color = pair_num)) + 
+    geom_point(size = 1) +
+    geom_line() +
+    labs(title = "edgeR", 
+         x = "rank", 
+         y = "-log10(p-values)", 
+         color = "peptide") +
+    coord_cartesian(xlim = c(0, 100), ylim = c(0, 6)) +
+    scale_y_continuous(oob = scales::oob_censor_any) +
+    scale_color_manual(values = c("red", "black")) +
+    theme_bw() +
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10), 
+          legend.background = element_rect(color = "black", size = 0.3), 
+          legend.position = c(0.825, 0.825))
+
+ggarrange(post_prob, p_value, nrow = 1)
+```
+
+## Tables
+
+### Table S4
+
+Concordance of enrichment calls between peptide pairs for all CS samples. Each sample has 3366 unique peptide pairs. n: number of pairs with concordant enrichment calls; p: proportion of pairs with concordant enrichment calls.
+
+```{r}
+cs_tidy %>%
+    select(sample, pair_id, pair_num, beer_hits, edgeR_hits) %>%
+    pivot_longer(cols = contains("hits"), 
+                 names_to = "method", 
+                 values_to = "hits", 
+                 names_pattern = "([A-Za-z]*)_hits") %>%
+    pivot_wider(names_from = pair_num, values_from = hits) %>%
+    mutate(concordant = ifelse(`1` == `2`, 1, 0))%>%
+    group_by(sample, method) %>%
+    summarize(num = sum(concordant), 
+              total_pep = n(), 
+              prop = num/total_pep, .groups = "drop") %>%
+    pivot_longer(cols = c("num", "prop"), 
+                 names_to = "param", 
+                 values_to = "value") %>%
+    unite("method_param", method, param) %>%
+    pivot_wider(names_from = "method_param", values_from = "value") %>%
+    select(-total_pep) %>%
+    mutate(across(contains(c("beer", "edgeR")), round, digits = 3)) %>%
+    kbl(col.names = c("sample", rep(c("n", "p"), times = 2))) %>%
+    kable_styling(
+        bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+    add_header_above(c(" " = 1, "BEER" = 2, "edgeR" = 2))
+```

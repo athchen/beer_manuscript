@@ -36,3 +36,8 @@ This webpage details all analyses and methods used to produce the work presented
 * [Table S3](https://athchen.github.io/beer_manuscript/hiv_ec.html#Table_S3)
 
 #### CoronaScan Samples
+
+* [Figure S13](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S13)
+* [Figure S14](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S14)
+* [Figure S15](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S15)
+* [Table S4](https://athchen.github.io/beer_manuscript/coronascan.html#Table_S4)
