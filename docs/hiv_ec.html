@@ -9,11 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Athena Chen" />
 
-<meta name="date" content="2021-09-13" />
 
-<title>hiv_ec</title>
+<title>HIV Elite Controllers</title>
 
 <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -38,6 +36,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 <link rel="apple-touch-icon" sizes="180x180" href="site_libs/images/beer_icons/apple-touch-icon.png">
@@ -387,9 +387,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">hiv_ec</h1>
-<h4 class="author">Athena Chen</h4>
-<h4 class="date">2021-09-13</h4>
+<h1 class="title toc-ignore">HIV Elite Controllers</h1>
 
 </div>
 
@@ -414,7 +412,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-09-14
+<strong>Last updated:</strong> 2021-09-15
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -505,16 +503,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreea0d5332c80f7f5cb8fdbae69c63e8bffdcf50ffdtargetblanka0d5332a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/a0d5332c80f7f5cb8fdbae69c63e8bffdcf50ffd" target="_blank">a0d5332</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree26ee6f3e4b79307b93a1105441d687c42aa513betargetblank26ee6f3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/26ee6f3e4b79307b93a1105441d687c42aa513be" target="_blank">26ee6f3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreea0d5332c80f7f5cb8fdbae69c63e8bffdcf50ffdtargetblanka0d5332a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree26ee6f3e4b79307b93a1105441d687c42aa513betargetblank26ee6f3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/a0d5332c80f7f5cb8fdbae69c63e8bffdcf50ffd" target="_blank">a0d5332</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/26ee6f3e4b79307b93a1105441d687c42aa513be" target="_blank">26ee6f3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -533,6 +531,10 @@ Ignored files:
     Ignored:    data_processed/simulation_4beads_edgeR/.DS_Store
     Ignored:    data_processed/simulation_curves.rda
     Ignored:    figures/.DS_Store
+
+Unstaged changes:
+    Modified:   R/figure_hiv.R
+    Modified:   README.Rmd
 
 </code></pre>
 <p>
@@ -571,6 +573,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/26ee6f3e4b79307b93a1105441d687c42aa513be/analysis/hiv_ec.Rmd" target="_blank">26ee6f3</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2021-09-15
+</td>
+<td>
+wflow_publish(list.files(“analysis”, pattern = “.Rmd”, full.names = TRUE))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/athchen/beer_manuscript/e30784bce4b9b6d5be2382063948b559b4f78f69/docs/hiv_ec.html" target="_blank">e30784b</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2021-09-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -646,8 +682,679 @@ Added simulation output
 </div>
 </div>
 </div>
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
+<div id="hiv-elite-controller-ec-data" class="section level2">
+<h2>HIV Elite Controller (EC) Data</h2>
+<p>The HIV EC data consists of read counts for 3394 HIV peptides in the VirScan library for six beads-only samples and ten serum samples run on the same plate. Of these ten serum samples, eight were from individuals infected with HIV subtype B. The remaining two serum samples are identical samples from an individual infected with HIV subtype A.</p>
+<pre class="r"><code>#&#39; Code to load required packages to reproduce the results and figures in 
+#&#39; the manuscript. 
+required_packages &lt;- c(&#39;plyr&#39;, &#39;tidyverse&#39;, &#39;here&#39;, &#39;ggpubr&#39;, &#39;gridExtra&#39;, 
+                       &#39;latex2exp&#39;, &#39;kableExtra&#39;, &#39;RColorBrewer&#39;, &#39;BiocManager&#39;)
+for (pkg in required_packages) {
+    if (!(pkg %in% rownames(installed.packages()))) {
+        install.packages(pkg)
+    }
+    library(pkg, character.only = TRUE)
+}
+
+bioc_packages &lt;- c(&quot;beer&quot;)
+for(pkg in bioc_packages){
+    if(!(pkg %in% rownames(installed.packages()))) {
+        BiocManager::install(pkg)
+    }
+    library(pkg, character.only = TRUE)
+}
+
+rm(list = c(&quot;required_packages&quot;, &quot;bioc_packages&quot;, &quot;pkg&quot;))
+
+#&#39; Define global variables for plotting
+hot_cold_cols &lt;- c(&quot;navy&quot;, &quot;blue&quot;, &quot;deepskyblue&quot;, &quot;cyan&quot;, &quot;lightcyan&quot;,
+                   &quot;yellow&quot;, &quot;orange&quot;, &quot;red&quot;)</code></pre>
+<pre class="r"><code>#&#39; helper_functions.R 
+#&#39; 
+#&#39; functions used to help process and analyze output from BEER simulations
+
+#&#39; integrate_vector()
+#&#39; 
+#&#39; Function to perform trapezoidal approximation given two vectors. 
+#&#39; 
+#&#39; @param x numeric vector of x values
+#&#39; @param y numeric vector with the same length as x
+#&#39; 
+#&#39; @return numeric value of the trapezoidal approximation 
+integrate_vector &lt;- function(x, y){
+    
+    if (length(y) != length(x)) {
+        stop(&quot;The length of the vectors must be equal.&quot;)
+    }
+    
+    n_points &lt;- length(y)
+    sorted_ind &lt;- sort(x, index.return = TRUE)$ix
+    sorted_x &lt;- x[sorted_ind]
+    sorted_y &lt;- y[sorted_ind]
+    
+    # trapezoidal rule
+    sum(0.5 * (sorted_y[-1] + sorted_y[-n_points]) * 
+            (sorted_x[-1] - sorted_x[-n_points]))
+}
+
+#&#39; get_roc()
+#&#39; 
+#&#39; Function to calculate the ppv, sens, and spec for various
+#&#39; cutoffs between 0 and 1. 
+#&#39; 
+#&#39; @param data data frame  with columns `prop_enriched` for the threshold and 
+#&#39; `Z` for the true enrichment status, and optional column `extra_info`
+#&#39; @param min_cutoff minimum cutoff, default to 0
+#&#39; @param max_cutoff maximum cutoff, default ot 1 - 1e-6
+#&#39; @param extra_info boolean indicating whether extra information should be used
+#&#39; in the classification at each cutoff. If `TRUE`, then the column `extra_info`
+#&#39; must be present in the data frame. 
+#&#39; 
+#&#39; @return data fram with columns `cutoff`, `ppv`, `sens`, and `spec`. 
+get_roc &lt;- function(data, min_cutoff = 0, max_cutoff = 1 - 1e-6, 
+                    extra_info = FALSE){
+    
+    cutoffs &lt;- seq(min_cutoff, max_cutoff, length.out = 1000)
+    
+    # Calculate ppv, sens, spec for each cutoff
+    ppv &lt;- sapply(cutoffs, function(x) {
+        if(extra_info){
+            predict &lt;- (data$prop_enriched &gt;= x &amp; data$extra_info)
+        } else {
+            predict &lt;- (data$prop_enriched &gt;= x)
+        }
+        sum((data$Z == 1) &amp; predict)/sum(predict)
+    })
+    
+    spec &lt;- sapply(cutoffs, function(x){
+        if(extra_info){
+            predict &lt;- (data$prop_enriched &gt;= x &amp; data$extra_info)
+        } else {
+            predict &lt;- (data$prop_enriched &gt;= x)
+        }
+        sum((data$Z == 0) &amp; !predict)/sum(data$Z == 0)
+    })
+    
+    sens &lt;- sapply(cutoffs, function(x){
+        if(extra_info){
+            predict &lt;- (data$prop_enriched &gt;= x &amp; data$extra_info)
+        } else {
+            predict &lt;- (data$prop_enriched &gt;= x)
+        }
+        sum((data$Z == 1) &amp; predict)/sum(data$Z == 1)
+    })
+    
+    # Get AUC for ROC
+    npoints &lt;- length(sens)
+    area_roc &lt;- integrate_vector(1-spec, sens)
+    
+    return(cutoffs = data.frame(cutoff = cutoffs,
+                                ppv = ppv,
+                                sens = sens,
+                                spec = spec, 
+                                area_roc = area_roc))
+}
+
+#&#39; get_legend()
+#&#39; 
+#&#39; Function given [here](https://stackoverflow.com/questions/12539348/ggplot-separate-legend-and-plot)
+#&#39; to extract the legend for plotting purposes. 
+#&#39; 
+#&#39; @param plot ggplot
+#&#39; @return ggplot legend
+get_legend &lt;- function(myggplot){
+    tmp &lt;- ggplot_gtable(ggplot_build(myggplot))
+    leg &lt;- which(sapply(tmp$grobs, function(x) x$name) == &quot;guide-box&quot;)
+    legend &lt;- tmp$grobs[[leg]]
+    return(legend)
+}
+
+#&#39; mysqrt_trans()
+#&#39; 
+#&#39; Function given [here](https://stackoverflow.com/questions/47944992/ggplot2-removes-zero-when-using-scale-x-sqrt)
+#&#39; to add zero to the plot after sqrt transforming the x-axis
+#&#39; 
+#&#39; @param plot ggplot
+#&#39; @return ggplot legend
+mysqrt_trans &lt;- function() {
+    scales::trans_new(&quot;mysqrt&quot;, 
+                      transform = base::sqrt,
+                      inverse = function(x) ifelse(x&lt;0, 0, x^2),
+                      domain = c(0, Inf))
+}
+
+#&#39; penriched_fit()
+#&#39; 
+#&#39; Function that returns a data frame with the point estimate, and 95\% 
+#&#39; confidence intervals. 
+#&#39; 
+#&#39; @param model logistic regression model
+#&#39; @param covariates data frame of covariates
+#&#39; @return data frame with columns for the covariate, point estimate, lower CI
+#&#39; and upper CI.
+penriched_fit &lt;- function(model, covariates){
+    
+    # Predict based on the model
+    prediction &lt;- predict(model, covariates, type = &quot;link&quot;, se.fit = TRUE)
+    pred_lower &lt;- prediction$fit - 1.96*prediction$se.fit
+    pred_upper &lt;- prediction$fit + 1.96*prediction$se.fit
+    
+    # Transform logit to probabilities
+    ppred &lt;- 1/(1 + exp(-prediction$fit))
+    plower &lt;- 1/(1 + exp(-pred_lower))
+    pupper &lt;- 1/(1 + exp(-pred_upper))
+    
+    # Return covariates with prediction + 95 CI added
+    bind_cols(covariates, 
+              data.frame(predict_p = ppred, 
+                         lower_ci = plower, 
+                         upper_ci = pupper))
+}</code></pre>
+<pre class="r"><code>hiv &lt;- readRDS(here::here(&quot;data_raw&quot;, &quot;hiv.rds&quot;))</code></pre>
+</div>
+<div id="running-beer-and-edger" class="section level2">
+<h2>Running BEER and edgeR</h2>
+<p>We can run BEER and edgeR using the following code. To estimate the false positive rate, we run each beads-only sample against the five other beads-only samples.</p>
+<pre class="r"><code>## Run edgeR with beadsRR
+hiv_out &lt;- edgeR(hiv, assay.names = c(&quot;edgeR_logfc&quot;, &quot;edgeR_prob&quot;), 
+                 parallel = &quot;multisession&quot;, beadsRR = TRUE)
+
+## Run beer with beadsRR
+beer_assays &lt;- c(phi = NULL, phi_Z = &quot;beer_logfc&quot;, Z = &quot;beer_prob&quot;, 
+                 c = &quot;sampleInfo&quot;, pi = &quot;sampleInfo&quot;)
+hiv_out &lt;- brew(hiv_out, assay.names = beer_assays, beadsRR = TRUE, 
+                parallel = &quot;multisession&quot;)</code></pre>
+<p>For plotting convenience, we convert the PhIPData object to a tidy dataframe.</p>
+<pre class="r"><code>hiv_tidy &lt;- as(hiv_out, &quot;DataFrame&quot;) %&gt;%
+    as_tibble() %&gt;%
+    group_by(sample) %&gt;%
+    mutate(is_se = ifelse(sample != &quot;beads&quot; &amp; is.na(beer_prob), TRUE, FALSE), 
+           sample = factor(sample, levels = colnames(hiv)),
+           beer_hits = ifelse(beer_prob &gt; 0.5 | is_se, 1, 0), 
+           edgeR_bh = p.adjust(10^(-edgeR_prob), method = &quot;BH&quot;), 
+           edgeR_hits = ifelse(edgeR_bh &lt; 0.05, 1, 0)) %&gt;%
+    ungroup()</code></pre>
+</div>
+<div id="figures" class="section level2">
+<h2>Figures</h2>
+<div id="figure-3" class="section level3">
+<h3>Figure 3</h3>
+<p>MA plots for the proportion of enriched peptides by protein, for eight elite controller samples. Points represent individual proteins, point colors indicate protein virus types, point diameters indicate the number of peptides tiling the respective proteins. All subjects shown here were infected with subtype B (red).</p>
+<pre class="r"><code># Color palette
+hiv_subtype &lt;- unique(hiv_tidy$taxon_species)
+grey_palette &lt;- palette(gray(seq(0.1, 0.8, length.out = (length(hiv_subtype) - 1))))
+# Make `grey_palette` is of the correct length. Not sure why this has to be run twice
+grey_palette &lt;- if(length(grey_palette) &lt; (length(hiv_subtype) - 1)){
+    palette(gray(seq(0.1, 0.8, length.out = (length(hiv_subtype) - 1))))
+} else grey_palette
+
+num_B &lt;- grep(&quot;HIV type 1 group M subtype B&quot;, hiv_subtype)
+subtype_order &lt;- c(hiv_subtype[num_B], hiv_subtype[-num_B])
+
+hiv_tidy %&gt;%
+    filter(group != &quot;beads&quot; &amp; !grepl(&quot;9&quot;, sample)) %&gt;%
+    select(sample, peptide, UniProt_acc, taxon_species,
+           beer_hits, edgeR_hits) %&gt;%
+    group_by(sample, UniProt_acc, taxon_species) %&gt;%
+    dplyr::summarize(prot_prop_Bayes = mean(beer_hits),
+              prot_prop_edgeR = mean(edgeR_hits),
+              num_peptides = n(), .groups = &quot;drop&quot;) %&gt;%
+    mutate(taxon_species = factor(taxon_species, subtype_order)) %&gt;%
+    arrange(desc(taxon_species), desc(num_peptides)) %&gt;%
+    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
+               y = prot_prop_Bayes - prot_prop_edgeR,
+               color = taxon_species,
+               size = num_peptides)) +
+    facet_wrap(sample ~., ncol = 4) +
+    geom_hline(aes(yintercept = 0), size = 0.5, color = &quot;grey50&quot;) +
+    geom_vline(aes(xintercept = 0), size = 0.5, color = &quot;grey50&quot;) +
+    geom_point(alpha = 0.8) +
+    labs(x = TeX(&quot;$\\frac{1}{2}$ (BEER + edgeR)&quot;),
+         y = &quot;BEER - edgeR&quot;,
+         color = &quot;HIV strain&quot;,
+         size = &quot;# peptides&quot;) +
+    scale_x_continuous(trans = &quot;mysqrt&quot;, 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
+                       limits = c(-0.25, 1)) +
+    scale_color_manual(values = c( &quot;firebrick2&quot;, grey_palette),
+                       breaks = subtype_order) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 10), 
+          legend.text = element_text(size = 8), 
+          legend.key.size = unit(0.75, &quot;lines&quot;), 
+          legend.position = &quot;bottom&quot;) +
+    guides(color = guide_legend(ncol = 2, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))</code></pre>
+<p><img src="figure/hiv_ec.Rmd/figure_hiv_protein-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-s9" class="section level3">
+<h3>Figure S9</h3>
+<p>Proportion of enriched peptides by protein without HIV subtype B. Each point represents a protein. The color of the point indicates which virus the protein belongs to, and the size of the point corresponds to the number of peptides tiling the protein.</p>
+<pre class="r"><code>hiv_tidy %&gt;%
+    filter(group != &quot;beads&quot; &amp; !grepl(&quot;9&quot;, sample) &amp;
+               !grepl(&quot;HIV type 1 group M subtype B&quot;, taxon_species)) %&gt;%
+    select(sample, peptide, UniProt_acc, taxon_species,
+           beer_hits, edgeR_hits) %&gt;%
+    group_by(sample, UniProt_acc, taxon_species) %&gt;%
+    summarize(prot_prop_Bayes = mean(beer_hits),
+              prot_prop_edgeR = mean(edgeR_hits),
+              num_peptides = n(), .groups = &quot;drop&quot;) %&gt;%
+    mutate(taxon_species = factor(taxon_species, subtype_order)) %&gt;%
+    arrange(desc(taxon_species), desc(num_peptides)) %&gt;%
+    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
+               y = prot_prop_Bayes - prot_prop_edgeR,
+               color = taxon_species,
+               size = num_peptides)) +
+    facet_wrap(sample ~., ncol = 4) +
+    geom_hline(aes(yintercept = 0), size = 0.5, color = &quot;grey50&quot;) +
+    geom_vline(aes(xintercept = 0), size = 0.5, color = &quot;grey50&quot;) +
+    geom_point(alpha = 0.8) +
+    labs(x = TeX(&quot;$\\frac{1}{2}$ (BEER + edgeR)&quot;),
+         y = &quot;BEER - edgeR&quot;,
+         color = &quot;HIV strain&quot;,
+         size = &quot;# peptides&quot;) +
+    scale_x_continuous(trans = &quot;mysqrt&quot;, 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
+                       limits = c(-0.25, 1)) +
+    scale_color_manual(values = c( &quot;firebrick2&quot;, grey_palette),
+                       breaks = subtype_order) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 10), 
+          legend.text = element_text(size = 8), 
+          legend.key.size = unit(0.75, &quot;lines&quot;), 
+          legend.position = &quot;bottom&quot;) +
+    guides(color = guide_legend(ncol = 2, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))</code></pre>
+<p><img src="figure/hiv_ec.Rmd/figure_hiv_protein_noB-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-s10" class="section level3">
+<h3>Figure S10</h3>
+<p><strong>Left:</strong> Proportion of reads pulled for 3,395 HIV peptides for two technical replicates. <strong>Right:</strong> Concordance of HIV technical replicates, shown as proportion of peptides among the top ranked peptides in both replicates. For BEER, peptides are ranked by decreasing posterior probability of enrichment. For edgeR, peptides are ranked by increasing p-values. For both methods, ties of posterior probabilities and p-value (e.g., 0 and 1) were broken by the estimated fold-change. The top eight peptides from BEER are all super-enriched and treated exchangeably as no fold-change estimates are returned.</p>
+<pre class="r"><code># Plot for proportion of reads
+prop_reads &lt;- hiv_tidy %&gt;%
+    mutate(prop_reads = counts/n) %&gt;%
+    filter(sample %in% c(&quot;HIV EC 9&quot;, &quot;replicate of HIV EC 9&quot;)) %&gt;%
+    select(sample, peptide, prop_reads) %&gt;%
+    pivot_wider(names_from = &quot;sample&quot;, 
+                values_from = &quot;prop_reads&quot;) %&gt;%
+    dplyr::rename(sample_1 = `HIV EC 9`, sample_2 = `replicate of HIV EC 9`) %&gt;%
+    ggplot(aes(x = log10(sample_1), y = log10(sample_2))) + 
+    geom_abline(aes(intercept = 0, slope = 1)) +
+    geom_point() +
+    labs(title = &quot;Proportion of reads pulled&quot;, 
+         x = &quot;sample, log10(proportion)&quot;, 
+         y = &quot;replicate, log10(proportion)&quot;) +
+    scale_x_continuous(breaks = seq(-5, -1, by = 1),
+                       minor_breaks = seq(-5, -1, by = 0.5), 
+                       labels = TeX(paste0(&quot;$10^{&quot;, -5:-1, &quot;}$&quot;))) +
+    scale_y_continuous(breaks = seq(-5, -1, by = 1),
+                       minor_breaks = seq(-5, -1, by = 0.5), 
+                       labels = TeX(paste0(&quot;$10^{&quot;, -5:-1, &quot;}$&quot;))) +
+    theme_bw() +
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10))
+
+# CAT curve for BEER posterior probabilities
+#   For a fair comparison, set super-enriched peptides in the replicate sample
+#   to have a rank of 1 as all of these peptides are identified as enriched
+#   by BEER and edgeR. 
+se_peps &lt;- hiv_tidy %&gt;% 
+    filter(is_se &amp; grepl(&quot;9&quot;, sample)) %&gt;%
+    group_by(peptide) %&gt;%
+    filter(row_number() == 1) %&gt;%
+    ungroup() %&gt;%
+    mutate(rank = 1:n())
+
+#   Ties are broken by the posterior marginal estimates of phi
+beer_ranks &lt;- hiv_tidy %&gt;%
+    filter(sample %in% c(&quot;HIV EC 9&quot;, &quot;replicate of HIV EC 9&quot;)) %&gt;%
+    group_by(sample) %&gt;%
+    arrange(desc(beer_prob), desc(beer_logfc), peptide, .by_group = TRUE) %&gt;%
+    mutate(rank_se = nrow(se_peps) + cumsum(!peptide %in% se_peps$peptide)) %&gt;%
+    left_join(se_peps %&gt;% select(peptide, rank), by = c(&quot;peptide&quot;)) %&gt;%
+    mutate(rank = ifelse(peptide %in% se_peps$peptide, rank, rank_se)) %&gt;%
+    ungroup() %&gt;%
+    select(sample, peptide, rank) %&gt;%
+    pivot_wider(names_from = &quot;sample&quot;, 
+                values_from = &quot;peptide&quot;) %&gt;%
+    dplyr::rename(sample_1 = `HIV EC 9`, sample_2 = `replicate of HIV EC 9`) %&gt;%
+    arrange(rank)
+
+beer_conc &lt;- sapply(1:nrow(beer_ranks), function(rank){
+    length(intersect(beer_ranks$sample_1[beer_ranks$rank &lt;= rank], 
+                     beer_ranks$sample_2[beer_ranks$rank &lt;= rank]))/rank
+})
+
+# CAT curve for edgeR p-values
+edgeR_ranks &lt;- hiv_tidy %&gt;%
+    filter(sample %in% c(&quot;HIV EC 9&quot;, &quot;replicate of HIV EC 9&quot;)) %&gt;%
+    group_by(sample) %&gt;%
+    arrange(edgeR_bh, desc(edgeR_logfc), .by_group = TRUE) %&gt;%
+    mutate(rank_se = 8 + cumsum(!peptide %in% se_peps$peptide)) %&gt;%
+    left_join(se_peps %&gt;% select(peptide, rank), by = c(&quot;peptide&quot;)) %&gt;%
+    mutate(rank = ifelse(peptide %in% se_peps$peptide, rank, rank_se)) %&gt;%
+    ungroup() %&gt;%
+    select(sample, peptide, rank) %&gt;%
+    pivot_wider(names_from = &quot;sample&quot;, 
+                values_from = &quot;peptide&quot;) %&gt;%
+    dplyr::rename(sample_1 = `HIV EC 9`, sample_2 = `replicate of HIV EC 9`) %&gt;%
+    arrange(rank)
+
+edgeR_conc &lt;- sapply(1:nrow(edgeR_ranks), function(rank){
+    length(intersect(edgeR_ranks$sample_1[edgeR_ranks$rank &lt;= rank], 
+                     edgeR_ranks$sample_2[edgeR_ranks$rank &lt;= rank]))/rank
+})
+
+cat_plot &lt;- data.frame(rank = 1:length(beer_conc), 
+                       BEER = beer_conc, 
+                       edgeR = edgeR_conc) %&gt;%
+    pivot_longer(cols = c(&quot;BEER&quot;, &quot;edgeR&quot;), 
+                 names_to = &quot;approach&quot;, 
+                 values_to = &quot;concordance&quot;) %&gt;%
+    ggplot(aes(x = rank, y = concordance, color = approach)) +
+    geom_line() +
+    labs(title = &quot;Concordance at the top&quot;, 
+         y = &quot;concordance&quot;, 
+         x = &quot;rank&quot;) +
+    coord_cartesian(ylim = c(0, 1), xlim = c(0, 200)) +
+    scale_x_continuous(breaks = seq(0, 200, by = 25)) +
+    scale_y_continuous(breaks = seq(0, 1, by = 0.2)) +
+    scale_color_manual(values = c(&quot;red&quot;, &quot;black&quot;)) +
+    theme_bw() + 
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10),
+          legend.background = element_rect(color = &quot;black&quot;, size = 0.3), 
+          legend.position = c(0.8, 0.2))
+
+ggarrange(prop_reads, cat_plot, align = &quot;hv&quot;, 
+          nrow = 1, ncol = 2)</code></pre>
+<p><img src="figure/hiv_ec.Rmd/figure_hiv_replicates-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-s11" class="section level3">
+<h3>Figure S11</h3>
+<p>HIV replicate posterior probabilities by rank. For each of the technical replicates, peptides are sorted in decreasing order by posterior probability and -log10(edgeR p-values).</p>
+<pre class="r"><code>post_prob &lt;- hiv_tidy %&gt;%
+    filter(sample %in% c(&quot;HIV EC 9&quot;, &quot;replicate of HIV EC 9&quot;)) %&gt;%
+    select(sample, peptide, beer_prob) %&gt;%
+    group_by(sample) %&gt;%
+    arrange(desc(beer_prob), .by_group = TRUE) %&gt;%
+    mutate(rank = 1:n()) %&gt;%
+    ggplot(aes(x = rank, y = beer_prob, group = sample, color = sample)) + 
+    geom_point(size = 1) +
+    geom_line() +
+    coord_cartesian(xlim = c(0, 400), ylim = c(0, 1)) +
+    labs(title = &quot;BEER&quot;, 
+         x = &quot;rank&quot;, 
+         y = &quot;posterior probabilities&quot;, 
+         color = &quot;sample&quot;) +
+    scale_color_manual(values = c(&quot;red&quot;, &quot;black&quot;)) +
+    theme_bw() + 
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10), 
+          legend.background = element_rect(color = &quot;black&quot;, size = 0.3), 
+          legend.position = &quot;none&quot;)
+
+p_values &lt;- hiv_tidy %&gt;%
+    filter(sample %in% c(&quot;HIV EC 9&quot;, &quot;replicate of HIV EC 9&quot;)) %&gt;%
+    select(sample, peptide, edgeR_prob) %&gt;%
+    group_by(sample) %&gt;%
+    arrange(desc(edgeR_prob), .by_group = TRUE) %&gt;%
+    mutate(rank = 1:n()) %&gt;%
+    ggplot(aes(x = rank, y = edgeR_prob, group = sample, color = sample)) + 
+    geom_point(size = 1) +
+    geom_line() +
+    labs(title = &quot;edgeR&quot;, 
+         x = &quot;rank&quot;, 
+         y = &quot;-log10(p-values)&quot;, 
+         color = &quot;sample&quot;) +
+    coord_cartesian(xlim = c(0, 400), ylim = c(0, 6)) +
+    scale_color_manual(values = c(&quot;red&quot;, &quot;black&quot;)) +
+    theme_bw() +
+    theme(aspect.ratio = 1, 
+          title = element_text(size = 10), 
+          legend.background = element_rect(color = &quot;black&quot;, size = 0.3), 
+          legend.position = c(0.725, 0.825))
+
+ggarrange(post_prob, p_values, nrow = 1)</code></pre>
+<pre><code>Warning: Removed 13 rows containing missing values (geom_point).</code></pre>
+<pre><code>Warning: Removed 13 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="figure/hiv_ec.Rmd/figure_hiv_ranked_prob-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-s12" class="section level3">
+<h3>Figure S12</h3>
+<p>Proportion of enriched peptides by protein across technical replicates. This individual was infected with HIV subtype A. Each point represents a protein. The color of the point indicates which virus the protein belongs to, and the size of the point corresponds to the number of peptides tiling the protein.</p>
+<pre class="r"><code># Color palette
+num_A &lt;- grep(&quot;HIV type 1 group M subtype A&quot;, hiv_subtype)
+subtype_order &lt;- c(hiv_subtype[c(num_B, num_A)], hiv_subtype[-c(num_B, num_A)])
+
+hiv_tidy %&gt;%
+    filter(grepl(&quot;9&quot;, sample)) %&gt;%
+    select(sample, peptide, UniProt_acc, taxon_species,
+           beer_hits, edgeR_hits) %&gt;%
+    group_by(sample, UniProt_acc, taxon_species) %&gt;%
+    summarize(prot_prop_Bayes = mean(beer_hits),
+              prot_prop_edgeR = mean(edgeR_hits),
+              num_peptides = n(), .groups = &quot;drop&quot;) %&gt;%
+    mutate(taxon_species = factor(taxon_species, subtype_order)) %&gt;%
+    arrange(desc(taxon_species), desc(num_peptides)) %&gt;%
+    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
+               y = prot_prop_Bayes - prot_prop_edgeR,
+               color = taxon_species,
+               size = num_peptides)) +
+    facet_wrap(sample ~., ncol = 4) +
+    geom_hline(aes(yintercept = 0), size = 0.5, color = &quot;grey50&quot;) +
+    geom_vline(aes(xintercept = 0), size = 0.5, color = &quot;grey50&quot;) +
+    geom_point(alpha = 0.8) +
+    labs(x = TeX(&quot;$\\frac{1}{2}$ (BEER + edgeR)&quot;),
+         y = &quot;BEER - edgeR&quot;,
+         color = &quot;HIV strain&quot;,
+         size = &quot;# peptides&quot;) +
+    scale_x_continuous(trans = &quot;mysqrt&quot;, 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
+                       limits = c(-0.25, 1)) +
+    scale_color_manual(values = c(&quot;firebrick2&quot;, &quot;blue&quot;, grey_palette[-num_A]),
+                       breaks = subtype_order) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 10), 
+          legend.text = element_text(size = 8), 
+          legend.key.size = unit(0.75, &quot;lines&quot;), 
+          legend.position = &quot;bottom&quot;) +
+    guides(color = guide_legend(ncol = 2, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))</code></pre>
+<p><img src="figure/hiv_ec.Rmd/figure_hiv_protein_A-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="tables" class="section level2">
+<h2>Tables</h2>
+<div id="table-s3" class="section level3">
+<h3>Table S3</h3>
+<p>Concordance of enrichment calls between two technical replicates of an HIV subtype A infected individual for BEER and edgeR. A total of 204 peptides from subtype A and 3,191 peptides from other subtypes were present on the platform. n: number of peptides; p: proportion of peptides</p>
+<pre class="r"><code>hiv_tidy %&gt;%
+    filter(sample %in% c(&quot;HIV EC 9&quot;, &quot;replicate of HIV EC 9&quot;)) %&gt;%
+    mutate(subtype_a = ifelse(taxon_species == &quot;HIV type 1 group M subtype A&quot;, 1, 0)) %&gt;%
+    select(subtype_a, sample, peptide, beer_hits, edgeR_hits) %&gt;%
+    pivot_longer(cols = contains(&quot;hits&quot;), 
+                 names_to = &quot;method&quot;, 
+                 names_pattern = &quot;([a-zA-Z]*)_hits&quot;, 
+                 values_to = &quot;hits&quot;) %&gt;%
+    pivot_wider(names_from = sample, values_from = hits) %&gt;%
+    dplyr::rename(sample_1 = `HIV EC 9`, 
+                  sample_2 = `replicate of HIV EC 9`) %&gt;%
+    mutate(concordance = case_when(sample_1 == 1 &amp; sample_2 == 1 ~ &quot;both enriched&quot;, 
+                                   sample_1 == 0 &amp; sample_2 == 0 ~ &quot;both not enriched&quot;, 
+                                   TRUE ~ &quot;discordant&quot;)) %&gt;%
+    group_by(subtype_a, method, concordance) %&gt;%
+    summarize(n = n(), .groups = &quot;drop_last&quot;) %&gt;%
+    mutate(total_peps = sum(n), 
+           proportion = n/total_peps) %&gt;%
+    pivot_longer(cols = c(&quot;n&quot;, &quot;proportion&quot;), 
+                 names_to = &quot;param_name&quot;, 
+                 values_to = &quot;value&quot;) %&gt;%
+    unite(&quot;param&quot;, method, param_name) %&gt;%
+    pivot_wider(names_from = &quot;param&quot;, values_from = &quot;value&quot;) %&gt;%
+    arrange(desc(subtype_a)) %&gt;%
+    ungroup() %&gt;%
+    select(-subtype_a, -total_peps) %&gt;%
+    kbl(col.names = c(&quot;concordance&quot;, rep(c(&quot;n&quot;, &quot;p&quot;), times = 2))) %&gt;%
+    kable_styling(
+        bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
+    pack_rows(index = c(&quot;Subtype A&quot; = 3, &quot;Other Subtypes&quot; = 3)) %&gt;%
+    add_header_above(c(&quot; &quot; = 1, &quot;BEER&quot; = 2, &quot;edgeR&quot; = 2))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+BEER
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+edgeR
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+concordance
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+p
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="3">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>Subtype A</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+both enriched
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0.0784314
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0.0686275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+both not enriched
+</td>
+<td style="text-align:right;">
+186
+</td>
+<td style="text-align:right;">
+0.9117647
+</td>
+<td style="text-align:right;">
+188
+</td>
+<td style="text-align:right;">
+0.9215686
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+discordant
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0098039
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.0098039
+</td>
+</tr>
+<tr grouplength="3">
+<td colspan="5" style="border-bottom: 1px solid;">
+<strong>Other Subtypes</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+both enriched
+</td>
+<td style="text-align:right;">
+118
+</td>
+<td style="text-align:right;">
+0.0369790
+</td>
+<td style="text-align:right;">
+94
+</td>
+<td style="text-align:right;">
+0.0294579
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+both not enriched
+</td>
+<td style="text-align:right;">
+3039
+</td>
+<td style="text-align:right;">
+0.9523660
+</td>
+<td style="text-align:right;">
+3085
+</td>
+<td style="text-align:right;">
+0.9667816
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+discordant
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+0.0106550
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0.0037606
+</td>
+</tr>
+</tbody>
+</table>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -668,21 +1375,61 @@ locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
 
 other attached packages:
-[1] workflowr_1.6.2
+ [1] beer_0.99.0                 rjags_4-10                 
+ [3] coda_0.19-4                 PhIPData_1.1.2             
+ [5] SummarizedExperiment_1.23.4 Biobase_2.53.0             
+ [7] GenomicRanges_1.45.0        GenomeInfoDb_1.29.4        
+ [9] IRanges_2.27.2              S4Vectors_0.31.2           
+[11] BiocGenerics_0.39.2         MatrixGenerics_1.5.4       
+[13] matrixStats_0.60.1          BiocManager_1.30.16        
+[15] RColorBrewer_1.1-2          kableExtra_1.3.4           
+[17] latex2exp_0.5.0             gridExtra_2.3              
+[19] ggpubr_0.4.0                here_1.0.1                 
+[21] forcats_0.5.1               stringr_1.4.0              
+[23] dplyr_1.0.7                 purrr_0.3.4                
+[25] readr_2.0.1                 tidyr_1.1.3                
+[27] tibble_3.1.4                ggplot2_3.3.5              
+[29] tidyverse_1.3.1             plyr_1.8.6                 
+[31] workflowr_1.6.2            
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.7       whisker_0.4      knitr_1.33       magrittr_2.0.1  
- [5] R6_2.5.1         rlang_0.4.11     fastmap_1.1.0    fansi_0.5.0     
- [9] stringr_1.4.0    tools_4.1.1      xfun_0.25        utf8_1.2.2      
-[13] git2r_0.28.0     htmltools_0.5.2  ellipsis_0.3.2   rprojroot_2.0.2 
-[17] yaml_2.2.1       digest_0.6.27    tibble_3.1.4     lifecycle_1.0.0 
-[21] crayon_1.4.1     later_1.3.0      vctrs_0.3.8      promises_1.2.0.1
-[25] fs_1.5.0         glue_1.4.2       evaluate_0.14    rmarkdown_2.10  
-[29] stringi_1.7.4    compiler_4.1.1   pillar_1.6.2     httpuv_1.6.2    
-[33] pkgconfig_2.0.3 </code></pre>
+ [1] colorspace_2.0-2       ggsignif_0.6.2         ellipsis_0.3.2        
+ [4] rio_0.5.27             rprojroot_2.0.2        XVector_0.33.0        
+ [7] fs_1.5.0               rstudioapi_0.13        farver_2.1.0          
+[10] listenv_0.8.0          fansi_0.5.0            lubridate_1.7.10      
+[13] xml2_1.3.2             codetools_0.2-18       knitr_1.33            
+[16] jsonlite_1.7.2         broom_0.7.9            dbplyr_2.1.1          
+[19] compiler_4.1.1         httr_1.4.2             backports_1.2.1       
+[22] assertthat_0.2.1       Matrix_1.3-4           fastmap_1.1.0         
+[25] limma_3.49.4           cli_3.0.1              later_1.3.0           
+[28] htmltools_0.5.2        tools_4.1.1            gtable_0.3.0          
+[31] glue_1.4.2             GenomeInfoDbData_1.2.6 Rcpp_1.0.7            
+[34] carData_3.0-4          cellranger_1.1.0       vctrs_0.3.8           
+[37] svglite_2.0.0          progressr_0.8.0        xfun_0.25             
+[40] globals_0.14.0         openxlsx_4.2.4         rvest_1.0.1           
+[43] lifecycle_1.0.0        rstatix_0.7.0          future_1.22.1         
+[46] edgeR_3.35.0           zlibbioc_1.39.0        scales_1.1.1          
+[49] hms_1.1.0              promises_1.2.0.1       parallel_4.1.1        
+[52] yaml_2.2.1             curl_4.3.2             stringi_1.7.4         
+[55] highr_0.9              zip_2.2.0              rlang_0.4.11          
+[58] pkgconfig_2.0.3        systemfonts_1.0.2      bitops_1.0-7          
+[61] evaluate_0.14          lattice_0.20-44        labeling_0.4.2        
+[64] cowplot_1.1.1          tidyselect_1.1.1       parallelly_1.27.0     
+[67] magrittr_2.0.1         R6_2.5.1               generics_0.1.0        
+[70] DelayedArray_0.19.1    DBI_1.1.1              pillar_1.6.2          
+[73] haven_2.4.3            whisker_0.4            foreign_0.8-81        
+[76] withr_2.4.2            abind_1.4-5            RCurl_1.98-1.4        
+[79] future.apply_1.8.1     modelr_0.1.8           crayon_1.4.1          
+[82] car_3.0-11             utf8_1.2.2             tzdb_0.1.2            
+[85] rmarkdown_2.10         locfit_1.5-9.4         grid_4.1.1            
+[88] readxl_1.3.1           data.table_1.14.0      git2r_0.28.0          
+[91] reprex_2.0.1           digest_0.6.27          webshot_0.5.2         
+[94] httpuv_1.6.2           munsell_0.5.0          viridisLite_0.4.0     </code></pre>
+</div>
 </div>
 </div>
 
