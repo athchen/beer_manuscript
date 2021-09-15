@@ -29,6 +29,10 @@ hiv_tidy <- as(hiv, "DataFrame") %>%
 # Color palette
 hiv_subtype <- unique(hiv_tidy$taxon_species)
 grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(hiv_subtype) - 1))))
+# Make `grey_palette` is of the correct length. Not sure why this has to be run twice
+grey_palette <- if(length(grey_palette) < (length(hiv_subtype) - 1)){
+    palette(gray(seq(0.1, 0.8, length.out = (length(hiv_subtype) - 1))))
+} else grey_palette
 num_B <- grep("HIV type 1 group M subtype B", hiv_subtype)
 subtype_order <- c(hiv_subtype[num_B], hiv_subtype[-num_B])
 
