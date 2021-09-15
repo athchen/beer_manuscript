@@ -11,7 +11,7 @@
 
 
 
-<title>Overview</title>
+<title>Bayesian Enrichment Estimation in R (BEER)</title>
 
 <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
@@ -241,6 +244,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -248,6 +314,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -267,8 +343,23 @@ $(document).ready(function () {
         <li>
   <a href="beer.html">BEER</a>
 </li>
-<li>
-  <a href="simulation.html">Simulated Data</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Simulated Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="simulation_diag.html">MCMC Diagnostics</a>
+    </li>
+    <li>
+      <a href="simulation_beer.html">BEER Results</a>
+    </li>
+    <li>
+      <a></a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="hiv_ec.html">HIV Elite Controllers</a>
@@ -309,7 +400,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Overview</h1>
+<h1 class="title toc-ignore">Bayesian Enrichment Estimation in R (BEER)</h1>
 
 </div>
 
@@ -334,7 +425,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-09-14
+<strong>Last updated:</strong> 2021-09-13
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -358,7 +449,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -392,7 +483,6 @@ Ignored files:
     Ignored:    data_processed/simulation_2beads_truth/.DS_Store
     Ignored:    data_processed/simulation_4beads_edgeR/.DS_Store
     Ignored:    data_processed/simulation_curves.rda
-    Ignored:    figures/.DS_Store
 
 Untracked files:
     Untracked:  analysis/beer.Rmd
@@ -401,7 +491,6 @@ Untracked files:
     Untracked:  analysis/simulation.Rmd
 
 Unstaged changes:
-    Modified:   R/figure_simulation_curves.R
     Modified:   R/load_packages.R
     Modified:   README.Rmd
     Modified:   README.md
@@ -409,7 +498,6 @@ Unstaged changes:
     Deleted:    analysis/about.Rmd
     Modified:   analysis/index.Rmd
     Deleted:    analysis/license.Rmd
-    Deleted:    figures/simulation_roc_prc_interp_all.png
 
 </code></pre>
 <p>
@@ -422,128 +510,72 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML (<code>docs/index.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/athchen/beer_manuscript/blob/2af2df79df48512ae832488c48c3edb591bba9f5/analysis/index.Rmd" target="_blank">2af2df7</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-Added html page to put BEER icon in webpage header
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/athchen/beer_manuscript/2af2df79df48512ae832488c48c3edb591bba9f5/docs/index.html" target="_blank">2af2df7</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-Added html page to put BEER icon in webpage header
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/athchen/beer_manuscript/9c2fc363b0a6c5a0d1250f52bca420222bfca168/docs/index.html" target="_blank">9c2fc36</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-added workflowr page
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/athchen/beer_manuscript/blob/8d391f43ca9a05660f2fc369d367392d161c9122/analysis/index.Rmd" target="_blank">8d391f4</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<p>This webpage details all analyses and methods used to produce the work presented in <em>Detecting Enriched Antibody Peptides in Phage-Immunoprecipitation Sequencing Data</em>. Though all figures and tables can be found on this site, scripts to generate the manuscript figures and tables and this website can also be found in the <a href="https://github.com/athchen/beer_manuscript">source code</a> (also linked in the top right).</p>
-<div id="mapping-of-manuscript-contents-to-site-pages" class="section level2">
-<h2>Mapping of manuscript contents to site pages</h2>
-<div id="simulated-data" class="section level4">
-<h4>Simulated Data</h4>
-<ul>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_1">Figure 1</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_2">Figure 2</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_S4">Figure S4</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_S5">Figure S5</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_S6">Figure S6</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Table_S1">Table S1</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Table_S2">Table S2</a></li>
-</ul>
+<p>BEER is a Bayesian hierarchical model for identifying enriched antibody responses from phage-immunoprecipitation sequencing (PhIP-Seq) data. Here, we introduce the notation and describe the BEER model and implementation in the <code>R</code> package <a href="https://github.com/athchen/beer"><code>beer</code></a>.</p>
+<div id="notation" class="section level2">
+<h2>Notation</h2>
+<p>Let <span class="math inline">\(i = 1, 2, \ldots, P\)</span> and <span class="math inline">\(j = 1, 2, \ldots, N\)</span> index the peptides and samples, respectively. We observe,</p>
+<p><span class="math display">\[\begin{align*}
+Y_{ij} &amp;= \text{ observed # reads mapped to peptide } i \text{ in sample } j\\
+n_j &amp;= \sum_{i=1}^P Y_{ij} \text{ total # of reads in sample }j\\
+B_{j} &amp;= \unicode{x1D7D9} (\text{sample } j \text{ is a beads-only sample})\\
+\end{align*}\]</span></p>
+<p>Define,</p>
+<p><span class="math display">\[\begin{align*}
+\theta_{ij} &amp;= \text{ probability that peptide } i \text{ in sample } j \text{ pulls a read }\\
+Z_{ij} &amp;= \unicode{x1D7D9}(\text{peptide } i \text{ in sample } j \text { is enriched})\\
+\pi_{j} &amp;= \text{ proportion of enriched peptides in sample } j\\
+c_j &amp;= \text{ attenuation constant for sample } j\\
+\phi_{ij} &amp;= \text{ true fold change of peptide } i \text{ in sample } j
+\end{align*}\]</span></p>
+<p>Prior parameters for <span class="math inline">\(\theta_{ij}, \pi_j, c_j\)</span>, and <span class="math inline">\(\phi_{ij}\)</span> are denoted by,</p>
+<p><span class="math display">\[\begin{align*}
+a_{ij}, b_{ij} &amp;= \text{ shape parameters for the prior distribution of } \theta_{ij} \text{ for peptide } i \text{ in sample } j\\
+a_{\pi}, b_{\pi} &amp;= \text{ shape parameters for the prior distribution of } \pi_{j}\\
+a_c, b_c &amp;= \text{ shape parameters for the prior distribution of } c_{j}\\
+a_\phi, b_\phi &amp;= \text{ shape parameters for the prior distribution of } \phi_{ij}|Z_{ij} = 1
+\end{align*}\]</span></p>
+<p>Parameters specific to beads-only samples are denoted with the subscript <span class="math inline">\(i0\)</span> (e.g. <span class="math inline">\(a_{i0}, b_{i0}, \theta_{i0}\)</span>, etc.). Additionally, let <span class="math inline">\(\phi_{min}\)</span> denote the minimum fold-change for an enriched peptide.</p>
+<p>For convenience, we also define two function <span class="math inline">\(f_a, f_b\)</span> for deriving Beta parameters <span class="math inline">\(a, b\)</span> given mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+f_a(\mu, \sigma^2) &amp;= \frac{\mu^2(1-\mu)}{\sigma^2} - \mu\\
+f_b(\mu, \sigma^2) &amp;= f_a(\mu, \sigma^2) \left(\frac{1}{\mu} - 1\right)
+\end{align*}\]</span></p>
 </div>
-<div id="hiv-elite-controllers" class="section level4">
-<h4>HIV Elite Controllers</h4>
+<div id="model" class="section level2">
+<h2>Model</h2>
+<p>Let <span class="math inline">\(\mu_{i0}\)</span> and <span class="math inline">\(\sigma^2{i0}\)</span> denote the mean and variance for peptide <span class="math inline">\(i\)</span> in a beads-only sample where,</p>
+<p><span class="math display">\[\begin{align*}
+\mu_{ij} &amp;= \frac{a_{i0}}{a_{i0} + b_{i0}}\\
+\sigma^2_{i0} &amp;= \frac{a_{i0}b_{i0}}{(a_{i0} + b_{i0})^2 (a_{i0} + b_{i0} + 1)}.
+\end{align*}\]</span></p>
+<p>Our model for detecting antibody enriched is described as follows:</p>
+<p><span class="math display">\[\begin{align*}
+Y_{ij}|\theta_{ij} &amp; \sim \text{Binomial}(n_j, \theta_{ij}) \\
+\theta_{ij}| a_{i0}, b_{i0} c_j, \phi_{ij} &amp; \sim \text{Beta}(f_a(c_j\phi_{ij} \mu_{i0}, \sigma^2_{i0}), f_b(c_j\phi_{ij} \mu_{i0}, \sigma^2_{i0})) \\
+c_j|B_j &amp; \sim B_j \cdot 1 + (1 - B_j) \cdot \text{Beta}(a_c, b_c)\\
+\phi_{ij}|Z_{ij} &amp; \sim (1 - Z_{ij}) \cdot 1 + Z_{ij} (\phi_{min} + \text{Gamma}(a_\phi, b_\phi))\\
+Z_{ij}|\pi_{j} &amp; \sim \text{Bernoulli}(\pi_j)\\
+\pi_j &amp; \sim B_j \cdot \text{Beta}(a_\pi, b_\pi)
+\end{align*}\]</span></p>
 </div>
-<div id="coronascan-samples" class="section level4">
-<h4>CoronaScan Samples</h4>
-</div>
+<div id="implementation" class="section level2">
+<h2>Implementation</h2>
+<p>To reduce computational time, BEER runs each sample individually in comparison to all beads-only samples and removes clearly enriched peptides apriori. The implementation can be broken down into the following steps:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Define prior parameters.</strong> Though most prior parameters are supplemented by the user (or use the defaults), prior parameters for non-enriched peptides are first approximated using all beads-only samples.</li>
+<li><strong>Identify super enriched peptides.</strong> Based on the prior parameters, super enriched peptides are first excluded as these peptides should always have posterior probabilities of enrichment of 1.</li>
+<li><strong>Re-estimate beads-only prior parameters.</strong> Prior parameters are then reestimated from the beads-only samples for the remaining peptides.</li>
+<li><strong>Initialize and run the MCMCs.</strong> To reduce convergence time, MLE estimates are used to initialize the MCMC sampler, and samples are drawn from the posterior distributions of the unknown parameters.</li>
+<li><strong>Summarize and store results.</strong> Posterior samples are summarized using the means of the posterior distribution and are stored in the PhIPData object.</li>
+</ol>
+<p>For more information, please see the <em>Supplemental Methods</em> section of the manuscript.</p>
 </div>
 
 
@@ -562,6 +594,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -599,6 +633,35 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

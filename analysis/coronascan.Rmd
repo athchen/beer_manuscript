@@ -1,0 +1,42 @@
+---
+title: "CoronaScan Samples"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+The CoronaScan PhIP-seq antigen library consists of 3466 unique peptides tiling proteins belonging to various coronaviruses, including SARS-CoV2, viruses associated with the common cold, and bat coronaviruses. Each peptide is present in duplicate, resulting in a total of 6932 peptides in the library.
+
+This data set consists of eight beads-only samples and ten serum samples all run on the same plate. Of the ten serum samples, six samples are from individuals who participated in a vaccine research study prior to the discovery of SARS-CoV2. The remaining four samples are serum samples from various time points from one individual who was infected with SARS-CoV2. These samples were also tested for SARS-CoV2 antibodies.
+
+```{r setup_packages, message = FALSE, code = readLines("../R/load_packages.R")}
+```
+
+```{r load_data}
+cs <- readRDS(here("data_raw", "coronascan.rds"))
+
+# Look at metadata
+sampleInfo(cs)
+```
+
+## Running BEER and edgeR
+
+To estimate the false-positive rate, we run each beads-only sample against the remaining seven beads-only samples. 
+
+```{r run_both, eval = FALSE}
+## Run edgeR with beadsRR
+cs_out <- edgeR(cs, assay.names = c("edgeR_logfc", "edgeR_prob"), 
+                parallel = "multisession", beadsRR = TRUE)
+
+## Run beer with beadsRR
+beer_assays <- c(phi = NULL, phi_Z = "beer_logfc", Z = "beer_prob", 
+                 c = "sampleInfo", pi = "sampleInfo")
+cs_out <- brew(cs_out, assay.names = beer_assays, beadsRR = TRUE, 
+                parallel = "multisession")
+```
+
+### Protein-specific predictions
+
+### Peptide replicates

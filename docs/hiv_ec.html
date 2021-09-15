@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Athena Chen" />
 
+<meta name="date" content="2021-09-13" />
 
-<title>Overview</title>
+<title>hiv_ec</title>
 
 <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -29,6 +31,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
@@ -241,6 +246,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -248,6 +316,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -267,8 +345,23 @@ $(document).ready(function () {
         <li>
   <a href="beer.html">BEER</a>
 </li>
-<li>
-  <a href="simulation.html">Simulated Data</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Simulated Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="simulation_diag.html">MCMC Diagnostics</a>
+    </li>
+    <li>
+      <a href="simulation_beer.html">BEER Results</a>
+    </li>
+    <li>
+      <a></a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="hiv_ec.html">HIV Elite Controllers</a>
@@ -309,7 +402,9 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Overview</h1>
+<h1 class="title toc-ignore">hiv_ec</h1>
+<h4 class="author">Athena Chen</h4>
+<h4 class="date">2021-09-13</h4>
 
 </div>
 
@@ -334,10 +429,10 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-09-14
+<strong>Last updated:</strong> 2021-09-13
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>beer_manuscript/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -358,7 +453,67 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20210907code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20210907)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20210907code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20210907)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -392,7 +547,6 @@ Ignored files:
     Ignored:    data_processed/simulation_2beads_truth/.DS_Store
     Ignored:    data_processed/simulation_4beads_edgeR/.DS_Store
     Ignored:    data_processed/simulation_curves.rda
-    Ignored:    figures/.DS_Store
 
 Untracked files:
     Untracked:  analysis/beer.Rmd
@@ -401,7 +555,6 @@ Untracked files:
     Untracked:  analysis/simulation.Rmd
 
 Unstaged changes:
-    Modified:   R/figure_simulation_curves.R
     Modified:   R/load_packages.R
     Modified:   README.Rmd
     Modified:   README.md
@@ -409,7 +562,6 @@ Unstaged changes:
     Deleted:    analysis/about.Rmd
     Modified:   analysis/index.Rmd
     Deleted:    analysis/license.Rmd
-    Deleted:    figures/simulation_roc_prc_interp_all.png
 
 </code></pre>
 <p>
@@ -422,127 +574,49 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML (<code>docs/index.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/athchen/beer_manuscript/blob/2af2df79df48512ae832488c48c3edb591bba9f5/analysis/index.Rmd" target="_blank">2af2df7</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-Added html page to put BEER icon in webpage header
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/athchen/beer_manuscript/2af2df79df48512ae832488c48c3edb591bba9f5/docs/index.html" target="_blank">2af2df7</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-Added html page to put BEER icon in webpage header
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/athchen/beer_manuscript/9c2fc363b0a6c5a0d1250f52bca420222bfca168/docs/index.html" target="_blank">9c2fc36</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-added workflowr page
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/athchen/beer_manuscript/blob/8d391f43ca9a05660f2fc369d367392d161c9122/analysis/index.Rmd" target="_blank">8d391f4</a>
-</td>
-<td>
-Athena Chen
-</td>
-<td>
-2021-09-07
-</td>
-<td>
-Start workflowr project.
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<p>This webpage details all analyses and methods used to produce the work presented in <em>Detecting Enriched Antibody Peptides in Phage-Immunoprecipitation Sequencing Data</em>. Though all figures and tables can be found on this site, scripts to generate the manuscript figures and tables and this website can also be found in the <a href="https://github.com/athchen/beer_manuscript">source code</a> (also linked in the top right).</p>
-<div id="mapping-of-manuscript-contents-to-site-pages" class="section level2">
-<h2>Mapping of manuscript contents to site pages</h2>
-<div id="simulated-data" class="section level4">
-<h4>Simulated Data</h4>
-<ul>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_1">Figure 1</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_2">Figure 2</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_S4">Figure S4</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_S5">Figure S5</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Figure_S6">Figure S6</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Table_S1">Table S1</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/simulation.html#Table_S2">Table S2</a></li>
-</ul>
-</div>
-<div id="hiv-elite-controllers" class="section level4">
-<h4>HIV Elite Controllers</h4>
-</div>
-<div id="coronascan-samples" class="section level4">
-<h4>CoronaScan Samples</h4>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.1 (2021-08-10)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.7       knitr_1.33       magrittr_2.0.1   R6_2.5.1        
+ [5] rlang_0.4.11     fastmap_1.1.0    fansi_0.5.0      stringr_1.4.0   
+ [9] tools_4.1.1      xfun_0.25        utf8_1.2.2       git2r_0.28.0    
+[13] htmltools_0.5.2  ellipsis_0.3.2   rprojroot_2.0.2  yaml_2.2.1      
+[17] digest_0.6.27    tibble_3.1.4     lifecycle_1.0.0  crayon_1.4.1    
+[21] later_1.3.0      vctrs_0.3.8      promises_1.2.0.1 fs_1.5.0        
+[25] glue_1.4.2       evaluate_0.14    rmarkdown_2.10   stringi_1.7.4   
+[29] compiler_4.1.1   pillar_1.6.2     httpuv_1.6.2     pkgconfig_2.0.3 </code></pre>
 </div>
 </div>
 
@@ -562,6 +636,8 @@ footer is added to webpages before the MathJax javascript. -->
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -599,6 +675,35 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

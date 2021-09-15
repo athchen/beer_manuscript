@@ -3,20 +3,27 @@ output_dir: ../docs
 navbar:
   title: "beer_manuscript"
   left:
-  - text: Home
-    href: index.html
-  - text: About
-    href: about.html
-  - text: License
-    href: license.html
+  - text: BEER
+    href: beer.html
+  - text: Simulated Data
+    href: simulation.html
+  - text: HIV Elite Controllers
+    href: hiv_ec.html
+  - text: CoronaScan Samples
+    href: coronascan.html
   right: 
-  - icon: fa-github
-  - href: "https://github.com/athchen/beer_manuscript"
+  - text: "Manuscript"
+    icon: fa-file-alt
+    href: "templink"
+  - text: "Source Code"
+    icon: fa-github
+    href: "https://github.com/athchen/beer_manuscript"
 output:
   workflowr::wflow_html:
     toc: yes
     toc_float: yes
+    code_folding: hide
+    includes:
+      in_header: "partials/header.html"
     theme: cosmo
     highlight: textmate
-    includes:
-      in_header: partials/header.html

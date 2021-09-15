@@ -1,0 +1,454 @@
+---
+title: "Simulated Data"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r knitr_setup, include = FALSE, echo = FALSE}
+knitr::opts_chunk$set(
+    fig.align = 'center', 
+    out.width = "100%"
+)
+```
+
+## Simulated Data
+
+We simulated ten data sets based on read count data from beads-only samples run with HIV elite controllers. Each data set consists of eight beads-only samples and twelve simulated serum samples. Of the twelve samples, one sample is a beads-only sample that has been run as a serum sample, and two samples are replicates generated from the same parameters with some error. 
+
+For all generated serum sample, we randomly select 50 peptides to be enriched. We set the fold-changes for enriched peptides such that there were 10 peptides in each of the following intervals: 1 to 2, 2 to 4, 4 to 8, 8 to 16, and 16 to 32.
+
+```{r setup_packages, message = FALSE, code = readLines("../R/load_packages.R")}
+```
+
+```{r simulate_data_func, message = FALSE, warning = FALSE, code = readLines("../data_raw/simulations.R")}
+```
+
+```{r simulate_data, message = FALSE}
+num_sims <- 10
+set.seed(20210223)
+sim_seeds <- c(20210223, sample(-1e6:1e6, num_sims - 1))
+
+sim_data <- lapply(sim_seeds, simulate_data)
+```
+
+For example, we can visualize the first simulated data set by plotting the expected versus the observed read counts. 
+
+```{r sim_data_1, message = FALSE, warning = FALSE, fig.width = 9, fig.height = 10}
+sample_names <- c(
+    paste0("Beads ", 1:8), 
+    paste0("Sample ", 1:11), 
+    "Replicate of Sample 11"
+)
+names(sample_names) <- 1:20
+
+sim_data[[1]] %>%
+    as("DataFrame") %>%
+    as_tibble() %>% 
+    group_by(peptide) %>%
+    mutate(expected_prop = mean((counts/n)[group == "beads"]), 
+           expected_rc = n*expected_prop, 
+           phi_cat = case_when(true_phi == 1 ~ "not enriched", 
+                               true_phi <= 2 ~ "1<phi<=2",
+                               true_phi <= 4 ~ "2<phi<=4",
+                               true_phi <= 8 ~ "4<phi<=8",
+                               true_phi <= 16 ~ "8<phi<=16", 
+                               TRUE ~ "16<phi<=32"), 
+           sample = factor(sample, levels = 1:20)) %>%
+    arrange(true_phi) %>%
+    ggplot(aes(x = log10(expected_rc + 1), 
+               y = log10(counts + 1), 
+               color = phi_cat)) +
+    geom_point(alpha = 0.75, size = 0.75) +
+    geom_abline(aes(slope = 1, intercept = log10(true_c)), 
+                color = "black", size = 0.25) + 
+    facet_wrap(sample ~., ncol = 4, 
+               labeller = labeller(sample = sample_names)) +
+    scale_color_manual(values = c("grey", brewer.pal(6, "Reds")[-1]), 
+                       breaks = c("not enriched", "1<phi<=2", "2<phi<=4",
+                                  "4<phi<=8", "8<phi<=16", "16<phi<=32"),
+                       labels = unname(TeX(c(
+                           "not enriched", 
+                           "$1<\\phi_{ij}\\leq 2$",
+                           "$2<\\phi_{ij}\\leq 4$", 
+                           "$4<\\phi_{ij}\\leq 8$", 
+                           "$8<\\phi_{ij}\\leq 16$", 
+                           "$16<\\phi_{ij}\\leq 32$")))) +
+    labs(title = "Simulated Data Set 1",
+         x = "log10(expected read count + 1)",
+         y = "log10(observed read count + 1)", 
+         color = "FC category") +
+    theme_bw() +
+    theme(legend.text.align = 0)
+```
+
+## Running BEER and edgeR
+
+Each simulated data set was run using the first two, four, and all eight beads-only samples. For each simulated data set and subset of beads-only samples, we ran edgeR and BEER using MLE, MOM, and edgeR estimates for $a_0, b_0$ and the true values of $a_0, b_0$. 
+
+The simulations were run on a cluster using [this `R` script](https://github.com/athchen/beer_manuscript/blob/master/R/run_simulations.R). The resulting PhIPData objects are stored in the repository folders named [`data_processed/simulation_xbeads_method`](https://github.com/athchen/beer_manuscript/tree/master/data_processed). The folders are named such that `x` indicates the number of beads-only samples used for both BEER and edgeR and `method` is the method used to define $a_0, b_0$ for BEER. 
+
+```{r load_results, code = readLines("../R/load_simulations.R"), eval = FALSE}
+```
+
+## Comparison of BEER and edgeR
+
+Algorithm performance was primarily assessed using ROC and PR curves on the full data and fold-change subsets of the data. For each fold-change group, curves were generated using all non-enriched peptides and enriched peptides within the specified fold-change group from the simulated serum samples (no peptides from beads-only samples were included). The area under each ROC curve was approximated using trapezoidal approximation from the interpolated data points. 
+
+Simulation results for each combination of beads-only samples used (2 vs. 4 vs. 8), method (BEER vs. edgeR), and estimation approach of $a_0, b_0$ for BEER (edgeR, MOM, MLE, and truth) were summarized as follows. To ensure that all curves had the same support points, we used linear interpolation to approximate the sensitivity or positive predictive value at each support point for each simulation. ROC curves started at 0 sensitivity and 0 false-positive rate, while PRC curves started at 0 sensitivity and perfect positive-predictive value. The interpolated curves were averaged point-wise to generate an average curve for each condition. 
+
+```{r load_curves, code = readLines("../R/load_curves.R"), eval = FALSE}
+```
+
+```{r load_saved_curves, echo = FALSE}
+if(file.exists(here("data_processed", "simulation_curves.rda"))){
+    load(here("data_processed", "simulation_curves.rda"))
+} else {
+    # Takes a while to run - only need to run once. 
+    source(here("R", "load_curves.R"))
+}
+
+curves_summary <- interpolate %>%
+    group_by(group, group_lab, method, num_beads, x) %>%
+    summarize(n_point = n(), 
+              sens_na = sum(is.na(sens)), 
+              ppv_na = sum(is.na(ppv)), 
+              mean_sens = mean(sens, na.rm = TRUE), 
+              mean_ppv = mean(ppv, na.rm = TRUE), 
+              .groups = "drop")
+```
+
+In addition to assessing the performance of each algorithm by discrete fold-change categories, we modeled the probability of identifying an enriched peptide by fold-change and reads pulled per million using results from one simulated data set. Posterior probability and p-value cutoffs for enrichment were selected to ensure an FDR of at most 0.05. Additionally, we used logistic regression to model the probability of identifying and enriched peptide by fold-change and reads pulled per million. 95\% confidence intervals were constructed by mapping the 95\% confidence bands for the linear component of the model to the logistic scale. 
+
+```{r setup_logistic}
+# Get posterior probability cutoff with FDR rate of around 5\%
+# Comment out lines 21 & 22 to see variation in cutoffs by simulation
+beer_fdr <- beer_roc_by_fc %>%
+    filter(approach == "BEER" & ab_method == "edgeR" &
+               group == "full data" & num_beads == 8) %>%
+    group_by(approach, ab_method, sim_num, num_beads) %>%
+    # mutate(dist_fdr = abs(ppv - 0.95)) %>%
+    # filter(dist_fdr == min(dist_fdr, na.rm = TRUE)) %>%
+    summarize(mean_cutoff = mean(cutoff),
+              median_cutoff = median(cutoff), 
+              range_cutoff = max(cutoff) - min(cutoff), 
+              .groups = "drop") 
+
+# Tidy simulation data, add edgeR and bh hits
+sim_tidy <- lapply(sim_data[grepl("8beads_edgeR", names(sim_data))], function(sim){
+    sim %>% 
+        left_join(beer_fdr[, c("sim_num", "mean_cutoff")], by = "sim_num") %>%
+        mutate(beer_hits = ifelse(post_prob > mean_cutoff, 1, 0), 
+               rpm = Y/n*1e6) %>%
+        group_by(sample) %>%
+        mutate(edgeR_bh = p.adjust(10^(-edgeR_pval), method = "BH")) %>%
+        ungroup()
+})
+```
+
+## Figures
+
+### Figure 1
+
+Average ROC (top panels) and PR (bottom panels) curves calculated from ten simulations, comparing edgeR (black lines) and BEER (red lines) across fold-change categories and number of beads only samples available. Curves for BEER using the actual simulation shape parameters in the prior distributions (orange lines) are added to show the effect of sampling variability in these parameters. Results for fold changes above 16 are omitted since in all instances peptides were correctly classified as enriched.
+
+```{r figure_roc_prc_interp, fig.width = 7, fig.height = 9}
+roc_interp <- curves_summary %>%
+    filter(method %in% c("BEER_truth", "BEER_edgeR", "edgeR")) %>% 
+    ggplot(aes(x = x, y = mean_sens, group = method)) +
+    geom_line(aes(color = method), size = 0.5) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c("2" = "2 beads",
+                                                 "4" = "4 beads", 
+                                                 "8" = "8 beads"))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = "1 - specificity", y = "sensitivity",
+         color = "method") +
+    scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
+                                  "BEER_edgeR", "edgeR"),
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
+                                  brewer.pal(3, "Greys")[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, "lines"), 
+          legend.background = element_rect(color = "black", size = 0.3),  
+          legend.position = c(0.92, 0.78), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
+
+prc_interp <- curves_summary %>%
+    filter(method %in% c("BEER_truth", "BEER_edgeR", "edgeR")) %>% 
+    ggplot(aes(x = x, y = mean_ppv, group = method)) +
+    geom_line(aes(color = method), size = 0.5) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c("2" = "2 beads",
+                                                 "4" = "4 beads", 
+                                                 "8" = "8 beads"))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = "sensitivity", y = "positive predictive value (PPV)",
+         color = "method") +
+    scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
+                                  "BEER_edgeR", "edgeR"),
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
+                                  brewer.pal(3, "Greys")[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 8), 
+          axis.title = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
+
+ggarrange(roc_interp, 
+          prc_interp + theme(legend.position = "none"), 
+          ncol = 1, nrow = 2)
+```
+
+### Figure 2
+
+Estimated probabilities to identify enriched peptides (y-axis) as a function of the foldchange (x-axis) for each of ten simulated data sets based on logistic regression models. BEER posterior probability cut-offs were selected to achieve a false discovery rate of 5% in each simulation. Thin lines indicate the individual simulations, thick lines the respective averages.
+
+```{r figure_simulation_logistic_fc, message = FALSE, warning = FALSE, fig.width = 6, fig.height = 4.5}
+# BEER
+beer_pred <- lapply(sim_tidy, function(sim){
+    fit <- glm(beer_hits ~ phi, family = binomial(link = "logit"),
+               data = sim %>% filter(Z == 1))
+    
+    penriched_fit(fit, data.frame(phi = seq(1, 100, length = 1000))) %>%
+        mutate(sim_num = unique(sim$sim_num), 
+               approach = "BEER", 
+               threshold = "FDR - 0.05")
+}) %>% plyr::ldply(.id = NULL)
+
+# edgeR - BH 0.05
+edgeR_05_pred <- lapply(sim_tidy, function(sim){
+    fit <- glm(edgeR_hits ~ phi, family = binomial(link = "logit"),
+               data = sim %>% 
+                   mutate(edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0)) %>%
+                   filter(Z == 1))
+    
+    penriched_fit(fit, data.frame(phi = seq(1, 100, length = 1000))) %>%
+        mutate(sim_num = unique(sim$sim_num), 
+               approach = "edgeR", 
+               threshold = "BH - 0.05")
+}) %>% plyr::ldply(.id = NULL)
+
+bind_rows(beer_pred, edgeR_05_pred) %>%
+    # group_by(approach, threshold, phi) %>%
+    # summarize(mean_prob = mean(predict_p), 
+    #           max_prob = max(predict_p), 
+    #           min_prob = min(predict_p), 
+    #           .groups = "drop") %>%
+    ggplot(aes(x = log2(phi), y = predict_p)) +
+    geom_line(aes(color = approach, 
+                  group = paste0(approach, threshold, sim_num)), 
+              size = 0.1, alpha = 0.5) +
+    geom_line(aes(x = log2(phi), y = mean_prob, color = approach), 
+              size = 1,
+              data = bind_rows(beer_pred, edgeR_05_pred) %>%
+                  group_by(approach, threshold, phi) %>%
+                  summarize(mean_prob = mean(predict_p), .groups = "drop")) +
+    labs(x = "true fold change",
+         y = "probability of being classified as enriched",
+         color = "method") +
+    scale_color_manual(breaks = c("BEER", "edgeR"),
+                       values = c("red", "black"),
+                       labels = c("BEER", "edgeR")) +
+    scale_y_continuous(breaks = seq(0, 1, 0.1),
+                       minor_breaks = seq(0, 1, 0.05)) +
+    scale_x_continuous(breaks = 0:4,
+                       labels = 2^(0:4), 
+                       limits = c(0, 4)) +
+    theme_bw() +
+    theme(aspect.ratio = 1)
+```
+
+### Figure S4
+
+ROC and PR curves for various fold-change categories by approach and method of estimation for $a_{i0}, b_{i0}$.
+
+```{r figure_simulation_roc_prc, warning = FALSE, fig.width = 8.5, fig.height = 9}
+roc <- roc_by_fc %>%
+    ggplot(aes(x = 1-spec, y = sens, group = paste0(sim_num, method))) +
+    geom_line(aes(color = method), size = 0.2) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c("2" = "2 beads",
+                                                 "4" = "4 beads", 
+                                                 "8" = "8 beads"))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = "1 - specificity", y = "sensitivity", color = "method") +
+    scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
+                                  "BEER_edgeR", "edgeR"),
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
+                                  brewer.pal(3, "Greys")[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, "lines"), 
+          legend.background = element_rect(color = "black", size = 0.3),  
+          legend.position = c(0.93, 0.81), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
+
+prc <- roc_by_fc %>%
+    ggplot(aes(x = sens, y = ppv, group = paste0(sim_num, method))) +
+    geom_line(aes(color = method), size = 0.2) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c("2" = "2 beads",
+                                                 "4" = "4 beads", 
+                                                 "8" = "8 beads"))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = "sensitivity", y = "PPV", color = "method") +
+    scale_color_manual(breaks = c("BEER_truth", "BEER_mom", "BEER_mle", 
+                                  "BEER_edgeR", "edgeR"),
+                       labels = c("BEER, truth", "BEER, MOM", 
+                                  "BEER, MLE", "BEER, edgeR", 
+                                  "edgeR"), 
+                       values = c(brewer.pal(5, "Reds")[2:5],
+                                  brewer.pal(3, "Greys")[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 8), 
+          axis.title = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
+
+ggarrange(roc, prc + theme(legend.position = "none"), ncol = 1, nrow = 2)
+```
+
+### Figure S5
+
+Averaged ROC curves comparing the performance of each method using 2 (red), 4 (blue),
+and all 8 (black) beads-only samples.
+
+```{r simulation_roc_bybeads, fig.width = 6, fig.height = 5}
+curves_summary %>%
+    filter(method !="BEER_truth") %>% 
+    ggplot(aes(x = x, y = mean_sens, group = num_beads)) +
+    geom_line(aes(color = factor(num_beads)), size = 0.5) +
+    facet_grid(method ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   method = c("BEER_truth" = "BEER, truth",
+                                              "BEER_mom" = "BEER, MOM", 
+                                              "BEER_mle" = "BEER, MLE", 
+                                              "BEER_edgeR" = "BEER, edgeR", 
+                                              "edgeR" = "edgeR"))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = "1 - specificity", y = "sensitivity",
+         color = "# beads") +
+    scale_color_manual(breaks = c("2", "4", "8"),
+                       values = c("red", "blue", "black")) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, "lines"), 
+          legend.background = element_rect(color = "black", size = 0.3),  
+          legend.position = c(0.94, 0.08), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
+
+```
+
+### Figure S6
+
+Averaged PR curves comparing the performance of each method using 2 (red), 4 (blue), and all 8 (black) beads-only samples.
+
+```{r simulation_prc_by_beads, fig.width = 6, fig.height = 5}
+curves_summary %>%
+    filter(method !="BEER_truth") %>% 
+    ggplot(aes(x = x, y = mean_ppv, group = num_beads)) +
+    geom_line(aes(color = factor(num_beads)), size = 0.5) +
+    facet_grid(method ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed)) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = "sensitivity", y = "positive predictive value (PPV)",
+         color = "# beads") +
+    scale_color_manual(breaks = c("2", "4", "8"),
+                       values = c("red", "blue", "black")) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, "lines"), 
+          legend.background = element_rect(color = "black", size = 0.3),  
+          legend.position = c(0.94, 0.08), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
+```
+
+## Tables
+
+### Table S1
+
+Area under the ROC curves. The table shows the approximated area under the ROC
+curves shown in Figure 1. Both BEER using edgeR parameter estimates and edgeR had near perfect classification for peptides with fold-changes above 4, even when only four beads-only samples were used to estimate $a_{i0}, b_{i0}$.
+
+```{r table_simulation_auc_roc_interp}
+curves_summary %>%
+  filter(!grepl("truth", method)) %>%
+  group_by(method, group, num_beads) %>%
+  arrange(x, .by_group = TRUE) %>%
+  summarize(auc_roc = integrate_vector(x, mean_sens),
+            .groups = "drop") %>%
+  pivot_wider(names_from = "num_beads", values_from = "auc_roc") %>%
+  mutate(group = factor(
+    group, levels = c("full data", "1<phi<=2", "2<phi<=4", "4<phi<=8", 
+                      "8<phi<=16", "16<phi<=32")), 
+    across(all_of(c("2", "4", "8")), ~ round(.x, 3))) %>%
+  arrange(method, group) %>%
+  select(-method) %>%
+  kbl(col.names = c("", paste0(2^(1:3), " beads-only"))) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  pack_rows(index = c("BEER, MOM" = 5, "BEER, MLE" = 5, 
+                      "BEER, edgeR" = 5, "edgeR" = 5))
+```
+
+### Table S2
+
+PPV at various sensitivity values. The table gives the averaged PPV at various sensitivity values for the curves shown in [Figure 1](#figure-1).
+
+```{r table_ppv_by_sens}
+curves_summary %>%
+  filter(round(x, 2) %in% c(0.5, 0.75, 0.9, 0.95) &
+             grepl("edgeR", method)) %>%
+  select(method, num_beads, group, x, mean_ppv) %>%
+  mutate(mean_ppv = round(mean_ppv, 3), 
+         group = factor(group, 
+                        levels = c("full data", "1<phi<=2", "2<phi<=4", 
+                                   "4<phi<=8", "8<phi<=16", "16<phi<=32"))) %>%
+  pivot_wider(names_from = x, values_from = mean_ppv) %>%
+  arrange(num_beads, method, group) %>%
+  select(-num_beads) %>%
+  kbl(col.names = c("method", "group", 
+                    paste0(c(0.5, 0.75, 0.9, 0.95), "% sensitivity"))) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  pack_rows(index = c("2 beads-only samples" = 10, 
+                      "4 beads-only samples" = 10, 
+                      "8 beads-only samples" = 10))
+```

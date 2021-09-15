@@ -1,0 +1,2426 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Simulated Data</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link rel="apple-touch-icon" sizes="180x180" href="site_libs/images/beer_icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="site_libs/images/beer_icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="site_libs/images/beer_icons/favicon-16x16.png">
+<link rel="manifest" href="site_libs/images/beer_icons/site.webmanifest">
+<link rel="mask-icon" href="site_libs/images/beer_icons/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#b91d47">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">beer_manuscript</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="beer.html">BEER</a>
+</li>
+<li>
+  <a href="simulation.html">Simulated Data</a>
+</li>
+<li>
+  <a href="hiv_ec.html">HIV Elite Controllers</a>
+</li>
+<li>
+  <a href="coronascan.html">CoronaScan Samples</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="templink">
+    <span class="fa fa-file-alt"></span>
+     
+    Manuscript
+  </a>
+</li>
+<li>
+  <a href="https://github.com/athchen/beer_manuscript">
+    <span class="fa fa-github"></span>
+     
+    Source Code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Simulated Data</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-09-14
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>beer_manuscript/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20210907code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20210907)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20210907code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20210907)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreecc91890c401efc52acd709e10f1ea180e1247178targetblankcc91890a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/cc91890c401efc52acd709e10f1ea180e1247178" target="_blank">cc91890</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreecc91890c401efc52acd709e10f1ea180e1247178targetblankcc91890a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/cc91890c401efc52acd709e10f1ea180e1247178" target="_blank">cc91890</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/partials/.DS_Store
+    Ignored:    data_processed/.DS_Store
+    Ignored:    data_processed/simulation_2beads_mle/.DS_Store
+    Ignored:    data_processed/simulation_2beads_mom/.DS_Store
+    Ignored:    data_processed/simulation_2beads_truth/.DS_Store
+    Ignored:    data_processed/simulation_4beads_edgeR/.DS_Store
+    Ignored:    data_processed/simulation_curves.rda
+    Ignored:    figures/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/beer.Rmd
+    Untracked:  analysis/coronascan.Rmd
+    Untracked:  analysis/hiv_ec.Rmd
+    Untracked:  analysis/simulation.Rmd
+
+Unstaged changes:
+    Modified:   R/figure_simulation_curves.R
+    Modified:   R/load_packages.R
+    Modified:   README.Rmd
+    Modified:   README.md
+    Modified:   analysis/_site.yml
+    Deleted:    analysis/about.Rmd
+    Modified:   analysis/index.Rmd
+    Deleted:    analysis/license.Rmd
+    Deleted:    figures/simulation_roc_prc_interp_all.png
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="simulated-data" class="section level2">
+<h2>Simulated Data</h2>
+<p>We simulated ten data sets based on read count data from beads-only samples run with HIV elite controllers. Each data set consists of eight beads-only samples and twelve simulated serum samples. Of the twelve samples, one sample is a beads-only sample that has been run as a serum sample, and two samples are replicates generated from the same parameters with some error.</p>
+<p>For all generated serum sample, we randomly select 50 peptides to be enriched. We set the fold-changes for enriched peptides such that there were 10 peptides in each of the following intervals: 1 to 2, 2 to 4, 4 to 8, 8 to 16, and 16 to 32.</p>
+<pre class="r"><code>#&#39; Code to load required packages to reproduce the results and figures in 
+#&#39; the manuscript. 
+required_packages &lt;- c(&#39;plyr&#39;, &#39;tidyverse&#39;, &#39;here&#39;, &#39;ggpubr&#39;, &#39;gridExtra&#39;, 
+                       &#39;latex2exp&#39;, &#39;kableExtra&#39;, &#39;RColorBrewer&#39;, &#39;BiocManager&#39;)
+for (pkg in required_packages) {
+    if (!(pkg %in% rownames(installed.packages()))) {
+        install.packages(pkg)
+    }
+    library(pkg, character.only = TRUE)
+}
+
+bioc_packages &lt;- c(&quot;beer&quot;)
+for(pkg in bioc_packages){
+    if(!(pkg %in% rownames(installed.packages()))) {
+        BiocManager::install(pkg)
+    }
+    library(pkg, character.only = TRUE)
+}
+
+rm(list = c(&quot;required_packages&quot;, &quot;bioc_packages&quot;, &quot;pkg&quot;))
+
+#&#39; Define global variables for plotting
+hot_cold_cols &lt;- c(&quot;navy&quot;, &quot;blue&quot;, &quot;deepskyblue&quot;, &quot;cyan&quot;, &quot;lightcyan&quot;,
+                   &quot;yellow&quot;, &quot;orange&quot;, &quot;red&quot;)</code></pre>
+<pre class="r"><code>#&#39; Function to generate simulated data sets based on HIV EC beads-only samples.
+#&#39; 
+#&#39; @param seed RNG seed
+#&#39; @return PhIPData object with the true parameters saved in assays/metadata 
+simulate_data &lt;- function(seed){
+    set.seed(seed)
+    
+    ## Read-in HIV EC data
+    hiv &lt;- readRDS(here(&quot;data_raw&quot;, &quot;hiv.rds&quot;))
+    
+    ## Constants
+    N &lt;- 20
+    P &lt;- 1000
+    B &lt;- c(rep(1, 9), rep(0, 11))
+    n &lt;- round(abs(rnorm(N, 1e6, 1e5)))
+    
+    ## Beads-only parameters, sort peptides by proportion
+    beads_params &lt;- getAB(subsetBeads(hiv[1:P, ]), lower = 1) %&gt;%
+        as_tibble() %&gt;%
+        mutate(mean = a_0/(a_0 + b_0)) %&gt;%
+        arrange(mean)
+    
+    a_0 &lt;- beads_params$a_0
+    b_0 &lt;- beads_params$b_0
+    
+    ## Proportion of peptides enriched
+    Z &lt;- cbind(matrix(0, nrow = P, ncol = 9), 
+               sapply(1:10, function(x) sample(c(rep(1, 50), rep(0, P - 50)))))
+    pi &lt;- colMeans(Z)
+    
+    ## Fold-changes
+    ## - 10 peptides with fc between 1-2
+    ## - 10 peptides with fc between 2-4
+    ## - 10 peptides with fc between 4-8
+    ## - 10 peptides with fc between 8-10
+    ## - 10 peptides with fc between 16-32
+    ## Arrange the enriched peptides so that they are spaced across the range of
+    ## proportion of reads pulled
+    phi &lt;- apply(Z, 2, function(x) {
+        phi_j &lt;- rep(1, P)
+        phi_cat &lt;- as.vector(matrix(c(runif(10, 1, 2), runif(10, 2, 4), 
+                                      runif(10, 4, 8), runif(10, 8, 16), 
+                                      runif(10, 16, 32)), 
+                                    nrow = 5, byrow = TRUE))
+        phi_j[which(x!= 0)] &lt;- phi_cat
+        phi_j
+    })
+    
+    ## Duplicate last column for sample 20, add small noise for fc. 
+    Z &lt;- cbind(Z, Z[, N - 1])
+    pi &lt;- c(pi, pi[N - 1])
+    phi &lt;- cbind(phi, phi[, 19] + rnorm(P, 0, 0.01)*Z[, 19])
+    
+    ## Generate remaining parameters
+    a &lt;- matrix(NA, nrow = P, ncol = N)
+    b &lt;- matrix(NA, nrow = P, ncol = N)
+    theta &lt;- matrix(NA, nrow = P, ncol = N)
+    Y &lt;- matrix(NA, nrow = P, ncol = N)
+    
+    for(j in 1:N){
+        for(i in 1:P) {
+            if (Z[i, j] == 1 &amp; B[j] == 0) {
+                mean_e &lt;- min(phi[i, j]*a_0[i]/(a_0[i] + b_0[i]), 1)
+                var_e &lt;- a_0[i]*b_0[i]/((a_0[i] + b_0[i])^2*
+                                            (a_0[i] + b_0[i] + 1))
+                
+                a[i, j] &lt;- max((1-mean_e)*mean_e^2/var_e - mean_e, 1)
+                b[i, j] &lt;- a[i, j]*(1/mean_e - 1)
+                
+            } else if (Z[i, j] == 0 &amp; B[j] == 1) {
+                
+                a[i, j] &lt;- a_0[i]
+                b[i, j] &lt;- b_0[i]
+                
+            } else {
+                mean_ne &lt;- a_0[i]/(a_0[i] + b_0[i])
+                var_ne &lt;- (a_0[i]*b_0[i])/((a_0[i]+b_0[i])^2*
+                                               (a_0[i] + b_0[i] + 1))
+                
+                a[i, j] &lt;- max((1-mean_ne)*mean_ne^2/var_ne - var_ne, 1)
+                b[i, j] &lt;- a[i, j]*(1/mean_ne - 1)
+                
+            }
+            
+            theta[i, j] &lt;- rbeta(1, a[i, j], b[i, j])
+            if(is.na(theta[i, j])){
+                print(paste0(&quot;Sample &quot;, j, &quot; and peptide &quot;, i, 
+                             &quot; failed to create theta.&quot;))
+            }
+            
+            Y[i, j] &lt;- rbinom(1, n[j], theta[i, j])
+        }
+    }
+    
+    ## Define new n
+    n_init &lt;- n
+    n &lt;- colSums(Y)
+    
+    ## Define estimate of c
+    c &lt;- sapply(1:N, function(x){
+        if(x %in% 10:N) {
+            ne_index &lt;- which(Z[, x] == 0)
+            data_sub &lt;- data.frame(Y = Y[ne_index, x],
+                                   expected_rc = a_0[ne_index]/
+                                       (a_0[ne_index] + b_0[ne_index])*n[x])
+            lm_fit &lt;- lm(Y ~ expected_rc - 1, data = data_sub)
+            coef(lm_fit)[[1]]
+        } else 1
+    })
+    
+    ## Create PhIPData object
+    sample_params &lt;- data.frame(group = c(rep(&quot;beads&quot;, sum(B) - 1), 
+                                          rep(&quot;sample&quot;, N - sum(B) + 1)), 
+                                n_init = n_init, n = n, 
+                                true_c = c, true_pi = pi)
+    pep_params &lt;- data.frame(a_0 = a_0, b_0 = b_0)
+    prior_params &lt;- list(seed = seed,
+                         a_pi = 1000, b_pi = 2.4e4, 
+                         a_phi = 1.25, b_phi = 0.1, 
+                         a_c = 33.02, b_c = 17.92, 
+                         fc = 1)
+    sim_data &lt;- PhIPData(counts = Y, 
+                         peptideInfo = pep_params, 
+                         sampleInfo = sample_params, 
+                         metadata = prior_params)
+    assays(sim_data)[c(&quot;true_Z&quot;, &quot;true_phi&quot;, &quot;true_a&quot;, 
+                       &quot;true_b&quot;, &quot;true_theta&quot;)] &lt;-
+        list(true_Z = Z, true_phi = phi, true_a = a, 
+             true_b = b, true_theta = theta)
+    
+    sim_data
+}</code></pre>
+<pre class="r"><code>num_sims &lt;- 10
+set.seed(20210223)
+sim_seeds &lt;- c(20210223, sample(-1e6:1e6, num_sims - 1))
+
+sim_data &lt;- lapply(sim_seeds, simulate_data)</code></pre>
+<p>For example, we can visualize the first simulated data set by plotting the expected versus the observed read counts.</p>
+<pre class="r"><code>sample_names &lt;- c(
+    paste0(&quot;Beads &quot;, 1:8), 
+    paste0(&quot;Sample &quot;, 1:11), 
+    &quot;Replicate of Sample 11&quot;
+)
+names(sample_names) &lt;- 1:20
+
+sim_data[[1]] %&gt;%
+    as(&quot;DataFrame&quot;) %&gt;%
+    as_tibble() %&gt;% 
+    group_by(peptide) %&gt;%
+    mutate(expected_prop = mean((counts/n)[group == &quot;beads&quot;]), 
+           expected_rc = n*expected_prop, 
+           phi_cat = case_when(true_phi == 1 ~ &quot;not enriched&quot;, 
+                               true_phi &lt;= 2 ~ &quot;1&lt;phi&lt;=2&quot;,
+                               true_phi &lt;= 4 ~ &quot;2&lt;phi&lt;=4&quot;,
+                               true_phi &lt;= 8 ~ &quot;4&lt;phi&lt;=8&quot;,
+                               true_phi &lt;= 16 ~ &quot;8&lt;phi&lt;=16&quot;, 
+                               TRUE ~ &quot;16&lt;phi&lt;=32&quot;), 
+           sample = factor(sample, levels = 1:20)) %&gt;%
+    arrange(true_phi) %&gt;%
+    ggplot(aes(x = log10(expected_rc + 1), 
+               y = log10(counts + 1), 
+               color = phi_cat)) +
+    geom_point(alpha = 0.75, size = 0.75) +
+    geom_abline(aes(slope = 1, intercept = log10(true_c)), 
+                color = &quot;black&quot;, size = 0.25) + 
+    facet_wrap(sample ~., ncol = 4, 
+               labeller = labeller(sample = sample_names)) +
+    scale_color_manual(values = c(&quot;grey&quot;, brewer.pal(6, &quot;Reds&quot;)[-1]), 
+                       breaks = c(&quot;not enriched&quot;, &quot;1&lt;phi&lt;=2&quot;, &quot;2&lt;phi&lt;=4&quot;,
+                                  &quot;4&lt;phi&lt;=8&quot;, &quot;8&lt;phi&lt;=16&quot;, &quot;16&lt;phi&lt;=32&quot;),
+                       labels = unname(TeX(c(
+                           &quot;not enriched&quot;, 
+                           &quot;$1&lt;\\phi_{ij}\\leq 2$&quot;,
+                           &quot;$2&lt;\\phi_{ij}\\leq 4$&quot;, 
+                           &quot;$4&lt;\\phi_{ij}\\leq 8$&quot;, 
+                           &quot;$8&lt;\\phi_{ij}\\leq 16$&quot;, 
+                           &quot;$16&lt;\\phi_{ij}\\leq 32$&quot;)))) +
+    labs(title = &quot;Simulated Data Set 1&quot;,
+         x = &quot;log10(expected read count + 1)&quot;,
+         y = &quot;log10(observed read count + 1)&quot;, 
+         color = &quot;FC category&quot;) +
+    theme_bw() +
+    theme(legend.text.align = 0)</code></pre>
+<p><img src="figure/simulation.Rmd/sim_data_1-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="running-beer-and-edger" class="section level2">
+<h2>Running BEER and edgeR</h2>
+<p>Each simulated data set was run using the first two, four, and all eight beads-only samples. For each simulated data set and subset of beads-only samples, we ran edgeR and BEER using MLE, MOM, and edgeR estimates for <span class="math inline">\(a_0, b_0\)</span> and the true values of <span class="math inline">\(a_0, b_0\)</span>.</p>
+<p>The simulations were run on a cluster using <a href="https://github.com/athchen/beer_manuscript/blob/master/R/run_simulations.R">this <code>R</code> script</a>. The resulting PhIPData objects are stored in the repository folders named <a href="https://github.com/athchen/beer_manuscript/tree/master/data_processed"><code>data_processed/simulation_xbeads_method</code></a>. The folders are named such that <code>x</code> indicates the number of beads-only samples used for both BEER and edgeR and <code>method</code> is the method used to define <span class="math inline">\(a_0, b_0\)</span> for BEER.</p>
+<pre class="r"><code>source(here(&quot;R&quot;, &quot;load_packages.R&quot;))
+sim_dirs &lt;- list.files(&quot;data_processed&quot;, &quot;simulation_[0-9]&quot;, full.names = TRUE)
+sim_list &lt;- sapply(sim_dirs, list.files, full.names = TRUE) %&gt;% as.vector()
+
+# Read and tidy data ---------
+sim_data &lt;- lapply(sim_list, function(sim_num){
+    
+    # Extract setting (data set, # beads used, method of estimating a_0, b_0)
+    data_num &lt;- str_match(sim_num, &quot;sim_([0-9]*)\\.rds&quot;)[, 2] %&gt;% as.numeric()
+    num_beads &lt;- str_match(sim_num, &quot;([0-9])beads&quot;)[, 2] %&gt;% as.numeric()
+    ab_method &lt;- str_match(sim_num, &quot;[0-9]beads_(.*)/&quot;)[, 2]
+
+    # Read in data
+    all_results &lt;- readRDS(sim_num)
+
+    N &lt;- ncol(all_results)
+    P &lt;- nrow(all_results)
+    B &lt;- sum(all_results$group == getBeadsName())
+    n &lt;- librarySize(all_results)
+
+    a_pi &lt;- metadata(all_results)$a_pi
+    b_pi &lt;- metadata(all_results)$b_pi
+    a_c &lt;- metadata(all_results)$a_c
+    b_c &lt;- metadata(all_results)$b_c
+    a_phi &lt;- metadata(all_results)$a_phi
+    b_phi &lt;- metadata(all_results)$b_phi
+
+    a_0 &lt;- peptideInfo(all_results)$a_0
+    b_0 &lt;- peptideInfo(all_results)$b_0
+
+    pi &lt;- all_results$pi
+    c &lt;- all_results$c
+
+    Z &lt;- assay(all_results, &quot;true_Z&quot;)
+    phi &lt;- assay(all_results, &quot;true_phi&quot;)
+    a &lt;- assay(all_results, &quot;true_a&quot;)
+    b &lt;- assay(all_results, &quot;true_b&quot;)
+    theta &lt;- assay(all_results, &quot;true_theta&quot;)
+    Y &lt;- counts(all_results)
+
+    # Arrange in a df
+    data.frame(sim_num = data_num,
+               num_beads = num_beads, 
+               ab_method = ab_method, 
+               sample = rep(1:N, each = P),
+               peptide = rep(1:P, times = N),
+               n = rep(n, each = P),
+               c = rep(c, each = P),
+               a_0 = a_0,
+               b_0 = b_0,
+               phi = as.vector(phi),
+               Z = as.vector(Z),
+               Y = as.vector(Y),
+               post_prob = as.vector(assay(all_results, &quot;beer_prob&quot;)),
+               est_phi = as.vector(assay(all_results, &quot;beer_fc&quot;)),
+               est_phiZ = as.vector(assay(all_results, &quot;beer_fcZ&quot;)),
+               edgeR_fc = as.vector(assay(all_results, &quot;edgeR_logfc&quot;)),
+               edgeR_pval = as.vector(assay(all_results, &quot;edgeR_prob&quot;))) %&gt;%
+        mutate(is_se = ifelse(is.na(post_prob &amp; sample %in% (B+1):N), 1, 0),
+               post_prob = ifelse(is_se, 1, post_prob),
+               pred_enriched = ifelse(post_prob &gt; 0.5, 1, 0)) %&gt;%
+        group_by(peptide) %&gt;%
+        mutate(expected_prop = mean(Y[sample %in% 1:B]/n[sample %in% 1:B]),
+               expected_rc = expected_prop*n) %&gt;%
+        ungroup()
+})
+
+names(sim_data) &lt;- sim_list
+
+# Clean-up variable space
+rm(list = ls()[ls() != &quot;sim_data&quot;])</code></pre>
+</div>
+<div id="comparison-of-beer-and-edger" class="section level2">
+<h2>Comparison of BEER and edgeR</h2>
+<p>Algorithm performance was primarily assessed using ROC and PR curves on the full data and fold-change subsets of the data. For each fold-change group, curves were generated using all non-enriched peptides and enriched peptides within the specified fold-change group from the simulated serum samples (no peptides from beads-only samples were included). The area under each ROC curve was approximated using trapezoidal approximation from the interpolated data points.</p>
+<p>Simulation results for each combination of beads-only samples used (2 vs. 4 vs. 8), method (BEER vs. edgeR), and estimation approach of <span class="math inline">\(a_0, b_0\)</span> for BEER (edgeR, MOM, MLE, and truth) were summarized as follows. To ensure that all curves had the same support points, we used linear interpolation to approximate the sensitivity or positive predictive value at each support point for each simulation. ROC curves started at 0 sensitivity and 0 false-positive rate, while PRC curves started at 0 sensitivity and perfect positive-predictive value. The interpolated curves were averaged point-wise to generate an average curve for each condition.</p>
+<pre class="r"><code>#&#39; load_curves.R
+#&#39; 
+#&#39; Code to process and load sens/spec/ppv data.
+
+# Set-up ----------
+source(here(&quot;R&quot;, &quot;load_simulations.R&quot;))
+source(here(&quot;R&quot;, &quot;helper_functions.R&quot;))
+
+# Create ROC/PRC data for each data set and simulation condition ------------
+# Note: the following code takes a while to run. 
+fc_thresholds &lt;- c(1, 2, 4, 8, 16, 32, NA)
+
+beer_roc_by_fc &lt;- lapply(sim_data, function(sim){
+    
+    roc_by_fc &lt;- map_dfr(2:length(fc_thresholds), function(pos){
+        
+        fc_min &lt;- ifelse(is.na(fc_thresholds[pos]), 1, fc_thresholds[pos - 1])
+        fc_max &lt;- ifelse(is.na(fc_thresholds[pos]), 32, fc_thresholds[pos])
+        
+        n_beads &lt;- unique(sim$num_beads)
+        n_samples &lt;- max(sim$sample)
+        
+        sim %&gt;%
+            filter(((phi &lt;= fc_max &amp; phi &gt; fc_min) | Z == 0) &amp;
+                       (sample %in% seq(n_beads + 1, n_samples))) %&gt;%
+            select(post_prob, Z) %&gt;%
+            dplyr::rename(prop_enriched = post_prob) %&gt;%
+            get_roc(., min_cutoff = 0, max_cutoff = 1 + 1e-6) %&gt;%
+            mutate(approach = &quot;BEER&quot;,
+                   sim_num = unique(sim$sim_num), 
+                   num_beads = n_beads,
+                   ab_method = unique(sim$ab_method), 
+                   group = ifelse(is.na(fc_thresholds[pos]), &quot;full data&quot;,
+                                  paste0(fc_min, &quot;&lt;phi&lt;=&quot;, fc_max)))
+    }) %&gt;%
+        mutate(group_lab = factor(group, 
+                                  levels = c(&quot;full data&quot;, &quot;1&lt;phi&lt;=2&quot;, &quot;2&lt;phi&lt;=4&quot;,
+                                             &quot;4&lt;phi&lt;=8&quot;, &quot;8&lt;phi&lt;=16&quot;, &quot;16&lt;phi&lt;=32&quot;), 
+                                  labels = c(TeX(&quot;full data&quot;), 
+                                             TeX(&quot;$1&lt;\\phi_{ij}\\leq 2$&quot;), 
+                                             TeX(&quot;$2&lt;\\phi_{ij}\\leq 4$&quot;),
+                                             TeX(&quot;$4&lt;\\phi_{ij}\\leq 8$&quot;),
+                                             TeX(&quot;$8&lt;\\phi_{ij}\\leq 16$&quot;),
+                                             TeX(&quot;$16&lt;\\phi_{ij}\\leq 32$&quot;))))
+}) %&gt;% plyr::ldply(.id = NULL)
+
+# edgeR is run with every BEER condition (i.e. MLE/MOM/edgeR and 2, 4, 8 
+# beads-only samples) so to avoid duplication, we just use the edgeR output
+# from the &quot;truth&quot; runs for 2, 4, and 8 beads-only samples. 
+edgeR_roc_by_fc &lt;- lapply(sim_data[grepl(&quot;truth&quot;, names(sim_data))], function(sim){
+    
+    roc_by_fc &lt;- map_dfr(2:length(fc_thresholds), function(pos){
+        
+        fc_min &lt;- ifelse(is.na(fc_thresholds[pos]), 1, fc_thresholds[pos - 1])
+        fc_max &lt;- ifelse(is.na(fc_thresholds[pos]), 32, fc_thresholds[pos])
+        
+        n_beads &lt;- unique(sim$num_beads)
+        n_samples &lt;- max(sim$sample)
+        
+        sim %&gt;%
+            filter(((phi &lt;= fc_max &amp; phi &gt; fc_min) | Z == 0) &amp;
+                       (sample %in% seq(n_beads + 1, n_samples))) %&gt;%
+            select(edgeR_pval, Z) %&gt;%
+            dplyr::rename(prop_enriched = edgeR_pval) %&gt;%
+            get_roc(., min_cutoff = 0, max_cutoff = max(.$prop_enriched)) %&gt;%
+            mutate(approach = &quot;edgeR&quot;,
+                   sim_num = unique(sim$sim_num), 
+                   num_beads = n_beads,
+                   ab_method = unique(sim$ab_method), 
+                   group = ifelse(is.na(fc_thresholds[pos]), &quot;full data&quot;,
+                                  paste0(fc_min, &quot;&lt;phi&lt;=&quot;, fc_max)))
+    }) %&gt;%
+        mutate(group_lab = factor(group, 
+                                  levels = c(&quot;full data&quot;, &quot;1&lt;phi&lt;=2&quot;, &quot;2&lt;phi&lt;=4&quot;,
+                                             &quot;4&lt;phi&lt;=8&quot;, &quot;8&lt;phi&lt;=16&quot;, &quot;16&lt;phi&lt;=32&quot;), 
+                                  labels = c(TeX(&quot;full data&quot;), 
+                                             TeX(&quot;$1&lt;\\phi_{ij}\\leq 2$&quot;), 
+                                             TeX(&quot;$2&lt;\\phi_{ij}\\leq 4$&quot;),
+                                             TeX(&quot;$4&lt;\\phi_{ij}\\leq 8$&quot;),
+                                             TeX(&quot;$8&lt;\\phi_{ij}\\leq 16$&quot;),
+                                             TeX(&quot;$16&lt;\\phi_{ij}\\leq 32$&quot;))))
+}) %&gt;% plyr::ldply(.id = NULL)
+
+roc_by_fc &lt;- bind_rows(beer_roc_by_fc, edgeR_roc_by_fc) %&gt;%
+    mutate(method = ifelse(approach == &quot;edgeR&quot;, &quot;edgeR&quot;, paste0(approach, &quot;_&quot;, ab_method)),
+           method = factor(method,
+                           levels = c(&quot;BEER_truth&quot;, &quot;BEER_mom&quot;, &quot;BEER_mle&quot;,
+                                      &quot;BEER_edgeR&quot;, &quot;edgeR&quot;)))
+
+# Average individual curves -----------
+# Remote fc &gt; 16 since the curves are essentially perfect which causes problems 
+# for interpolation.
+interpolate &lt;- roc_by_fc %&gt;%
+    filter(group!= &quot;16&lt;phi&lt;=32&quot;) %&gt;%
+    group_by(sim_num, group, group_lab, method, num_beads) %&gt;%
+    group_split() %&gt;%
+    map_dfr(function(sub_df){
+        
+        specm_range &lt;- seq(0, 1, by = 0.01)
+        sens_approx &lt;-  approx(c(0, 1 - sub_df$spec, 1), 
+                               c(0, sub_df$sens, 1), specm_range, 
+                               yleft = 0, yright = 1, rule = 1)$y
+        ppv_approx &lt;-  approx(c(0, sub_df$sens), 
+                              c(1, sub_df$ppv), specm_range, 
+                              yleft = 1, yright = 0, rule = 1)$y
+        
+        data.frame(sim_num = unique(sub_df$sim_num),
+                   group = unique(sub_df$group), 
+                   group_lab = unique(sub_df$group_lab), 
+                   method = unique(sub_df$method),
+                   num_beads = unique(sub_df$num_beads),
+                   x = specm_range, 
+                   sens = sens_approx, 
+                   ppv = ppv_approx)
+    })
+
+save.image(&quot;data_processed/simulation_curves.rda&quot;)</code></pre>
+<p>In addition to assessing the performance of each algorithm by discrete fold-change categories, we modeled the probability of identifying an enriched peptide by fold-change and reads pulled per million using results from one simulated data set. Posterior probability and p-value cutoffs for enrichment were selected to ensure an FDR of at most 0.05. Additionally, we used logistic regression to model the probability of identifying and enriched peptide by fold-change and reads pulled per million. 95% confidence intervals were constructed by mapping the 95% confidence bands for the linear component of the model to the logistic scale.</p>
+<pre class="r"><code># Get posterior probability cutoff with FDR rate of around 5\%
+# Comment out lines 21 &amp; 22 to see variation in cutoffs by simulation
+beer_fdr &lt;- beer_roc_by_fc %&gt;%
+    filter(approach == &quot;BEER&quot; &amp; ab_method == &quot;edgeR&quot; &amp;
+               group == &quot;full data&quot; &amp; num_beads == 8) %&gt;%
+    group_by(approach, ab_method, sim_num, num_beads) %&gt;%
+    # mutate(dist_fdr = abs(ppv - 0.95)) %&gt;%
+    # filter(dist_fdr == min(dist_fdr, na.rm = TRUE)) %&gt;%
+    summarize(mean_cutoff = mean(cutoff),
+              median_cutoff = median(cutoff), 
+              range_cutoff = max(cutoff) - min(cutoff), 
+              .groups = &quot;drop&quot;) 
+
+# Tidy simulation data, add edgeR and bh hits
+sim_tidy &lt;- lapply(sim_data[grepl(&quot;8beads_edgeR&quot;, names(sim_data))], function(sim){
+    sim %&gt;% 
+        left_join(beer_fdr[, c(&quot;sim_num&quot;, &quot;mean_cutoff&quot;)], by = &quot;sim_num&quot;) %&gt;%
+        mutate(beer_hits = ifelse(post_prob &gt; mean_cutoff, 1, 0), 
+               rpm = Y/n*1e6) %&gt;%
+        group_by(sample) %&gt;%
+        mutate(edgeR_bh = p.adjust(10^(-edgeR_pval), method = &quot;BH&quot;)) %&gt;%
+        ungroup()
+})</code></pre>
+</div>
+<div id="figures" class="section level2">
+<h2>Figures</h2>
+<div id="figure-1" class="section level3">
+<h3>Figure 1</h3>
+<p>Average ROC (top panels) and PR (bottom panels) curves calculated from ten simulations, comparing edgeR (black lines) and BEER (red lines) across fold-change categories and number of beads only samples available. Curves for BEER using the actual simulation shape parameters in the prior distributions (orange lines) are added to show the effect of sampling variability in these parameters. Results for fold changes above 16 are omitted since in all instances peptides were correctly classified as enriched.</p>
+<pre class="r"><code>roc_interp &lt;- curves_summary %&gt;%
+    filter(method %in% c(&quot;BEER_truth&quot;, &quot;BEER_edgeR&quot;, &quot;edgeR&quot;)) %&gt;% 
+    ggplot(aes(x = x, y = mean_sens, group = method)) +
+    geom_line(aes(color = method), size = 0.5) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c(&quot;2&quot; = &quot;2 beads&quot;,
+                                                 &quot;4&quot; = &quot;4 beads&quot;, 
+                                                 &quot;8&quot; = &quot;8 beads&quot;))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = &quot;1 - specificity&quot;, y = &quot;sensitivity&quot;,
+         color = &quot;method&quot;) +
+    scale_color_manual(breaks = c(&quot;BEER_truth&quot;, &quot;BEER_mom&quot;, &quot;BEER_mle&quot;, 
+                                  &quot;BEER_edgeR&quot;, &quot;edgeR&quot;),
+                       labels = c(&quot;BEER, truth&quot;, &quot;BEER, MOM&quot;, 
+                                  &quot;BEER, MLE&quot;, &quot;BEER, edgeR&quot;, 
+                                  &quot;edgeR&quot;), 
+                       values = c(brewer.pal(5, &quot;Reds&quot;)[2:5],
+                                  brewer.pal(3, &quot;Greys&quot;)[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, &quot;lines&quot;), 
+          legend.background = element_rect(color = &quot;black&quot;, size = 0.3),  
+          legend.position = c(0.92, 0.78), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), &quot;cm&quot;))
+
+prc_interp &lt;- curves_summary %&gt;%
+    filter(method %in% c(&quot;BEER_truth&quot;, &quot;BEER_edgeR&quot;, &quot;edgeR&quot;)) %&gt;% 
+    ggplot(aes(x = x, y = mean_ppv, group = method)) +
+    geom_line(aes(color = method), size = 0.5) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c(&quot;2&quot; = &quot;2 beads&quot;,
+                                                 &quot;4&quot; = &quot;4 beads&quot;, 
+                                                 &quot;8&quot; = &quot;8 beads&quot;))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = &quot;sensitivity&quot;, y = &quot;positive predictive value (PPV)&quot;,
+         color = &quot;method&quot;) +
+    scale_color_manual(breaks = c(&quot;BEER_truth&quot;, &quot;BEER_mom&quot;, &quot;BEER_mle&quot;, 
+                                  &quot;BEER_edgeR&quot;, &quot;edgeR&quot;),
+                       labels = c(&quot;BEER, truth&quot;, &quot;BEER, MOM&quot;, 
+                                  &quot;BEER, MLE&quot;, &quot;BEER, edgeR&quot;, 
+                                  &quot;edgeR&quot;), 
+                       values = c(brewer.pal(5, &quot;Reds&quot;)[2:5],
+                                  brewer.pal(3, &quot;Greys&quot;)[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 8), 
+          axis.title = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), &quot;cm&quot;))
+
+ggarrange(roc_interp, 
+          prc_interp + theme(legend.position = &quot;none&quot;), 
+          ncol = 1, nrow = 2)</code></pre>
+<p><img src="figure/simulation.Rmd/figure_roc_prc_interp-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-2" class="section level3">
+<h3>Figure 2</h3>
+<p>Estimated probabilities to identify enriched peptides (y-axis) as a function of the foldchange (x-axis) for each of ten simulated data sets based on logistic regression models. BEER posterior probability cut-offs were selected to achieve a false discovery rate of 5% in each simulation. Thin lines indicate the individual simulations, thick lines the respective averages.</p>
+<pre class="r"><code># BEER
+beer_pred &lt;- lapply(sim_tidy, function(sim){
+    fit &lt;- glm(beer_hits ~ phi, family = binomial(link = &quot;logit&quot;),
+               data = sim %&gt;% filter(Z == 1))
+    
+    penriched_fit(fit, data.frame(phi = seq(1, 100, length = 1000))) %&gt;%
+        mutate(sim_num = unique(sim$sim_num), 
+               approach = &quot;BEER&quot;, 
+               threshold = &quot;FDR - 0.05&quot;)
+}) %&gt;% plyr::ldply(.id = NULL)
+
+# edgeR - BH 0.05
+edgeR_05_pred &lt;- lapply(sim_tidy, function(sim){
+    fit &lt;- glm(edgeR_hits ~ phi, family = binomial(link = &quot;logit&quot;),
+               data = sim %&gt;% 
+                   mutate(edgeR_hits = ifelse(edgeR_bh &lt; 0.05, 1, 0)) %&gt;%
+                   filter(Z == 1))
+    
+    penriched_fit(fit, data.frame(phi = seq(1, 100, length = 1000))) %&gt;%
+        mutate(sim_num = unique(sim$sim_num), 
+               approach = &quot;edgeR&quot;, 
+               threshold = &quot;BH - 0.05&quot;)
+}) %&gt;% plyr::ldply(.id = NULL)
+
+bind_rows(beer_pred, edgeR_05_pred) %&gt;%
+    # group_by(approach, threshold, phi) %&gt;%
+    # summarize(mean_prob = mean(predict_p), 
+    #           max_prob = max(predict_p), 
+    #           min_prob = min(predict_p), 
+    #           .groups = &quot;drop&quot;) %&gt;%
+    ggplot(aes(x = log2(phi), y = predict_p)) +
+    geom_line(aes(color = approach, 
+                  group = paste0(approach, threshold, sim_num)), 
+              size = 0.1, alpha = 0.5) +
+    geom_line(aes(x = log2(phi), y = mean_prob, color = approach), 
+              size = 1,
+              data = bind_rows(beer_pred, edgeR_05_pred) %&gt;%
+                  group_by(approach, threshold, phi) %&gt;%
+                  summarize(mean_prob = mean(predict_p), .groups = &quot;drop&quot;)) +
+    labs(x = &quot;true fold change&quot;,
+         y = &quot;probability of being classified as enriched&quot;,
+         color = &quot;method&quot;) +
+    scale_color_manual(breaks = c(&quot;BEER&quot;, &quot;edgeR&quot;),
+                       values = c(&quot;red&quot;, &quot;black&quot;),
+                       labels = c(&quot;BEER&quot;, &quot;edgeR&quot;)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.1),
+                       minor_breaks = seq(0, 1, 0.05)) +
+    scale_x_continuous(breaks = 0:4,
+                       labels = 2^(0:4), 
+                       limits = c(0, 4)) +
+    theme_bw() +
+    theme(aspect.ratio = 1)</code></pre>
+<p><img src="figure/simulation.Rmd/figure_simulation_logistic_fc-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-s4" class="section level3">
+<h3>Figure S4</h3>
+<p>ROC and PR curves for various fold-change categories by approach and method of estimation for <span class="math inline">\(a_{i0}, b_{i0}\)</span>.</p>
+<pre class="r"><code>roc &lt;- roc_by_fc %&gt;%
+    ggplot(aes(x = 1-spec, y = sens, group = paste0(sim_num, method))) +
+    geom_line(aes(color = method), size = 0.2) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c(&quot;2&quot; = &quot;2 beads&quot;,
+                                                 &quot;4&quot; = &quot;4 beads&quot;, 
+                                                 &quot;8&quot; = &quot;8 beads&quot;))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = &quot;1 - specificity&quot;, y = &quot;sensitivity&quot;, color = &quot;method&quot;) +
+    scale_color_manual(breaks = c(&quot;BEER_truth&quot;, &quot;BEER_mom&quot;, &quot;BEER_mle&quot;, 
+                                  &quot;BEER_edgeR&quot;, &quot;edgeR&quot;),
+                       labels = c(&quot;BEER, truth&quot;, &quot;BEER, MOM&quot;, 
+                                  &quot;BEER, MLE&quot;, &quot;BEER, edgeR&quot;, 
+                                  &quot;edgeR&quot;), 
+                       values = c(brewer.pal(5, &quot;Reds&quot;)[2:5],
+                                  brewer.pal(3, &quot;Greys&quot;)[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, &quot;lines&quot;), 
+          legend.background = element_rect(color = &quot;black&quot;, size = 0.3),  
+          legend.position = c(0.93, 0.81), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), &quot;cm&quot;))
+
+prc &lt;- roc_by_fc %&gt;%
+    ggplot(aes(x = sens, y = ppv, group = paste0(sim_num, method))) +
+    geom_line(aes(color = method), size = 0.2) +
+    facet_grid(num_beads ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   num_beads = c(&quot;2&quot; = &quot;2 beads&quot;,
+                                                 &quot;4&quot; = &quot;4 beads&quot;, 
+                                                 &quot;8&quot; = &quot;8 beads&quot;))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = &quot;sensitivity&quot;, y = &quot;PPV&quot;, color = &quot;method&quot;) +
+    scale_color_manual(breaks = c(&quot;BEER_truth&quot;, &quot;BEER_mom&quot;, &quot;BEER_mle&quot;, 
+                                  &quot;BEER_edgeR&quot;, &quot;edgeR&quot;),
+                       labels = c(&quot;BEER, truth&quot;, &quot;BEER, MOM&quot;, 
+                                  &quot;BEER, MLE&quot;, &quot;BEER, edgeR&quot;, 
+                                  &quot;edgeR&quot;), 
+                       values = c(brewer.pal(5, &quot;Reds&quot;)[2:5],
+                                  brewer.pal(3, &quot;Greys&quot;)[c(3)])) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(axis.text = element_text(size = 8), 
+          axis.title = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), &quot;cm&quot;))
+
+ggarrange(roc, prc + theme(legend.position = &quot;none&quot;), ncol = 1, nrow = 2)</code></pre>
+<p><img src="figure/simulation.Rmd/figure_simulation_roc_prc-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-s5" class="section level3">
+<h3>Figure S5</h3>
+<p>Averaged ROC curves comparing the performance of each method using 2 (red), 4 (blue), and all 8 (black) beads-only samples.</p>
+<pre class="r"><code>curves_summary %&gt;%
+    filter(method !=&quot;BEER_truth&quot;) %&gt;% 
+    ggplot(aes(x = x, y = mean_sens, group = num_beads)) +
+    geom_line(aes(color = factor(num_beads)), size = 0.5) +
+    facet_grid(method ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed, 
+                                   method = c(&quot;BEER_truth&quot; = &quot;BEER, truth&quot;,
+                                              &quot;BEER_mom&quot; = &quot;BEER, MOM&quot;, 
+                                              &quot;BEER_mle&quot; = &quot;BEER, MLE&quot;, 
+                                              &quot;BEER_edgeR&quot; = &quot;BEER, edgeR&quot;, 
+                                              &quot;edgeR&quot; = &quot;edgeR&quot;))) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = &quot;1 - specificity&quot;, y = &quot;sensitivity&quot;,
+         color = &quot;# beads&quot;) +
+    scale_color_manual(breaks = c(&quot;2&quot;, &quot;4&quot;, &quot;8&quot;),
+                       values = c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, &quot;lines&quot;), 
+          legend.background = element_rect(color = &quot;black&quot;, size = 0.3),  
+          legend.position = c(0.94, 0.08), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), &quot;cm&quot;))</code></pre>
+<p><img src="figure/simulation.Rmd/simulation_roc_bybeads-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="figure-s6" class="section level3">
+<h3>Figure S6</h3>
+<p>Averaged PR curves comparing the performance of each method using 2 (red), 4 (blue), and all 8 (black) beads-only samples.</p>
+<pre class="r"><code>curves_summary %&gt;%
+    filter(method !=&quot;BEER_truth&quot;) %&gt;% 
+    ggplot(aes(x = x, y = mean_ppv, group = num_beads)) +
+    geom_line(aes(color = factor(num_beads)), size = 0.5) +
+    facet_grid(method ~ group_lab, 
+               labeller = labeller(group_lab = label_parsed)) +
+    coord_fixed(xlim = c(0, 1), ylim = c(0, 1)) +
+    labs(x = &quot;sensitivity&quot;, y = &quot;positive predictive value (PPV)&quot;,
+         color = &quot;# beads&quot;) +
+    scale_color_manual(breaks = c(&quot;2&quot;, &quot;4&quot;, &quot;8&quot;),
+                       values = c(&quot;red&quot;, &quot;blue&quot;, &quot;black&quot;)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.2)) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 6), 
+          legend.text = element_text(size = 6), 
+          legend.key.size = unit(0.6, &quot;lines&quot;), 
+          legend.background = element_rect(color = &quot;black&quot;, size = 0.3),  
+          legend.position = c(0.94, 0.08), 
+          axis.title = element_text(size = 8), 
+          axis.text = element_text(size = 8), 
+          plot.margin = unit(c(0, 0, 0.25, 0), &quot;cm&quot;))</code></pre>
+<p><img src="figure/simulation.Rmd/simulation_prc_by_beads-1.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="tables" class="section level2">
+<h2>Tables</h2>
+<div id="table-s1" class="section level3">
+<h3>Table S1</h3>
+<p>Area under the ROC curves. The table shows the approximated area under the ROC curves shown in Figure 1. Both BEER using edgeR parameter estimates and edgeR had near perfect classification for peptides with fold-changes above 4, even when only four beads-only samples were used to estimate <span class="math inline">\(a_{i0}, b_{i0}\)</span>.</p>
+<pre class="r"><code>curves_summary %&gt;%
+  filter(!grepl(&quot;truth&quot;, method)) %&gt;%
+  group_by(method, group, num_beads) %&gt;%
+  arrange(x, .by_group = TRUE) %&gt;%
+  summarize(auc_roc = integrate_vector(x, mean_sens),
+            .groups = &quot;drop&quot;) %&gt;%
+  pivot_wider(names_from = &quot;num_beads&quot;, values_from = &quot;auc_roc&quot;) %&gt;%
+  mutate(group = factor(
+    group, levels = c(&quot;full data&quot;, &quot;1&lt;phi&lt;=2&quot;, &quot;2&lt;phi&lt;=4&quot;, &quot;4&lt;phi&lt;=8&quot;, 
+                      &quot;8&lt;phi&lt;=16&quot;, &quot;16&lt;phi&lt;=32&quot;)), 
+    across(all_of(c(&quot;2&quot;, &quot;4&quot;, &quot;8&quot;)), ~ round(.x, 3))) %&gt;%
+  arrange(method, group) %&gt;%
+  select(-method) %&gt;%
+  kbl(col.names = c(&quot;&quot;, paste0(2^(1:3), &quot; beads-only&quot;))) %&gt;%
+  kable_styling(
+    bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
+  pack_rows(index = c(&quot;BEER, MOM&quot; = 5, &quot;BEER, MLE&quot; = 5, 
+                      &quot;BEER, edgeR&quot; = 5, &quot;edgeR&quot; = 5))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+2 beads-only
+</th>
+<th style="text-align:right;">
+4 beads-only
+</th>
+<th style="text-align:right;">
+8 beads-only
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="5">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>BEER, MOM</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+full data
+</td>
+<td style="text-align:right;">
+0.884
+</td>
+<td style="text-align:right;">
+0.939
+</td>
+<td style="text-align:right;">
+0.943
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.695
+</td>
+<td style="text-align:right;">
+0.757
+</td>
+<td style="text-align:right;">
+0.756
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.881
+</td>
+<td style="text-align:right;">
+0.959
+</td>
+<td style="text-align:right;">
+0.975
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.937
+</td>
+<td style="text-align:right;">
+0.989
+</td>
+<td style="text-align:right;">
+0.994
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+0.953
+</td>
+<td style="text-align:right;">
+0.994
+</td>
+<td style="text-align:right;">
+0.995
+</td>
+</tr>
+<tr grouplength="5">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>BEER, MLE</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+full data
+</td>
+<td style="text-align:right;">
+0.886
+</td>
+<td style="text-align:right;">
+0.939
+</td>
+<td style="text-align:right;">
+0.944
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.697
+</td>
+<td style="text-align:right;">
+0.759
+</td>
+<td style="text-align:right;">
+0.762
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.886
+</td>
+<td style="text-align:right;">
+0.959
+</td>
+<td style="text-align:right;">
+0.976
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.940
+</td>
+<td style="text-align:right;">
+0.989
+</td>
+<td style="text-align:right;">
+0.994
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+0.953
+</td>
+<td style="text-align:right;">
+0.994
+</td>
+<td style="text-align:right;">
+0.995
+</td>
+</tr>
+<tr grouplength="5">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>BEER, edgeR</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+full data
+</td>
+<td style="text-align:right;">
+0.929
+</td>
+<td style="text-align:right;">
+0.936
+</td>
+<td style="text-align:right;">
+0.939
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.712
+</td>
+<td style="text-align:right;">
+0.727
+</td>
+<td style="text-align:right;">
+0.728
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.951
+</td>
+<td style="text-align:right;">
+0.970
+</td>
+<td style="text-align:right;">
+0.977
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.992
+</td>
+<td style="text-align:right;">
+0.994
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+0.995
+</td>
+<td style="text-align:right;">
+0.995
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+</tr>
+<tr grouplength="5">
+<td colspan="4" style="border-bottom: 1px solid;">
+<strong>edgeR</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+full data
+</td>
+<td style="text-align:right;">
+0.926
+</td>
+<td style="text-align:right;">
+0.934
+</td>
+<td style="text-align:right;">
+0.936
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.709
+</td>
+<td style="text-align:right;">
+0.728
+</td>
+<td style="text-align:right;">
+0.737
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.940
+</td>
+<td style="text-align:right;">
+0.960
+</td>
+<td style="text-align:right;">
+0.967
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.991
+</td>
+<td style="text-align:right;">
+0.994
+</td>
+<td style="text-align:right;">
+0.995
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="table-s2" class="section level3">
+<h3>Table S2</h3>
+<p>PPV at various sensitivity values. The table gives the averaged PPV at various sensitivity values for the curves shown in <a href="#figure-1">Figure 1</a>.</p>
+<pre class="r"><code>curves_summary %&gt;%
+  filter(round(x, 2) %in% c(0.5, 0.75, 0.9, 0.95) &amp;
+             grepl(&quot;edgeR&quot;, method)) %&gt;%
+  select(method, num_beads, group, x, mean_ppv) %&gt;%
+  mutate(mean_ppv = round(mean_ppv, 3), 
+         group = factor(group, 
+                        levels = c(&quot;full data&quot;, &quot;1&lt;phi&lt;=2&quot;, &quot;2&lt;phi&lt;=4&quot;, 
+                                   &quot;4&lt;phi&lt;=8&quot;, &quot;8&lt;phi&lt;=16&quot;, &quot;16&lt;phi&lt;=32&quot;))) %&gt;%
+  pivot_wider(names_from = x, values_from = mean_ppv) %&gt;%
+  arrange(num_beads, method, group) %&gt;%
+  select(-num_beads) %&gt;%
+  kbl(col.names = c(&quot;method&quot;, &quot;group&quot;, 
+                    paste0(c(0.5, 0.75, 0.9, 0.95), &quot;% sensitivity&quot;))) %&gt;%
+  kable_styling(
+    bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
+  pack_rows(index = c(&quot;2 beads-only samples&quot; = 10, 
+                      &quot;4 beads-only samples&quot; = 10, 
+                      &quot;8 beads-only samples&quot; = 10))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+method
+</th>
+<th style="text-align:left;">
+group
+</th>
+<th style="text-align:right;">
+0.5% sensitivity
+</th>
+<th style="text-align:right;">
+0.75% sensitivity
+</th>
+<th style="text-align:right;">
+0.9% sensitivity
+</th>
+<th style="text-align:right;">
+0.95% sensitivity
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="10">
+<td colspan="6" style="border-bottom: 1px solid;">
+<strong>2 beads-only samples</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+full data
+</td>
+<td style="text-align:right;">
+0.953
+</td>
+<td style="text-align:right;">
+0.501
+</td>
+<td style="text-align:right;">
+0.173
+</td>
+<td style="text-align:right;">
+0.099
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.217
+</td>
+<td style="text-align:right;">
+0.125
+</td>
+<td style="text-align:right;">
+0.070
+</td>
+<td style="text-align:right;">
+0.047
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.844
+</td>
+<td style="text-align:right;">
+0.693
+</td>
+<td style="text-align:right;">
+0.482
+</td>
+<td style="text-align:right;">
+0.322
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+0.926
+</td>
+<td style="text-align:right;">
+0.888
+</td>
+<td style="text-align:right;">
+0.866
+</td>
+<td style="text-align:right;">
+0.846
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+full data
+</td>
+<td style="text-align:right;">
+0.965
+</td>
+<td style="text-align:right;">
+0.442
+</td>
+<td style="text-align:right;">
+0.152
+</td>
+<td style="text-align:right;">
+0.092
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.023
+</td>
+<td style="text-align:right;">
+0.016
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+0.011
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.182
+</td>
+<td style="text-align:right;">
+0.097
+</td>
+<td style="text-align:right;">
+0.056
+</td>
+<td style="text-align:right;">
+0.037
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.881
+</td>
+<td style="text-align:right;">
+0.674
+</td>
+<td style="text-align:right;">
+0.432
+</td>
+<td style="text-align:right;">
+0.245
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+<td style="text-align:right;">
+0.958
+</td>
+<td style="text-align:right;">
+0.874
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="6" style="border-bottom: 1px solid;">
+<strong>4 beads-only samples</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+full data
+</td>
+<td style="text-align:right;">
+0.989
+</td>
+<td style="text-align:right;">
+0.632
+</td>
+<td style="text-align:right;">
+0.208
+</td>
+<td style="text-align:right;">
+0.114
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.031
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.388
+</td>
+<td style="text-align:right;">
+0.207
+</td>
+<td style="text-align:right;">
+0.116
+</td>
+<td style="text-align:right;">
+0.080
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.957
+</td>
+<td style="text-align:right;">
+0.887
+</td>
+<td style="text-align:right;">
+0.698
+</td>
+<td style="text-align:right;">
+0.513
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+0.980
+</td>
+<td style="text-align:right;">
+0.971
+</td>
+<td style="text-align:right;">
+0.965
+</td>
+<td style="text-align:right;">
+0.947
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+full data
+</td>
+<td style="text-align:right;">
+0.988
+</td>
+<td style="text-align:right;">
+0.534
+</td>
+<td style="text-align:right;">
+0.168
+</td>
+<td style="text-align:right;">
+0.102
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.281
+</td>
+<td style="text-align:right;">
+0.142
+</td>
+<td style="text-align:right;">
+0.075
+</td>
+<td style="text-align:right;">
+0.055
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.958
+</td>
+<td style="text-align:right;">
+0.824
+</td>
+<td style="text-align:right;">
+0.586
+</td>
+<td style="text-align:right;">
+0.368
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+0.999
+</td>
+<td style="text-align:right;">
+0.978
+</td>
+<td style="text-align:right;">
+0.936
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="6" style="border-bottom: 1px solid;">
+<strong>8 beads-only samples</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+full data
+</td>
+<td style="text-align:right;">
+0.997
+</td>
+<td style="text-align:right;">
+0.728
+</td>
+<td style="text-align:right;">
+0.222
+</td>
+<td style="text-align:right;">
+0.121
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.032
+</td>
+<td style="text-align:right;">
+0.021
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.508
+</td>
+<td style="text-align:right;">
+0.282
+</td>
+<td style="text-align:right;">
+0.154
+</td>
+<td style="text-align:right;">
+0.111
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.988
+</td>
+<td style="text-align:right;">
+0.959
+</td>
+<td style="text-align:right;">
+0.835
+</td>
+<td style="text-align:right;">
+0.716
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BEER_edgeR
+</td>
+<td style="text-align:left;">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+0.995
+</td>
+<td style="text-align:right;">
+0.993
+</td>
+<td style="text-align:right;">
+0.992
+</td>
+<td style="text-align:right;">
+0.984
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+full data
+</td>
+<td style="text-align:right;">
+0.997
+</td>
+<td style="text-align:right;">
+0.606
+</td>
+<td style="text-align:right;">
+0.177
+</td>
+<td style="text-align:right;">
+0.102
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+1&lt;phi&lt;=2
+</td>
+<td style="text-align:right;">
+0.025
+</td>
+<td style="text-align:right;">
+0.018
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+2&lt;phi&lt;=4
+</td>
+<td style="text-align:right;">
+0.366
+</td>
+<td style="text-align:right;">
+0.181
+</td>
+<td style="text-align:right;">
+0.089
+</td>
+<td style="text-align:right;">
+0.067
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+4&lt;phi&lt;=8
+</td>
+<td style="text-align:right;">
+0.990
+</td>
+<td style="text-align:right;">
+0.910
+</td>
+<td style="text-align:right;">
+0.694
+</td>
+<td style="text-align:right;">
+0.523
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+edgeR
+</td>
+<td style="text-align:left;">
+8&lt;phi&lt;=16
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+0.992
+</td>
+<td style="text-align:right;">
+0.968
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.1 (2021-08-10)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats4    stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] beer_0.99.0                 rjags_4-10                 
+ [3] coda_0.19-4                 PhIPData_1.1.2             
+ [5] SummarizedExperiment_1.23.4 Biobase_2.53.0             
+ [7] GenomicRanges_1.45.0        GenomeInfoDb_1.29.4        
+ [9] IRanges_2.27.2              S4Vectors_0.31.2           
+[11] BiocGenerics_0.39.2         MatrixGenerics_1.5.4       
+[13] matrixStats_0.60.1          BiocManager_1.30.16        
+[15] RColorBrewer_1.1-2          kableExtra_1.3.4           
+[17] latex2exp_0.5.0             gridExtra_2.3              
+[19] ggpubr_0.4.0                here_1.0.1                 
+[21] forcats_0.5.1               stringr_1.4.0              
+[23] dplyr_1.0.7                 purrr_0.3.4                
+[25] readr_2.0.1                 tidyr_1.1.3                
+[27] tibble_3.1.4                ggplot2_3.3.5              
+[29] tidyverse_1.3.1             plyr_1.8.6                 
+
+loaded via a namespace (and not attached):
+ [1] colorspace_2.0-2       ggsignif_0.6.2         ellipsis_0.3.2        
+ [4] rio_0.5.27             rprojroot_2.0.2        XVector_0.33.0        
+ [7] fs_1.5.0               rstudioapi_0.13        farver_2.1.0          
+[10] listenv_0.8.0          fansi_0.5.0            lubridate_1.7.10      
+[13] xml2_1.3.2             codetools_0.2-18       knitr_1.33            
+[16] jsonlite_1.7.2         workflowr_1.6.2        broom_0.7.9           
+[19] dbplyr_2.1.1           compiler_4.1.1         httr_1.4.2            
+[22] backports_1.2.1        assertthat_0.2.1       Matrix_1.3-4          
+[25] fastmap_1.1.0          limma_3.49.4           cli_3.0.1             
+[28] later_1.3.0            htmltools_0.5.2        tools_4.1.1           
+[31] gtable_0.3.0           glue_1.4.2             GenomeInfoDbData_1.2.6
+[34] Rcpp_1.0.7             carData_3.0-4          cellranger_1.1.0      
+[37] vctrs_0.3.8            svglite_2.0.0          progressr_0.8.0       
+[40] xfun_0.25              globals_0.14.0         openxlsx_4.2.4        
+[43] rvest_1.0.1            lifecycle_1.0.0        rstatix_0.7.0         
+[46] future_1.22.1          edgeR_3.35.0           zlibbioc_1.39.0       
+[49] scales_1.1.1           hms_1.1.0              promises_1.2.0.1      
+[52] parallel_4.1.1         yaml_2.2.1             curl_4.3.2            
+[55] stringi_1.7.4          highr_0.9              zip_2.2.0             
+[58] rlang_0.4.11           pkgconfig_2.0.3        systemfonts_1.0.2     
+[61] bitops_1.0-7           evaluate_0.14          lattice_0.20-44       
+[64] labeling_0.4.2         cowplot_1.1.1          tidyselect_1.1.1      
+[67] parallelly_1.27.0      magrittr_2.0.1         R6_2.5.1              
+[70] generics_0.1.0         DelayedArray_0.19.1    DBI_1.1.1             
+[73] pillar_1.6.2           haven_2.4.3            foreign_0.8-81        
+[76] withr_2.4.2            abind_1.4-5            RCurl_1.98-1.4        
+[79] future.apply_1.8.1     modelr_0.1.8           crayon_1.4.1          
+[82] car_3.0-11             utf8_1.2.2             tzdb_0.1.2            
+[85] rmarkdown_2.10         locfit_1.5-9.4         grid_4.1.1            
+[88] readxl_1.3.1           data.table_1.14.0      git2r_0.28.0          
+[91] reprex_2.0.1           digest_0.6.27          webshot_0.5.2         
+[94] httpuv_1.6.2           munsell_0.5.0          viridisLite_0.4.0     </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
