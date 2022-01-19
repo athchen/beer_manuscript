@@ -1,7 +1,10 @@
 #' Run edgeR and beer on CoronaScan data. 
 
 ## Load packages
-source(here("R", "load_packages.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
 
 ## Read in data
 cs <- readRDS(here("data_raw", "coronascan.rds"))

@@ -4,31 +4,19 @@
 # BEER Manuscript
 
 This repository contains all of the data and code to reproduce the work
-presented in, *Detecting Enriched Antibody Peptides in
-Phage-Immunoprecipitation Sequencing Data*.
+presented in, *Detecting Antibody Reactivities in Phage
+Immunoprecipitation Sequencing Data*.
 
 The session info, including all packages used in the analyses and their
 respective versions can be found in the [Session Info](#session-info)
-section of this README.md. All code used to generate the results of the
-manuscript are mapped in the [section
-below](#mapping-of-manuscript-content-to-repository-files). A detailed
-description of the contents of each file in the directory is provided in
-the [Directory Structure](#directory-structure) section.
+section of this README.md. All code used to generate the figures and
+tables of the manuscript are mapped in the [section
+below](#mapping-of-figures-and-tables). The contents of each file in the
+repository are provided in the [Directory
+Structure](#directory-structure) section.
 
-In particular, these results were generated using the `R` package
+The results in the manuscript were generated using the `R` package
 [`beer`](https://github.com/athchen/beer) version `0.99.0`.
-
-# TO DO
-
--   In `README.Rmd`:
-    -   Change `beer` hyperlink to Bioc URL once accepted
-    -   Add figure and table numbers
-    -   Add hyperlink to paper once it’s been uploaded/submitted.
--   In `workflowr` page:
-    -   Update `beer` hyperlink to Bioc URL once accepted
-    -   Review of figure/table legends and captions on each page
-    -   Update CS data description
-    -   Update HIV data description
 
 # Directory structure
 
@@ -59,6 +47,8 @@ simulated data sets.
 
 -   **`coronascan.rds`**: coronascan data set.
 -   **`hiv.rds`**: HIV elite controller data set.
+-   **`hiv_virscan.rds`**: additional HIV data set referenced in the
+    Discussion
 -   **`simulations.R`**: script to generate simulated data sets.
 
 ### **`docs`**
@@ -94,9 +84,6 @@ figure files in `figures`.
     -   `simulation_roc_prc.png`
     -   `simulation_roc_bybeads.png`
     -   `simulation_prc_bybeads.png`
--   **`figure_simulation_enrichments.R`** generates figures:
-    -   `simulation_enrichments_e.png`
-    -   `simulation_enrichments_ne.png`
 -   **`figure_simulation_fc.R`** generates figure `simulation_fc.png`.
 -   **`figure_simulation_logistic.R`** generates figures:
     -   `simulation_logistic_fc.png`
@@ -113,86 +100,127 @@ figure files in `figures`.
     simulation results to a tidy dataframe.
 -   **`run_coronascan.R`** runs edgeR and BEER on CoronaScan data.
 -   **`run_hiv.R`** runs edgeR and BEER on HIV EC data.
--   **`run_simulations.R`** run edgeR and BEER on simulated data sets
+-   **`run_simulations.R`** runs edgeR and BEER on simulated data sets
     with various beads-only samples and different methods of estimating
     prior parameters.
-
-# Mapping of manuscript content to repository files
-
-## Methods
 
 ## Mapping of Figures and Tables
 
 ### Main Text
 
+-   Figure 1 - in `figures/simulation_roc_prc_interp.png`; generated
+    with `R/figure_simulation_curves.R`
+-   Figure 2 - in `figures/simulation_logistic_fc.png`; generated with
+    `R/figure_simulation_fc.R`
+-   Figure 3 - in `figures/hiv_protein.png`; generated with
+    `R/figure_hiv.R`
+
 ### Supplementary Material
+
+-   Table S1 - generated with `R/figure_simulation_curves.R`
+-   Table S2 - generated with `R/figure_simulation_curves.R`
+-   Table S3 - generated with `R/figure_hiv.R`
+-   Table S4 - generated with `R/figure_coronascan.R`
+-   Figure S1 - in `figures/simulation_roc_prc.png`; generated with
+    `R/figure_simulation_curves.R`
+-   Figure S2 - in `figures/simulation_roc_bybeads.png`; generated with
+    `R/figure_simulation_curves.R`
+-   Figure S3 - in `figures/simulation_prc_bybeads.png`; generated with
+    `R/figure_simulation_curves.R`
+-   Figure S4 - in `figures/simulation_postprob.png`; generated with
+    `R/figure_simulation_postprob.R`
+-   Figure S5 - in `figures/simulation_fc.png`; generated with
+    `R/figure_simulation_fc.R`
+-   Figure S6 - in `figures/hiv_protein_noB.png`; generated with
+    `R/figure_hiv.R`
+-   Figure S7 - in `figures/hiv_protein_A.png`; generated with
+    `R/figure_hiv.R`
+-   Figure S8 - in `figures/hiv_replicates.png`; generated with
+    `R/figure_hiv.R`
+-   Figure S9 - in `figures/hiv_ranked_prob.png`; generated with
+    `R/figure_hiv.R`
+-   Figure S10 - in `figures/coronascan_protein.png`; generated with
+    `R/figure_coronascan.R`
+-   Figure S11 - in `figures/coronascan_replicates.png`; generated with
+    `R/figure_coronascan.R`
+-   Figure S12 - in `figures/coronascan_ranked_prob.png`; generated with
+    `R/figure_coronascan.R`
+-   Figure S13 - in `figures/corstructure.png`; generated with
+    `R/figure_corstructure.R`
+-   Figure S14 - in `figures/figdatastructurebinom.png`; generated with
+    `R/figure_corstructure.R`
+-   Figure S15 - in `figures/attnconstant.png`; generated with
+    `R/figure_attnconstant.R`
+-   Figure 16 - in `figures/prior.pdf`; generated with
+    `R/figure_priors.R`
 
 # Session Info
 
 ``` r
 devtools::session_info()
 #> ─ Session info ───────────────────────────────────────────────────────────────
-#>  setting  value                       
-#>  version  R version 4.1.1 (2021-08-10)
-#>  os       macOS Big Sur 10.16         
-#>  system   x86_64, darwin17.0          
-#>  ui       X11                         
-#>  language (EN)                        
-#>  collate  en_US.UTF-8                 
-#>  ctype    en_US.UTF-8                 
-#>  tz       America/New_York            
-#>  date     2021-09-15                  
+#>  setting  value
+#>  version  R Under development (unstable) (2022-01-12 r81477)
+#>  os       macOS Big Sur/Monterey 10.16
+#>  system   x86_64, darwin17.0
+#>  ui       X11
+#>  language (EN)
+#>  collate  en_US.UTF-8
+#>  ctype    en_US.UTF-8
+#>  tz       America/New_York
+#>  date     2022-01-18
+#>  pandoc   2.16.2 @ /Applications/RStudio.app/Contents/MacOS/quarto/bin/ (via rmarkdown)
 #> 
 #> ─ Packages ───────────────────────────────────────────────────────────────────
-#>  package     * version date       lib source        
-#>  cachem        1.0.6   2021-08-19 [1] CRAN (R 4.1.0)
-#>  callr         3.7.0   2021-04-20 [1] CRAN (R 4.1.0)
-#>  cli           3.0.1   2021-07-17 [1] CRAN (R 4.1.0)
-#>  crayon        1.4.1   2021-02-08 [1] CRAN (R 4.1.0)
-#>  desc          1.3.0   2021-03-05 [1] CRAN (R 4.1.0)
-#>  devtools      2.4.2   2021-06-07 [1] CRAN (R 4.1.0)
-#>  digest        0.6.27  2020-10-24 [1] CRAN (R 4.1.0)
-#>  ellipsis      0.3.2   2021-04-29 [1] CRAN (R 4.1.0)
-#>  evaluate      0.14    2019-05-28 [1] CRAN (R 4.1.0)
-#>  fansi         0.5.0   2021-05-25 [1] CRAN (R 4.1.0)
-#>  fastmap       1.1.0   2021-01-25 [1] CRAN (R 4.1.0)
-#>  fs            1.5.0   2020-07-31 [1] CRAN (R 4.1.0)
-#>  glue          1.4.2   2020-08-27 [1] CRAN (R 4.1.0)
-#>  htmltools     0.5.2   2021-08-25 [1] CRAN (R 4.1.0)
-#>  httpuv        1.6.2   2021-08-18 [1] CRAN (R 4.1.0)
-#>  knitr         1.33    2021-04-24 [1] CRAN (R 4.1.0)
-#>  later         1.3.0   2021-08-18 [1] CRAN (R 4.1.0)
-#>  lifecycle     1.0.0   2021-02-15 [1] CRAN (R 4.1.0)
-#>  magrittr      2.0.1   2020-11-17 [1] CRAN (R 4.1.0)
-#>  memoise       2.0.0   2021-01-26 [1] CRAN (R 4.1.0)
-#>  pillar        1.6.2   2021-07-29 [1] CRAN (R 4.1.0)
-#>  pkgbuild      1.2.0   2020-12-15 [1] CRAN (R 4.1.0)
-#>  pkgconfig     2.0.3   2019-09-22 [1] CRAN (R 4.1.0)
-#>  pkgload       1.2.1   2021-04-06 [1] CRAN (R 4.1.0)
-#>  prettyunits   1.1.1   2020-01-24 [1] CRAN (R 4.1.0)
-#>  processx      3.5.2   2021-04-30 [1] CRAN (R 4.1.0)
-#>  promises      1.2.0.1 2021-02-11 [1] CRAN (R 4.1.0)
-#>  ps            1.6.0   2021-02-28 [1] CRAN (R 4.1.0)
-#>  purrr         0.3.4   2020-04-17 [1] CRAN (R 4.1.0)
-#>  R6            2.5.1   2021-08-19 [1] CRAN (R 4.1.0)
-#>  Rcpp          1.0.7   2021-07-07 [1] CRAN (R 4.1.0)
-#>  remotes       2.4.0   2021-06-02 [1] CRAN (R 4.1.0)
-#>  rlang         0.4.11  2021-04-30 [1] CRAN (R 4.1.0)
-#>  rmarkdown     2.10    2021-08-06 [1] CRAN (R 4.1.0)
-#>  rprojroot     2.0.2   2020-11-15 [1] CRAN (R 4.1.0)
-#>  rstudioapi    0.13    2020-11-12 [1] CRAN (R 4.1.0)
-#>  sessioninfo   1.1.1   2018-11-05 [1] CRAN (R 4.1.0)
-#>  stringi       1.7.4   2021-08-25 [1] CRAN (R 4.1.0)
-#>  stringr       1.4.0   2019-02-10 [1] CRAN (R 4.1.0)
-#>  testthat      3.0.4   2021-07-01 [1] CRAN (R 4.1.0)
-#>  tibble        3.1.4   2021-08-25 [1] CRAN (R 4.1.0)
-#>  usethis       2.0.1   2021-02-10 [1] CRAN (R 4.1.0)
-#>  utf8          1.2.2   2021-07-24 [1] CRAN (R 4.1.0)
-#>  vctrs         0.3.8   2021-04-29 [1] CRAN (R 4.1.0)
-#>  withr         2.4.2   2021-04-18 [1] CRAN (R 4.1.0)
-#>  workflowr   * 1.6.2   2020-04-30 [1] CRAN (R 4.1.0)
-#>  xfun          0.25    2021-08-06 [1] CRAN (R 4.1.0)
-#>  yaml          2.2.1   2020-02-01 [1] CRAN (R 4.1.0)
+#>  package     * version date (UTC) lib source
+#>  cachem        1.0.6   2021-08-19 [1] CRAN (R 4.2.0)
+#>  callr         3.7.0   2021-04-20 [1] CRAN (R 4.2.0)
+#>  cli           3.1.0   2021-10-27 [1] CRAN (R 4.2.0)
+#>  crayon        1.4.2   2021-10-29 [1] CRAN (R 4.2.0)
+#>  desc          1.4.0   2021-09-28 [1] CRAN (R 4.2.0)
+#>  devtools      2.4.3   2021-11-30 [1] CRAN (R 4.2.0)
+#>  digest        0.6.29  2021-12-01 [1] CRAN (R 4.2.0)
+#>  ellipsis      0.3.2   2021-04-29 [1] CRAN (R 4.2.0)
+#>  evaluate      0.14    2019-05-28 [1] CRAN (R 4.2.0)
+#>  fastmap       1.1.0   2021-01-25 [1] CRAN (R 4.2.0)
+#>  fs            1.5.2   2021-12-08 [1] CRAN (R 4.2.0)
+#>  getPass       0.2-2   2017-07-21 [1] CRAN (R 4.2.0)
+#>  git2r         0.29.0  2021-11-22 [1] CRAN (R 4.2.0)
+#>  glue          1.6.0   2021-12-17 [1] CRAN (R 4.2.0)
+#>  htmltools     0.5.2   2021-08-25 [1] CRAN (R 4.2.0)
+#>  httpuv        1.6.5   2022-01-05 [1] CRAN (R 4.2.0)
+#>  httr          1.4.2   2020-07-20 [1] CRAN (R 4.2.0)
+#>  knitr         1.37    2021-12-16 [1] CRAN (R 4.2.0)
+#>  later         1.3.0   2021-08-18 [1] CRAN (R 4.2.0)
+#>  lifecycle     1.0.1   2021-09-24 [1] CRAN (R 4.2.0)
+#>  magrittr      2.0.1   2020-11-17 [1] CRAN (R 4.2.0)
+#>  memoise       2.0.1   2021-11-26 [1] CRAN (R 4.2.0)
+#>  pkgbuild      1.3.1   2021-12-20 [1] CRAN (R 4.2.0)
+#>  pkgload       1.2.4   2021-11-30 [1] CRAN (R 4.2.0)
+#>  prettyunits   1.1.1   2020-01-24 [1] CRAN (R 4.2.0)
+#>  processx      3.5.2   2021-04-30 [1] CRAN (R 4.2.0)
+#>  promises      1.2.0.1 2021-02-11 [1] CRAN (R 4.2.0)
+#>  ps            1.6.0   2021-02-28 [1] CRAN (R 4.2.0)
+#>  purrr         0.3.4   2020-04-17 [1] CRAN (R 4.2.0)
+#>  R6            2.5.1   2021-08-19 [1] CRAN (R 4.2.0)
+#>  Rcpp          1.0.8   2022-01-13 [1] CRAN (R 4.2.0)
+#>  remotes       2.4.2   2021-11-30 [1] CRAN (R 4.2.0)
+#>  rlang         0.4.12  2021-10-18 [1] CRAN (R 4.2.0)
+#>  rmarkdown     2.11    2021-09-14 [1] CRAN (R 4.2.0)
+#>  rprojroot     2.0.2   2020-11-15 [1] CRAN (R 4.2.0)
+#>  rstudioapi    0.13    2020-11-12 [1] CRAN (R 4.2.0)
+#>  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.2.0)
+#>  stringi       1.7.6   2021-11-29 [1] CRAN (R 4.2.0)
+#>  stringr       1.4.0   2019-02-10 [1] CRAN (R 4.2.0)
+#>  testthat      3.1.1   2021-12-03 [1] CRAN (R 4.2.0)
+#>  usethis       2.1.5   2021-12-09 [1] CRAN (R 4.2.0)
+#>  whisker       0.4     2019-08-28 [1] CRAN (R 4.2.0)
+#>  withr         2.4.3   2021-11-30 [1] CRAN (R 4.2.0)
+#>  workflowr   * 1.7.0   2021-12-21 [1] CRAN (R 4.2.0)
+#>  xfun          0.29    2021-12-14 [1] CRAN (R 4.2.0)
+#>  yaml          2.2.1   2020-02-01 [1] CRAN (R 4.2.0)
 #> 
-#> [1] /Library/Frameworks/R.framework/Versions/4.1/Resources/library
+#>  [1] /Library/Frameworks/R.framework/Versions/4.2/Resources/library
+#> 
+#> ──────────────────────────────────────────────────────────────────────────────
 ```

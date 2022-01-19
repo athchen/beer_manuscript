@@ -1,13 +1,19 @@
 #' figure_coronascan.R
 #' 
 #' Code to generate figures:
-#' - coronascan_protein.png
-#' - coronascan_replicates.png
-#' - coronascan_ranked_prob.png
+#' - Figure S10: coronascan_protein.png
+#' - Figure S11: coronascan_replicates.png
+#' - Figure S12: coronascan_ranked_prob.png
+#' 
+#' Code to generate tables:
+#' - Table S4: coronascan_replicates_concordance
 
 # Set-up --------------
-source(here("R", "load_packages.R"))
-source(here("R", "helper_functions.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
+source(here::here("R", "helper_functions.R"))
 
 # Read in data
 cs <- readRDS(here("data_processed", "coronascan_results.rds"))
@@ -18,30 +24,29 @@ cs_tidy <- as(cs, "DataFrame") %>%
     as_tibble() %>%
     group_by(sample) %>%
     mutate(is_se = ifelse(sample != "beads" & is.na(beer_prob), TRUE, FALSE), 
-           sample = factor(sample, levels = colnames(cs)[c(1:14, 16, 15, 18, 17)]),
+           sample = factor(sample, levels = colnames(cs)),
            beer_hits = ifelse(beer_prob > 0.5 | is_se, 1, 0), 
            edgeR_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
            edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0)) %>%
     ungroup()
 
-# Figure: coronascan_protein.png ------------
+# Figure S10: coronascan_protein.png ------------
 # Color palette
 cs_species <- unique(cs_tidy$organism)
-grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(cs_species) - 1))))
+grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(cs_species) - 2))))
 # Make `grey_palette` is of the correct length. Not sure why this has to be run twice
-grey_palette <- if(length(grey_palette) < (length(cs_species) - 1)){
-    palette(gray(seq(0.1, 0.8, length.out = (length(cs_species) - 1))))
+grey_palette <- if(length(grey_palette) < (length(cs_species) - 2)){
+    palette(gray(seq(0.1, 0.8, length.out = (length(cs_species) - 2))))
 } else grey_palette
-num_sarscov2 <- grep("SARS-CoV2", cs_species)
+num_sarscov2 <- rev(grep("SARS-CoV2|Wuhan", cs_species))
 cs_order <- c(cs_species[num_sarscov2], cs_species[-num_sarscov2])
 
 # Facet labels
-facet_labels <- case_when(
-    sampleInfo(cs)$group == "beads" ~ colnames(cs), 
-    sampleInfo(cs)$group == "vrc" ~ 
-        paste0("VRC ", gsub("CS ", "", colnames(cs))), 
-    TRUE ~ paste0("SARS-CoV2, D", sampleInfo(cs)$days_since_infection, 
-                  " Ab", ifelse(sampleInfo(cs)$ab_test == "pos", "+", "-")))
+facet_labels <- ifelse(
+    sampleInfo(cs)$group != "SARS-CoV-2", 
+    gsub("_", " ", toupper(colnames(cs))), 
+    paste0("SARS-CoV-2, D", sampleInfo(cs)$days_since_infection, 
+           " Ab", ifelse(sampleInfo(cs)$ab_test == "pos", "+", "-")))
 names(facet_labels) <- colnames(cs)
 
 cs_tidy %>%
@@ -69,10 +74,9 @@ cs_tidy %>%
     scale_x_continuous(trans = "mysqrt", 
                        limits = c(0, 1), 
                        breaks = seq(0, 1, by = 0.2)) +
-    scale_color_manual(values = c(grey_palette[1:(num_sarscov2 - 1)], 
-                                  "firebrick2", 
-                                  grey_palette[-(1:(num_sarscov2 - 1))]), 
-                       breaks = cs_species) +
+    scale_color_manual(values = c(brewer.pal(3, "Reds")[c(3, 2)], 
+                                  grey_palette), 
+                       breaks = cs_order) +
     theme_bw() +
     theme(aspect.ratio = 1, 
           legend.title = element_text(size = 10), 
@@ -84,9 +88,9 @@ cs_tidy %>%
 
 ggsave("figures/coronascan_protein.png", units = "in", width = 10.5, height = 7)
 
-# Figure: coronascan_replicates.png -----------
+# Figure S11: coronascan_replicates.png -----------
 # Define sample to look at
-cs_sample <- "CS 1"
+cs_sample <- "vrc_1"
 
 # Plot for proportion of reads
 prop_reads <- cs_tidy %>% 
@@ -186,9 +190,10 @@ cat_plot <- data.frame(rank = 1:length(beer_conc),
 ggarrange(prop_reads, cat_plot,
           nrow = 1, ncol = 2)
 
-ggsave("figures/coronascan_replicates.png", units = "in", width = 8, height = 4)
+ggsave("figures/coronascan_replicates.png", units = "in", width = 8, height = 4, 
+       bg = "white")
 
-# Figure: coronascan_ranked_prob.png -----------
+# Figur S12: coronascan_ranked_prob.png -----------
 post_prob <- cs_tidy %>%
     filter(sample == cs_sample) %>%
     select(pair_num, beer_prob) %>%
@@ -234,10 +239,12 @@ p_value <- cs_tidy %>%
 
 ggarrange(post_prob, p_value, nrow = 1)
 
-ggsave("figures/coronascan_ranked_prob.png", units = "in", width = 8, height = 4)
+ggsave("figures/coronascan_ranked_prob.png", units = "in", width = 8, height = 4, 
+       bg = "white")
 
-# Table: coronascan_replicates ----------
+# Table S4: coronascan_replicates_concordance ----------
 cs_tidy %>%
+    filter(group != "beads") %>%
     select(sample, pair_id, pair_num, beer_hits, edgeR_hits) %>%
     pivot_longer(cols = contains("hits"), 
                  names_to = "method", 
@@ -255,4 +262,5 @@ cs_tidy %>%
     unite("method_param", method, param) %>%
     pivot_wider(names_from = "method_param", values_from = "value") %>%
     select(-total_pep) %>%
-    mutate(across(contains(c("beer", "edgeR")), round, digits = 3))
+    mutate(across(contains(c("beer", "edgeR")), round, digits = 3), 
+           sample = facet_labels[match(sample, names(facet_labels))])

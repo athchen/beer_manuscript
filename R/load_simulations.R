@@ -1,4 +1,7 @@
-source(here("R", "load_packages.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
 sim_dirs <- list.files("data_processed", "simulation_[0-9]", full.names = TRUE)
 sim_list <- sapply(sim_dirs, list.files, full.names = TRUE) %>% as.vector()
 

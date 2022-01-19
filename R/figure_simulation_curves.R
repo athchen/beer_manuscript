@@ -1,21 +1,25 @@
 #' figure_simulation_curves.R
 #' 
-#' Code to generate tables:
-#' - simulation_auc_roc_interp
-#' - simulation_ppv_by_sens
-#' 
 #' Code to generate figures:
-#' - simulation_roc_prc_interp.png
-#' - simulation_roc_prc.png
-#' - simulation_roc_bybeads.png
-#' - simulation_prc_bybeads.png
+#' - Figure 1: simulation_roc_prc_interp.png
+#' - Figure S1: simulation_roc_prc.png
+#' - Figure S2: simulation_roc_bybeads.png
+#' - Figure S3: simulation_prc_bybeads.png
+#' 
+#' Code to generate tables:
+#' - Table S1: simulation_auc_roc_interp
+#' - Table S2: simulation_ppv_by_sens
 
 # Set-up --------------
-if(file.exists(here("data_processed", "simulation_curves.rda"))){
-    load(here("data_processed", "simulation_curves.rda"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+
+if(file.exists(here::here("data_processed", "simulation_curves.rda"))){
+    load(here::here("data_processed", "simulation_curves.rda"))
 } else {
     # Takes a while to run - only need to run once. 
-    source(here("R", "load_curves.R"))
+    source(here::here("R", "load_curves.R"))
 }
 
 curves_summary <- interpolate %>%
@@ -27,28 +31,7 @@ curves_summary <- interpolate %>%
               mean_ppv = mean(ppv, na.rm = TRUE), 
               .groups = "drop")
 
-# Table: simulation_auc_roc_interp ------------
-curves_summary %>%
-    filter(!grepl("truth", method)) %>%
-    group_by(method, group, num_beads) %>%
-    arrange(x, .by_group = TRUE) %>%
-    summarize(auc_roc = integrate_vector(x, mean_sens),
-              .groups = "drop") %>%
-    pivot_wider(names_from = "num_beads", values_from = "auc_roc") %>%
-    arrange(method, group)
-
-# Table: ppv_by_sens ----------
-curves_summary %>%
-    filter(round(x, 2) %in% c(0.5, 0.75, 0.9, 0.95) &
-               grepl("edgeR", method)) %>%
-    select(method, num_beads, group, x, mean_ppv) %>%
-    mutate(mean_ppv = round(mean_ppv, 3)) %>%
-    pivot_wider(names_from = x, values_from = mean_ppv) %>%
-    group_by(num_beads) %>%
-    arrange(method, group) %>%
-    group_split() 
-
-# Figure: simulation_roc_prc_interp.png ------------
+# Figure 1: simulation_roc_prc_interp.png ------------
 roc_interp <- curves_summary %>%
     filter(method %in% c("BEER_truth", "BEER_edgeR", "edgeR")) %>% 
     ggplot(aes(x = x, y = mean_sens, group = method)) +
@@ -113,7 +96,7 @@ roc_prc_interp <- ggarrange(roc_interp,
 ggsave("figures/simulation_roc_prc_interp.png", roc_prc_interp, 
        units = "in", height = 9, width = 7)
 
-# Figure: simulation_roc_prc.png ------------
+# Figure S1: simulation_roc_prc.png ------------
 roc <- roc_by_fc %>%
     ggplot(aes(x = 1-spec, y = sens, group = paste0(sim_num, method))) +
     geom_line(aes(color = method), size = 0.2) +
@@ -172,7 +155,7 @@ roc_prc <- ggarrange(roc, prc + theme(legend.position = "none"), ncol = 1, nrow 
 ggsave("figures/simulation_roc_prc.png", roc_prc, 
        units = "in", height = 9, width = 8.5)
 
-# Figure: simulation_roc_bybeads.png ------------
+# Figure S2: simulation_roc_bybeads.png ------------
 curves_summary %>%
     filter(method !="BEER_truth") %>% 
     ggplot(aes(x = x, y = mean_sens, group = num_beads)) +
@@ -204,7 +187,7 @@ curves_summary %>%
 ggsave("figures/simulation_roc_bybeads.png", units = "in", 
        height = 5, width = 6)
 
-# Figure: simulation_prc_bybeads.png ------------
+# Figure S3: simulation_prc_bybeads.png ------------
 curves_summary %>%
     filter(method !="BEER_truth") %>% 
     ggplot(aes(x = x, y = mean_ppv, group = num_beads)) +
@@ -230,3 +213,24 @@ curves_summary %>%
 
 ggsave("figures/simulation_prc_bybeads.png", units = "in", 
        height = 5, width = 6)
+
+# Table S1: simulation_auc_roc_interp ------------
+curves_summary %>%
+    filter(!grepl("truth", method)) %>%
+    group_by(method, group, num_beads) %>%
+    arrange(x, .by_group = TRUE) %>%
+    summarize(auc_roc = integrate_vector(x, mean_sens),
+              .groups = "drop") %>%
+    pivot_wider(names_from = "num_beads", values_from = "auc_roc") %>%
+    arrange(method, group)
+
+# Table S2: ppv_by_sens ----------
+curves_summary %>%
+    filter(round(x, 2) %in% c(0.5, 0.75, 0.9, 0.95) &
+               grepl("edgeR", method)) %>%
+    select(method, num_beads, group, x, mean_ppv) %>%
+    mutate(mean_ppv = round(mean_ppv, 3)) %>%
+    pivot_wider(names_from = x, values_from = mean_ppv) %>%
+    group_by(num_beads) %>%
+    arrange(method, group) %>%
+    group_split() 

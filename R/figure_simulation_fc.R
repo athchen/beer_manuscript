@@ -1,19 +1,23 @@
 #' figure_simulation_fc.R
 #' 
 #' Code to generate figures:
-#' - simulation_fc.png
+#' - Figure S5: simulation_fc.png
 
 # Set-up --------------
-source(here("R", "load_packages.R"))
-source(here("R", "helper_functions.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
+source(here::here("R", "helper_functions.R"))
 
 sim_out <- readRDS(here("data_processed", "simulation_8beads_edgeR",
                         "sim_001.rds"))
 
-sim_tidy <- as_df(sim_out, metadata = TRUE) %>%
+sim_tidy <- as(sim_out, "DataFrame") %>%
+    as_tibble() %>%
     group_by(peptide) %>%
-    mutate(is_se = ifelse(beads != "beads" & is.na(beer_prob), TRUE, FALSE), 
-           expected_prop = mean(counts[beads == "beads"]/n[beads == "beads"]), 
+    mutate(is_se = ifelse(group != "beads" & is.na(beer_prob), TRUE, FALSE), 
+           expected_prop = mean(counts[group == "beads"]/n[group == "beads"]), 
            expected_rc = expected_prop*n) %>%
     ungroup()
 
@@ -22,7 +26,7 @@ true_c <- sim_tidy %>%
     group_by(sample) %>%
     group_split() %>%
     map_dfr(function(df){
-        c_coef <- if(unique(df$beads) != "beads" &
+        c_coef <- if(unique(df$group) != "beads" &
                      as.numeric(unique(df$sample)) != 9){
             lm_fit <- lm(counts ~ expected_rc, data = df %>% filter(true_Z == 0))
             coef(lm_fit)[["expected_rc"]]
@@ -32,11 +36,11 @@ true_c <- sim_tidy %>%
     }) %>%
     arrange(as.numeric(sample))
 
-# Figure: simulation_fc.png ------------
+# Figure S5: simulation_fc.png ------------
 # Peptides from beads-only samples and super-enriched peptides are excluded
 # from the following plots
 beer_phi <- sim_tidy %>%
-    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    filter(group == "sample" & !is.na(beer_fc)) %>%
     mutate(cond_fc = ifelse(beer_prob < 0.5, 1, beer_fcZ)) %>%
     arrange(beer_prob) %>%
     ggplot(aes(x = log2(true_phi), y = log2(cond_fc), color = beer_prob)) +
@@ -59,10 +63,10 @@ beer_phi <- sim_tidy %>%
 
 beer_cphi <- sim_tidy %>%
     left_join(true_c, by = c("sample")) %>%
-    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    filter(group == "sample" & !is.na(beer_fc)) %>%
     mutate(cond_fc = ifelse(beer_prob < 0.5, 1, beer_fcZ)) %>%
     arrange(beer_prob) %>%
-    ggplot(aes(x = log2(true_phi*true_c), y = log2(cond_fc*est_c), 
+    ggplot(aes(x = log2(true_phi*true_c), y = log2(cond_fc*c), 
                color = beer_prob)) +
     geom_point(alpha = 0.75) +
     labs(title = "BEER with edgeR", 
@@ -84,7 +88,7 @@ beer_cphi <- sim_tidy %>%
           legend.title = element_text(vjust = 0.85))
 
 edgeR_phi <- sim_tidy %>%
-    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    filter(group == "sample" & !is.na(beer_fc)) %>%
     group_by(sample) %>%
     mutate(edgeR_prob_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
            edgeR_logprob_bh = -log10(edgeR_prob_bh)) %>%
@@ -113,7 +117,7 @@ edgeR_phi <- sim_tidy %>%
 
 edgeR_cphi <- sim_tidy %>%
     left_join(true_c, by = c("sample")) %>%
-    filter(beads == "sample" & !is.na(beer_fc)) %>%
+    filter(group == "sample" & !is.na(beer_fc)) %>%
     group_by(sample) %>%
     mutate(edgeR_prob_bh = p.adjust(10^(-edgeR_prob), method = "BH"), 
            edgeR_logprob_bh = -log10(edgeR_prob_bh)) %>%
@@ -146,5 +150,5 @@ simulation_fc <- ggarrange(beer_phi, edgeR_phi, beer_cphi, edgeR_cphi,
                            nrow = 2, ncol = 2, align = "v", 
                            heights = c(4, 4.9), labels = "AUTO")
 
-ggsave("figures/simulation_fc.png", simulation_fc, 
+ggsave("figures/simulation_fc.png", simulation_fc, bg = "white",
        units = "in", width = 8, height = 9)

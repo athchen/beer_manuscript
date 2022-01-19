@@ -1,15 +1,21 @@
 #' figure_hiv.R
 #' 
 #' Code to generate figures:
-#' - hiv_protein.png
-#' - hiv_protein_noB.png
-#' - hiv_protein_A.png
-#' - hiv_replicates.png
-#' - hiv_ranked_prob.png
+#' - Figure 3: hiv_protein.png
+#' - Figure S6: hiv_protein_noB.png
+#' - Figure S7: hiv_protein_A.png
+#' - Figure S8: hiv_replicates.png
+#' - Figure S9: hiv_ranked_prob.png
+#'
+#' Code to generate tables:
+#' - Table S3: hiv_replicates
 
 # Set-up --------------
-source(file.path("R", "load_packages.R"))
-source(here("R", "helper_functions.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
+source(here::here("R", "helper_functions.R"))
 
 # Read in data
 hiv <- readRDS(here::here("data_processed", "hiv_results.rds"))
@@ -25,7 +31,7 @@ hiv_tidy <- as(hiv, "DataFrame") %>%
            edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0)) %>%
     ungroup()
 
-# Figure: hiv_protein.png ------------
+# Figure 3: hiv_protein.png ------------
 # Color palette
 hiv_subtype <- unique(hiv_tidy$taxon_species)
 grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(hiv_subtype) - 1))))
@@ -75,7 +81,7 @@ hiv_tidy %>%
 
 ggsave("figures/hiv_protein.png", units = "in", width = 8.5, height = 6.5)
 
-# Figure: hiv_protein_noB.png ----------
+# Figure S6: hiv_protein_noB.png ----------
 hiv_tidy %>%
     filter(group != "beads" & !grepl("9", sample) &
                !grepl("HIV type 1 group M subtype B", taxon_species)) %>%
@@ -116,7 +122,7 @@ hiv_tidy %>%
 
 ggsave("figures/hiv_protein_noB.png", units = "in", width = 8.5, height = 6.5)
 
-# Figure: hiv_protein_A.png ----------
+# Figure S7: hiv_protein_A.png ----------
 # Color palette
 num_A <- grep("HIV type 1 group M subtype A", hiv_subtype)
 subtype_order <- c(hiv_subtype[c(num_B, num_A)], hiv_subtype[-c(num_B, num_A)])
@@ -160,7 +166,7 @@ hiv_tidy %>%
 
 ggsave("figures/hiv_protein_A.png", units = "in", width = 8.5, height = 6.5)
 
-# Figure: hiv_replicates.png -----------
+# Figure S8: hiv_replicates.png -----------
 # Plot for proportion of reads
 prop_reads <- hiv_tidy %>%
     mutate(prop_reads = counts/n) %>%
@@ -262,7 +268,7 @@ ggarrange(prop_reads, cat_plot, align = "hv",
 
 ggsave("figures/hiv_replicates.png", units = "in", width = 8, height = 4)
 
-# Figure: hiv_ranked_prob.png -----------
+# Figure S9: hiv_ranked_prob.png -----------
 post_prob <- hiv_tidy %>%
     filter(sample %in% c("HIV EC 9", "replicate of HIV EC 9")) %>%
     select(sample, peptide, beer_prob) %>%

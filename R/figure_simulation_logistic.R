@@ -1,15 +1,18 @@
 #' figure_simulation_logistic.R
 #' 
 #' Code to generate figures:
-#' - simulation_logistic_fc.png
-#' - simulation_logistic_rc.png
+#' - Figure 2: simulation_logistic_fc.png
 
 # Set-up --------------
-if(file.exists(here("data_processed", "simulation_curves.rda"))){
-    load(here("data_processed", "simulation_curves.rda"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+
+if(file.exists(here::here("data_processed", "simulation_curves.rda"))){
+    load(here::here("data_processed", "simulation_curves.rda"))
 } else {
     # Takes a while to run - only need to run once. 
-    source(file.path("R", "load_curves.R"))
+    source(here::here("R", "load_curves.R"))
 }
 
 # Get posterior probability cutoff with FDR rate of around 5\%
@@ -38,7 +41,7 @@ sim_tidy <- lapply(sim_data[grepl("8beads_edgeR", names(sim_data))], function(si
         ungroup()
 })
 
-# Figure: simulation_logistic_fc.png ----------
+# Figure 2: simulation_logistic_fc.png ----------
 # BEER
 beer_pred <- lapply(sim_tidy, function(sim){
     fit <- glm(beer_hits ~ phi, family = binomial(link = "logit"),
@@ -93,65 +96,4 @@ logistic_fc <- bind_rows(beer_pred, edgeR_05_pred) %>%
     theme(aspect.ratio = 1)
 
 ggsave("figures/simulation_logistic_fc.png", logistic_fc,
-       units = "in", width = 6, height = 4.5)
-
-# Figure: simulation_logistic_rc.png ----------
-# BEER
-beer_fit <- glm(beer_hits ~ rpm, family = binomial(link = "logit"),
-                data = sim_tidy %>% filter(true_Z == 1) %>%
-                    mutate(rpm = counts/n*1e6))
-
-beer_pred <- penriched_fit(beer_fit, 
-                           data.frame(rpm = seq(1, 2.5*1e5, length = 1000))) %>%
-    mutate(approach = "BEER", 
-           threshold = "FDR - 0.05")
-
-# edgeR - Bonferroni
-edgeR_bon_fit <- glm(edgeR_hits ~ rpm, family = binomial(link = "logit"),
-                     data = sim_tidy %>% 
-                         mutate(edgeR_hits = ifelse(edgeR_prob > -log10(5e-5), 1, 0), 
-                                rpm = counts/n*1e6) %>%
-                         filter(true_Z == 1))
-
-edgeR_bon_pred <- penriched_fit(edgeR_bon_fit, 
-                                data.frame(rpm = seq(1, 2.5*1e5, length = 1000))) %>%
-    mutate(approach = "edgeR", 
-           threshold = "Bonferroni")
-
-# edgeR - BH 0.05
-edgeR_05_fit <- glm(edgeR_hits ~ rpm, family = binomial(link = "logit"),
-                    data = sim_tidy %>% 
-                        mutate(edgeR_hits = ifelse(edgeR_bh < 0.05, 1, 0), 
-                               rpm = counts/n*1e6) %>%
-                        filter(true_Z == 1))
-
-edgeR_05_pred <- penriched_fit(edgeR_05_fit, 
-                               data.frame(rpm = seq(1, 2.5*1e5, length = 1000))) %>%
-    mutate(approach = "edgeR", 
-           threshold = "BH - 0.05")
-
-logistic_rc <- bind_rows(beer_pred, edgeR_bon_pred, edgeR_05_pred) %>%
-    ggplot(aes(x = log10(rpm), y = predict_p, group = paste0(approach, threshold))) +
-    geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci, fill = approach), alpha = 0.2) +
-    geom_line(aes(color = approach, linetype = threshold)) +
-    labs(x = "reads per million",
-         y = "probability of being classified as enriched",
-         color = "approach") +
-    scale_color_manual(breaks = c("BEER", "edgeR"),
-                       values = c("red", "black"),
-                       labels = c("BEER", "edgeR")) +
-    scale_fill_manual(breaks = c("BEER", "edgeR"),
-                      values = c("red", "black"),
-                      labels = c("BEER", "edgeR")) +
-    scale_y_continuous(breaks = seq(0, 1, 0.1),
-                       minor_breaks = seq(0, 1, 0.05)) +
-    scale_x_continuous(breaks = 0:5,
-                       minor_breaks = seq(0, 5, 0.5),
-                       labels = c(1, 10, 100, sapply(paste0("$10^{", 3:5, "}$"), TeX))) +
-    scale_linetype_manual(values = c("dashed", "dotted", "solid"), 
-                          breaks = c("FDR - 0.05", "BH - 0.05", "Bonferroni")) +
-    theme_bw() +
-    theme(aspect.ratio = 1)
-
-ggsave("figures/simulation_logistic_rc.png", logistic_rc,
        units = "in", width = 6, height = 4.5)

@@ -1,7 +1,10 @@
 #' Run edgeR and beer on HIV EC data. 
 
 ## Load packages
-source(here("R", "load_packages.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
 
 ## Read in data
 hiv <- readRDS(here("data_raw", "hiv.rds"))

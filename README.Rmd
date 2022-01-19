@@ -13,23 +13,11 @@ knitr::opts_chunk$set(
 
 # BEER Manuscript
 
-This repository contains all of the data and code to reproduce the work presented in, _Detecting Enriched Antibody Peptides in Phage-Immunoprecipitation Sequencing Data_.
+This repository contains all of the data and code to reproduce the work presented in, _Detecting Antibody Reactivities in Phage Immunoprecipitation Sequencing Data_.
 
-The session info, including all packages used in the analyses and their respective versions can be found in the [Session Info](#session-info) section of this README.md. All code used to generate the results of the manuscript are mapped in the [section below](#mapping-of-manuscript-content-to-repository-files). A detailed description of the contents of each file in the directory is provided in the [Directory Structure](#directory-structure) section. 
+The session info, including all packages used in the analyses and their respective versions can be found in the [Session Info](#session-info) section of this README.md. All code used to generate the figures and tables of the manuscript are mapped in the [section below](#mapping-of-figures-and-tables). The contents of each file in the repository are provided in the [Directory Structure](#directory-structure) section. 
 
-In particular, these results were generated using the `R` package [`beer`](https://github.com/athchen/beer) version `0.99.0`.
-
-# TO DO
-
-* In `README.Rmd`:
-  - Change `beer` hyperlink to Bioc URL once accepted
-  - Add figure and table numbers
-  - Add hyperlink to paper once it's been uploaded/submitted. 
-* In `workflowr` page: 
-  - Update `beer` hyperlink to Bioc URL once accepted
-  - Review of figure/table legends and captions on each page
-  - Update CS data description
-  - Update HIV data description
+The results in the manuscript were generated using the `R` package [`beer`](https://github.com/athchen/beer) version `0.99.0`.
 
 # Directory structure
 
@@ -52,6 +40,7 @@ Contains `PhIPData` objects of normalized read counts and relevant sample and pe
 
 * **`coronascan.rds`**: coronascan data set.
 * **`hiv.rds`**: HIV elite controller data set.
+* **`hiv_virscan.rds`**: additional HIV data set referenced in the Discussion
 * **`simulations.R`**: script to generate simulated data sets. 
 
 ### **`docs`**
@@ -82,9 +71,6 @@ R scripts used to generate the objects in `data_processed` and the figure files 
     + `simulation_roc_prc.png`
     + `simulation_roc_bybeads.png`
     + `simulation_prc_bybeads.png`
-* **`figure_simulation_enrichments.R`** generates figures:
-    + `simulation_enrichments_e.png`
-    + `simulation_enrichments_ne.png`
 * **`figure_simulation_fc.R`** generates figure `simulation_fc.png`.
 * **`figure_simulation_logistic.R`** generates figures:
     + `simulation_logistic_fc.png`
@@ -96,17 +82,38 @@ R scripts used to generate the objects in `data_processed` and the figure files 
 * **`load_simulations.R`** contains code to read in and convert simulation results to a tidy dataframe. 
 * **`run_coronascan.R`** runs edgeR and BEER on CoronaScan data.
 * **`run_hiv.R`** runs edgeR and BEER on HIV EC data.
-* **`run_simulations.R`** run edgeR and BEER on simulated data sets with various beads-only samples and different methods of estimating prior parameters. 
-
-# Mapping of manuscript content to repository files
-
-## Methods
+* **`run_simulations.R`** runs edgeR and BEER on simulated data sets with various beads-only samples and different methods of estimating prior parameters. 
 
 ## Mapping of Figures and Tables
 
 ### Main Text
 
+* Figure 1 - in `figures/simulation_roc_prc_interp.png`; generated with `R/figure_simulation_curves.R`
+* Figure 2 - in `figures/simulation_logistic_fc.png`; generated with `R/figure_simulation_fc.R`
+* Figure 3 - in `figures/hiv_protein.png`; generated with `R/figure_hiv.R`
+
 ### Supplementary Material
+
+* Table S1 - generated with `R/figure_simulation_curves.R`
+* Table S2 - generated with `R/figure_simulation_curves.R`
+* Table S3 - generated with `R/figure_hiv.R`
+* Table S4 - generated with `R/figure_coronascan.R`
+* Figure S1 - in `figures/simulation_roc_prc.png`; generated with `R/figure_simulation_curves.R`
+* Figure S2 - in `figures/simulation_roc_bybeads.png`; generated with `R/figure_simulation_curves.R`
+* Figure S3 - in `figures/simulation_prc_bybeads.png`; generated with `R/figure_simulation_curves.R`
+* Figure S4 - in `figures/simulation_postprob.png`; generated with `R/figure_simulation_postprob.R`
+* Figure S5 - in `figures/simulation_fc.png`; generated with `R/figure_simulation_fc.R`
+* Figure S6 - in `figures/hiv_protein_noB.png`; generated with `R/figure_hiv.R`
+* Figure S7 - in `figures/hiv_protein_A.png`; generated with `R/figure_hiv.R`
+* Figure S8 - in `figures/hiv_replicates.png`; generated with `R/figure_hiv.R`
+* Figure S9 - in `figures/hiv_ranked_prob.png`; generated with `R/figure_hiv.R`
+* Figure S10 - in `figures/coronascan_protein.png`; generated with `R/figure_coronascan.R`
+* Figure S11 - in `figures/coronascan_replicates.png`; generated with `R/figure_coronascan.R`
+* Figure S12 - in `figures/coronascan_ranked_prob.png`; generated with `R/figure_coronascan.R`
+* Figure S13 - in `figures/corstructure.png`; generated with `R/figure_corstructure.R`
+* Figure S14 - in `figures/figdatastructurebinom.png`; generated with `R/figure_corstructure.R`
+* Figure S15 - in `figures/attnconstant.png`; generated with `R/figure_attnconstant.R`
+* Figure 16 - in `figures/prior.pdf`; generated with `R/figure_priors.R`
 
 # Session Info
 

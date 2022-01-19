@@ -7,7 +7,10 @@
 #' that setting. See the conditions data frame for all conditions. 
 
 ## Setup ----------
-source(here("R", "load_packages.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
 source(here("data_raw", "simulations.R"))
 
 ## Define conditions ----------

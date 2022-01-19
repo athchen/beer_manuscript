@@ -1,35 +1,39 @@
 #' figure_simulation_postprob.R
 #' 
 #' Code to generate figures:
-#' - simulation_postprob.png
+#' - Figure S4: simulation_postprob.png
 
 # Set-up --------------
-source(file.path("R", "load_packages.R"))
-source(file.path("R", "helper_functions.R"))
+if(!"here" %in% installed.packages()){
+    install.packages(here)
+}
+source(here::here("R", "load_packages.R"))
+source(here::here("R", "helper_functions.R"))
 
-sim_out <- readRDS(file.path("data_processed", "simulation_8beads_edgeR",
+sim_out <- readRDS(here::here("data_processed", "simulation_8beads_edgeR",
                              "sim_001.rds"))
-sim_tidy <- as_df(sim_out, metadata = TRUE) %>%
+sim_tidy <- as(sim_out, "DataFrame") %>%
+    as_tibble() %>%
     group_by(peptide) %>%
     mutate(sample = factor(sample, 1:ncol(sim_out)), 
-           is_se = ifelse(beads != "beads" & is.na(beer_prob), TRUE, FALSE), 
-           expected_prop = mean(counts[beads == "beads"]/n[beads == "beads"]), 
+           is_se = ifelse(group != "beads" & is.na(beer_prob), TRUE, FALSE), 
+           expected_prop = mean(counts[group == "beads"]/n[group == "beads"]), 
            expected_rc = expected_prop*n) %>%
     ungroup()
 
 # Figure: simulation_postprob.png ------------
 # Peptides from beads-only samples are excluded below. Super-enriched peptides 
 # are colored in grey. 
-sample_names <- c("beads_only", paste0("sample ", 1:10), "replicate of 10")
+sample_names <- c("beads-only", paste0("sample ", 1:10), "replicate of 10")
 names(sample_names) <- 9:20
 
 sim_tidy %>% 
-    filter(beads != "beads") %>%
+    filter(group != "beads") %>%
     arrange(beer_prob) %>%
     ggplot(aes(x = log10(expected_rc + 1), y = log10(counts + 1),
                color = beer_prob, group = sample)) +
     geom_point(size = 1) +
-    geom_abline(aes(slope = 1, intercept = log10(est_c)), 
+    geom_abline(aes(slope = 1, intercept = log10(c)), 
                 size = 0.25, color = "black") +
     facet_wrap(sample ~., ncol = 4, 
                labeller = labeller(sample = sample_names)) +
