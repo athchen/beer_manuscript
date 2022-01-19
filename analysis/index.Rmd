@@ -46,6 +46,6 @@ This webpage details all analyses and methods used to produce the work presented
 
 #### HIV Discussion
 
-* [Figure S13](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S10)
-* [Figure S14](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S10)
-* [Figure S15](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S10)
+* [Figure S13](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S13)
+* [Figure S14](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S14)
+* [Figure S15](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S15)
