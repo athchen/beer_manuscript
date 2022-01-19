@@ -65,6 +65,23 @@ Z_{ij}|\pi_{j} & \sim \text{Bernoulli}(\pi_j)\\
 \pi_j & \sim B_j \cdot \text{Beta}(a_\pi, b_\pi)
 \end{align*}
 
+## Prior parameters
+
+### Figure S16
+
+**Left:** the prior distribution for the proportion of reactive peptides in sample $j$, $\pi_j$, modeled as a Beta distribution Beta($a_\pi$ = 2, $b_\pi$ = 300), reflecting peptide enrichment seen in previous studies.
+**Middle:** a Gamma($a_\phi$ = 1.25, $b_\phi$ = 0.1) distribution, used in the prior distribution for the fold change $\phi_{ij}$ for peptide $i$ in sample $j$, if reactive.
+**Right:** the prior distribution for the scaling constant in sample $j$, $c_j$, modeled as a Beta distribution Beta($a_c = 80$, $b_c = 20$).
+
+```{r priors, fig.width = 10, fig.height = 4}
+par(mfrow = c(1,3),las=1,yaxs="i",mar=c(5,1,3,1),cex.axis=1.3)
+curve(dbeta(x,2,300),from=0,to=0.05,n=501,
+      xlab="",ylab="",yaxt="n",ylim=c(0,115),lwd=3,col="red")
+curve(dgamma(x,1.25,0.1),from=0,to=80,n=501,
+      xlab="",ylab="",yaxt="n",ylim=c(0,0.065),lwd=3,col="blue")
+curve(dbeta(x,80,20),from=0.5,to=1,n=501,
+      xlab="",ylab="",yaxt="n",ylim=c(0,10.5),lwd=3,col="green3")
+```
 ## Implementation
 
 To reduce computational time, BEER runs each sample individually in comparison to all beads-only samples and removes clearly enriched peptides apriori. The implementation can be broken down into the following steps: 
@@ -76,3 +93,5 @@ To reduce computational time, BEER runs each sample individually in comparison t
 5. **Summarize and store results.** Posterior samples are summarized using the means of the posterior distribution and are stored in the PhIPData object.
 
 For more information, please see the _Supplemental Methods_ section of the manuscript. 
+
+

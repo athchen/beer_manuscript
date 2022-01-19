@@ -11,6 +11,8 @@ navbar:
     href: hiv_ec.html
   - text: CoronaScan Samples
     href: coronascan.html
+  - text: HIV Discussion
+    href: hiv_discussion.html
   right: 
   - text: "Manuscript"
     icon: fa-file-alt

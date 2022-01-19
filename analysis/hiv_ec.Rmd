@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 ## HIV Elite Controller (EC) Data
 
-The HIV EC data consists of read counts for 3394 HIV peptides in the VirScan library for six beads-only samples and ten serum samples run on the same plate. Of these ten serum samples, eight were from individuals infected with HIV subtype B. The remaining two serum samples are identical samples from an individual infected with HIV subtype A. 
+The HIV EC data consists of read counts for 3395 HIV peptidesfor six beads-only samples and ten serum samples run on the same plate. Of these ten serum samples, eight were from individuals infected with HIV subtype B. The remaining two serum samples are identical samples from an individual infected with HIV subtype A. 
 
 ```{r setup_packages, message = FALSE, code = readLines("../R/load_packages.R")}
 ```
@@ -67,18 +67,16 @@ hiv_tidy <- as(hiv_out, "DataFrame") %>%
 
 ### Figure 3
 
-MA plots for the proportion of enriched peptides by protein, for eight elite controller samples. Points represent individual proteins, point colors indicate protein virus types, point diameters indicate the number of peptides tiling the respective proteins. All subjects shown here were infected with subtype
-B (red).
+Bland-Altman (MA) plots for the proportion of enriched peptides by protein, for eight elite controller samples. Points represent individual proteins, point colors indicate protein virus types, point diameters indicate the number of peptides tiling the respective proteins. All subjects shown here were infected with subtype B (red).
 
 ```{r figure_hiv_protein, fig.width = 8.5, fig.height = 6.5}
 # Color palette
 hiv_subtype <- unique(hiv_tidy$taxon_species)
-grey_palette <- palette(gray(seq(0.1, 0.8, length.out = (length(hiv_subtype) - 1))))
+grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(hiv_subtype) - 1))))
 # Make `grey_palette` is of the correct length. Not sure why this has to be run twice
 grey_palette <- if(length(grey_palette) < (length(hiv_subtype) - 1)){
     palette(gray(seq(0.1, 0.8, length.out = (length(hiv_subtype) - 1))))
 } else grey_palette
-
 num_B <- grep("HIV type 1 group M subtype B", hiv_subtype)
 subtype_order <- c(hiv_subtype[num_B], hiv_subtype[-num_B])
 
@@ -120,11 +118,12 @@ hiv_tidy %>%
            size = guide_legend(ncol = 1, order = 2))
 ```
 
-### Figure S9
+### Figure S6
 
 Proportion of enriched peptides by protein without HIV subtype B. Each point represents a protein. The color of the point indicates which virus the protein belongs to, and the size of the point corresponds to the number of peptides tiling the protein.
 
 ```{r figure_hiv_protein_noB, fig.width = 8.5, fig.height = 6.5}
+# Figure S6: hiv_protein_noB.png ----------
 hiv_tidy %>%
     filter(group != "beads" & !grepl("9", sample) &
                !grepl("HIV type 1 group M subtype B", taxon_species)) %>%
@@ -164,9 +163,56 @@ hiv_tidy %>%
            size = guide_legend(ncol = 1, order = 2))
 ```
 
-### Figure S10
+### Figure S7
 
-**Left:** Proportion of reads pulled for 3,395 HIV peptides for two technical replicates. **Right:** Concordance of HIV technical replicates, shown as proportion of peptides among the top ranked peptides in both replicates. For BEER, peptides are ranked by decreasing posterior probability of enrichment. For edgeR, peptides are ranked by increasing p-values. For both methods, ties of posterior probabilities and p-value (e.g., 0 and 1) were broken by the estimated fold-change. The top eight peptides from BEER are all super-enriched and treated exchangeably as no fold-change estimates are returned.
+Proportion of enriched peptides by protein across technical replicates. This individual was infected with HIV subtype A. Each point represents a protein. The color of the point indicates which virus the protein belongs to, and the size of the point corresponds to the number of peptides tiling the protein.
+
+```{r figure_hiv_protein_A, fig.width = 8.5, fig.height = 6.5}
+# Color palette
+num_A <- grep("HIV type 1 group M subtype A", hiv_subtype)
+subtype_order <- c(hiv_subtype[c(num_B, num_A)], hiv_subtype[-c(num_B, num_A)])
+
+hiv_tidy %>%
+    filter(grepl("9", sample)) %>%
+    select(sample, peptide, UniProt_acc, taxon_species,
+           beer_hits, edgeR_hits) %>%
+    group_by(sample, UniProt_acc, taxon_species) %>%
+    summarize(prot_prop_Bayes = mean(beer_hits),
+              prot_prop_edgeR = mean(edgeR_hits),
+              num_peptides = n(), .groups = "drop") %>%
+    mutate(taxon_species = factor(taxon_species, subtype_order)) %>%
+    arrange(desc(taxon_species), desc(num_peptides)) %>%
+    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
+               y = prot_prop_Bayes - prot_prop_edgeR,
+               color = taxon_species,
+               size = num_peptides)) +
+    facet_wrap(sample ~., ncol = 4) +
+    geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
+    geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
+    geom_point(alpha = 0.8) +
+    labs(x = TeX("$\\frac{1}{2}$ (BEER + edgeR)"),
+         y = "BEER - edgeR",
+         color = "HIV strain",
+         size = "# peptides") +
+    scale_x_continuous(trans = "mysqrt", 
+                       limits = c(0, 1), 
+                       breaks = seq(0, 1, by = 0.2)) +
+    scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
+                       limits = c(-0.25, 1)) +
+    scale_color_manual(values = c("firebrick2", "blue", grey_palette[-num_A]),
+                       breaks = subtype_order) +
+    theme_bw() +
+    theme(legend.title = element_text(size = 10), 
+          legend.text = element_text(size = 8), 
+          legend.key.size = unit(0.75, "lines"), 
+          legend.position = "bottom") +
+    guides(color = guide_legend(ncol = 2, order = 1), 
+           size = guide_legend(ncol = 1, order = 2))
+```
+
+### Figure S8
+
+**Left:** proportion of reads pulled for 3,395 HIV peptides for two technical replicates. **Right:** concordance of HIV technical replicates, shown as proportion of peptides among the top ranked peptides in both replicates. For BEER, peptides are ranked by decreasing posterior probability of enrichment. For edgeR, peptides are ranked by increasing p-values. For both methods, ties of posterior probabilities and p-value (e.g., 0 and 1) were broken by the estimated fold-change. The top eight peptides from BEER are all highly enriched and treated exchangeably as no fold-change estimates are returned.
 
 ```{r figure_hiv_replicates, fig.width = 8, fig.height = 4}
 # Plot for proportion of reads
@@ -269,9 +315,9 @@ ggarrange(prop_reads, cat_plot, align = "hv",
           nrow = 1, ncol = 2)
 ```
 
-### Figure S11
+### Figure S9
 
-HIV replicate posterior probabilities by rank. For each of the technical replicates, peptides are sorted in decreasing order by posterior probability and -log10(edgeR p-values).
+HIV replicate posterior probabilities by rank. For each of the technical replicates, peptides are sorted in decreasing order by posterior probability and -log10(edgeR p-values). edgeR -log10(p-values) are truncated at 6.
 
 ```{r figure_hiv_ranked_prob, fig.width = 8, fig.height = 4}
 post_prob <- hiv_tidy %>%
@@ -315,62 +361,13 @@ p_values <- hiv_tidy %>%
           title = element_text(size = 10), 
           legend.background = element_rect(color = "black", size = 0.3), 
           legend.position = c(0.725, 0.825))
-
-ggarrange(post_prob, p_values, nrow = 1)
-```
-
-### Figure S12
-
-Proportion of enriched peptides by protein across technical replicates. This individual was infected with HIV subtype A. Each point represents a protein. The color of the point indicates which virus the protein belongs to, and the size of the point corresponds to the number of peptides tiling the protein.
-
-```{r figure_hiv_protein_A, fig.width = 8.5, fig.height = 6.5}
-# Color palette
-num_A <- grep("HIV type 1 group M subtype A", hiv_subtype)
-subtype_order <- c(hiv_subtype[c(num_B, num_A)], hiv_subtype[-c(num_B, num_A)])
-
-hiv_tidy %>%
-    filter(grepl("9", sample)) %>%
-    select(sample, peptide, UniProt_acc, taxon_species,
-           beer_hits, edgeR_hits) %>%
-    group_by(sample, UniProt_acc, taxon_species) %>%
-    summarize(prot_prop_Bayes = mean(beer_hits),
-              prot_prop_edgeR = mean(edgeR_hits),
-              num_peptides = n(), .groups = "drop") %>%
-    mutate(taxon_species = factor(taxon_species, subtype_order)) %>%
-    arrange(desc(taxon_species), desc(num_peptides)) %>%
-    ggplot(aes(x = 0.5*(prot_prop_Bayes + prot_prop_edgeR), 
-               y = prot_prop_Bayes - prot_prop_edgeR,
-               color = taxon_species,
-               size = num_peptides)) +
-    facet_wrap(sample ~., ncol = 4) +
-    geom_hline(aes(yintercept = 0), size = 0.5, color = "grey50") +
-    geom_vline(aes(xintercept = 0), size = 0.5, color = "grey50") +
-    geom_point(alpha = 0.8) +
-    labs(x = TeX("$\\frac{1}{2}$ (BEER + edgeR)"),
-         y = "BEER - edgeR",
-         color = "HIV strain",
-         size = "# peptides") +
-    scale_x_continuous(trans = "mysqrt", 
-                       limits = c(0, 1), 
-                       breaks = seq(0, 1, by = 0.2)) +
-    scale_y_continuous(breaks = seq(-0.25, 1, by = 0.25), 
-                       limits = c(-0.25, 1)) +
-    scale_color_manual(values = c("firebrick2", "blue", grey_palette[-num_A]),
-                       breaks = subtype_order) +
-    theme_bw() +
-    theme(legend.title = element_text(size = 10), 
-          legend.text = element_text(size = 8), 
-          legend.key.size = unit(0.75, "lines"), 
-          legend.position = "bottom") +
-    guides(color = guide_legend(ncol = 2, order = 1), 
-           size = guide_legend(ncol = 1, order = 2))
 ```
 
 ## Tables
 
 ### Table S3
 
-Concordance of enrichment calls between two technical replicates of an HIV subtype A infected individual for BEER and edgeR. A total of 204 peptides from subtype A and 3,191 peptides from other subtypes were present on the platform. n: number of peptides; p: proportion of peptides
+Concordance of enrichment calls between two technical replicates of an HIV subtype A infected individual for BEER and edgeR. A total of 204 peptides from subtype A and 3,191 peptides from other subtypes were present on the platform. n: number of peptides; p: proportion of peptides.
 
 ```{r table_hiv_replicates}
 hiv_tidy %>%

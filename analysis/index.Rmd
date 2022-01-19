@@ -8,36 +8,44 @@ editor_options:
   chunk_output_type: console
 ---
 
-This webpage details all analyses and methods used to produce the work presented in _Detecting Enriched Antibody Peptides in Phage-Immunoprecipitation Sequencing Data_. Though all figures and tables can be found on this site, scripts to generate the manuscript figures and tables and this website can also be found in the [source code](https://github.com/athchen/beer_manuscript) (also linked in the top right). 
+This webpage details all analyses and methods used to produce the work presented in _Detecting Antibody Reactivities in Phage ImmunoPrecipitation Sequencing Data_. Though all figures and tables can be found on this site, scripts to generate the manuscript figures and tables and this website can also be found in the [source code](https://github.com/athchen/beer_manuscript) (also linked in the top right). 
 
 ## Mapping of manuscript contents to site pages
+
+#### BEER
+
+* [Figure S16](https://athchen.github.io/beer_manuscript/beer.html#Figure_S16)
 
 #### Simulated Data
 
 * [Figure 1](https://athchen.github.io/beer_manuscript/simulation.html#Figure_1)
 * [Figure 2](https://athchen.github.io/beer_manuscript/simulation.html#Figure_2)
+* [Figure S1](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S1)
+* [Figure S2](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S2)
+* [Figure S3](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S3)
 * [Figure S4](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S4)
 * [Figure S5](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S5)
-* [Figure S6](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S6)
-* [Figure S7](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S7)
-* [Figure S8](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S8)
-* [Figure S16](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S16)
-* [Figure S17](https://athchen.github.io/beer_manuscript/simulation.html#Figure_S17)
 * [Table S1](https://athchen.github.io/beer_manuscript/simulation.html#Table_S1)
 * [Table S2](https://athchen.github.io/beer_manuscript/simulation.html#Table_S2)
  
 #### HIV Elite Controllers
 
 * [Figure 3](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_3)
+* [Figure S6](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S6)
+* [Figure S7](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S7)
+* [Figure S8](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S8)
 * [Figure S9](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S9)
-* [Figure S10](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S10)
-* [Figure S11](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S11)
-* [Figure S12](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S12)
 * [Table S3](https://athchen.github.io/beer_manuscript/hiv_ec.html#Table_S3)
 
 #### CoronaScan Samples
 
-* [Figure S13](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S13)
-* [Figure S14](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S14)
-* [Figure S15](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S15)
+* [Figure S10](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S10)
+* [Figure S11](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S11)
+* [Figure S12](https://athchen.github.io/beer_manuscript/coronascan.html#Figure_S12)
 * [Table S4](https://athchen.github.io/beer_manuscript/coronascan.html#Table_S4)
+
+#### HIV Discussion
+
+* [Figure S13](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S10)
+* [Figure S14](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S10)
+* [Figure S15](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S10)

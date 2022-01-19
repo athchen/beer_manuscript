@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The CoronaScan PhIP-seq antigen library consists of 3466 unique peptides tiling proteins belonging to various coronaviruses, including SARS-CoV2, viruses associated with the common cold, and bat coronaviruses. Each peptide is present in duplicate, resulting in a total of 6932 peptides in the library.
+The CoronaScan PhIP-seq antigen library consists of 3466 unique peptides tiling proteins belonging to various coronaviruses, including SARS-CoV-2, viruses associated with the common cold, and bat coronaviruses. Each peptide is present in duplicate, resulting in a total of 6932 peptides in the library.
 
-This data set consists of eight beads-only samples and ten serum samples all run on the same plate. Of the ten serum samples, six samples are from individuals who participated in a vaccine research study prior to the discovery of SARS-CoV2. The remaining four samples are serum samples from various time points from one individual who was infected with SARS-CoV2. These samples were also tested for SARS-CoV2 antibodies.
+This data set consists of eight beads-only samples and ten serum samples all run on the same plate. Of the ten serum samples, six samples are from individuals who participated in a vaccine research study prior to the COVID-19 pandemic. The remaining four samples are serum samples from days 10-13 since symptom onset from one individual who was infected with SARS-CoV-2. This individual was also tested for SARS-CoV-2 antibodies using a separate ELISA and only tested positive on day 13  since symptom onset. 
 
 ```{r setup_packages, message = FALSE, code = readLines("../R/load_packages.R")}
 ```
@@ -70,28 +70,27 @@ cs_tidy <- as(cs_out, "DataFrame") %>%
 
 ## Figures
 
-### Figure S13
+### Figure S10
 
-MA plots for the proportion of enriched peptides by protein for six pre-pandemic samples and four samples from one individual infected with SARS-CoV2. Samples from this individual were collected at various days since symptom onset (labels D10-D13) and were additionally tested for SARSCoV2 antibodies using (Ben) Ab test. Antibody test results (positive or negative) are indicated by Ab+ or Ab-, respectively. Points represent individual proteins; point colors indicate virus types; and point diameters indicate the number of peptides tiling the respective proteins. In the CoronaScan library, peptides are present in duplicate, so the number of peptides is double the number of unique peptides.
+MA plots for the proportion of enriched peptides by protein for six pre-pandemic samples and four samples from one individual infected with SARS-CoV-2. Samples from this individual were collected at various days since symptom onset (labels D10-D13) and were additionally tested for SARS-CoV-2 antibodies. Antibody test results (positive or negative) are indicated by Ab+ or Ab-, respectively. Points represent individual proteins; point colors indicate virus types; and point diameters indicate the number of peptides tiling the respective proteins. In the CoronaScan library, peptides are present in duplicate, so the number of peptides is double the number of unique peptides.
 
 ```{r figure_coronascan_protein, fig.width = 10.7, fig.height = 7}
 # Color palette
 cs_species <- unique(cs_tidy$organism)
-grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(cs_species) - 1))))
+grey_palette <- palette(gray(seq(0.1, 0.8, len = (length(cs_species) - 2))))
 # Make `grey_palette` is of the correct length. Not sure why this has to be run twice
-grey_palette <- if(length(grey_palette) < (length(cs_species) - 1)){
-    palette(gray(seq(0.1, 0.8, length.out = (length(cs_species) - 1))))
+grey_palette <- if(length(grey_palette) < (length(cs_species) - 2)){
+    palette(gray(seq(0.1, 0.8, length.out = (length(cs_species) - 2))))
 } else grey_palette
-num_sarscov2 <- grep("SARS-CoV2", cs_species)
+num_sarscov2 <- rev(grep("SARS-CoV2|Wuhan", cs_species))
 cs_order <- c(cs_species[num_sarscov2], cs_species[-num_sarscov2])
 
 # Facet labels
-facet_labels <- case_when(
-    sampleInfo(cs)$group == "beads" ~ colnames(cs), 
-    sampleInfo(cs)$group == "vrc" ~ 
-        paste0("VRC ", gsub("CS ", "", colnames(cs))), 
-    TRUE ~ paste0("SARS-CoV2, D", sampleInfo(cs)$days_since_infection, 
-                  " Ab", ifelse(sampleInfo(cs)$ab_test == "pos", "+", "-")))
+facet_labels <- ifelse(
+    sampleInfo(cs)$group != "SARS-CoV-2", 
+    gsub("_", " ", toupper(colnames(cs))), 
+    paste0("SARS-CoV-2, D", sampleInfo(cs)$days_since_infection, 
+           " Ab", ifelse(sampleInfo(cs)$ab_test == "pos", "+", "-")))
 names(facet_labels) <- colnames(cs)
 
 cs_tidy %>%
@@ -119,10 +118,9 @@ cs_tidy %>%
     scale_x_continuous(trans = "mysqrt", 
                        limits = c(0, 1), 
                        breaks = seq(0, 1, by = 0.2)) +
-    scale_color_manual(values = c(grey_palette[1:(num_sarscov2 - 1)], 
-                                  "firebrick2", 
-                                  grey_palette[-(1:(num_sarscov2 - 1))]), 
-                       breaks = cs_species) +
+    scale_color_manual(values = c(brewer.pal(3, "Reds")[c(3, 2)], 
+                                  grey_palette), 
+                       breaks = cs_order) +
     theme_bw() +
     theme(aspect.ratio = 1, 
           legend.title = element_text(size = 10), 
@@ -133,13 +131,13 @@ cs_tidy %>%
            size = guide_legend(ncol = 1, order = 2))
 ```
 
-### Figure S14
+### Figure S11
 
-Concordance of paired peptides in CS sample 9. For each unique peptide sequence, the proportion of reads pulled for peptide 1 with the same sequence is plotted against the proportion of reads pulled for peptide 2 of the same sequence (top left). For BEER with edgeR estimates peptides are ranked by decreasing posterior probability of enrichment, with ties broken by the estimated fold-change. For edgeR, peptides are ranked by increasing p-values, with ties again broken by estimated fold-changes. The concordance between the rankings for the top $k$ ranks (x-axis) between all peptide 1’s and all peptide 2’s for each method is shown in the top right panel.
+**Left:** concordance of paired peptides in CS sample VRC 1. For each unique peptide sequence, the proportion of reads pulled for peptide 1 with the same sequence is plotted against the proportion of reads pulled for peptide 2 of the same sequence. **Right:** concordance between the rankings for the top $k$ ranks (x-axis) between all peptide pairs. For BEER, peptides are ranked by decreasing posterior probability of enrichment, with ties broken by the estimated fold-change (red line). For edgeR, peptides are ranked by increasing p-values, with ties again broken by estimated fold-changes (black line).
 
 ```{r figure_coronascan_replicates, fig.width = 8, fig.height = 4}
 # Define sample to look at
-cs_sample <- "CS 1"
+cs_sample <- "vrc_1"
 
 # Plot for proportion of reads
 prop_reads <- cs_tidy %>% 
@@ -239,9 +237,9 @@ cat_plot <- data.frame(rank = 1:length(beer_conc),
 ggarrange(prop_reads, cat_plot, nrow = 1, ncol = 2)
 ```
 
-### Figure S15
+### Figure S12
 
-Coronascan peptide pairs by rank. For each set of unique peptides, peptides are sorted in decreasing order by posterior probability and -log10 edgeR p-values.
+CoronaScan peptide pairs by rank. For each set of unique peptides, peptides are sorted in decreasing order by posterior probability and -log10(edgeR p-values).
 
 ```{r figure_coronascan_ranked_prob, fig.width = 8, fig.height = 4}
 post_prob <- cs_tidy %>%
@@ -294,10 +292,11 @@ ggarrange(post_prob, p_value, nrow = 1)
 
 ### Table S4
 
-Concordance of enrichment calls between peptide pairs for all CS samples. Each sample has 3366 unique peptide pairs. n: number of pairs with concordant enrichment calls; p: proportion of pairs with concordant enrichment calls.
+Concordance of enrichment calls between peptide pairs for all CoronaScan samples. Each sample has 3,366 unique peptide pairs. n: number of pairs with concordant enrichment calls; p: proportion of pairs with concordant enrichment calls.
 
 ```{r}
 cs_tidy %>%
+    filter(group != "beads") %>%
     select(sample, pair_id, pair_num, beer_hits, edgeR_hits) %>%
     pivot_longer(cols = contains("hits"), 
                  names_to = "method", 
@@ -315,7 +314,8 @@ cs_tidy %>%
     unite("method_param", method, param) %>%
     pivot_wider(names_from = "method_param", values_from = "value") %>%
     select(-total_pep) %>%
-    mutate(across(contains(c("beer", "edgeR")), round, digits = 3)) %>%
+    mutate(across(contains(c("beer", "edgeR")), round, digits = 3), 
+           sample = facet_labels[match(sample, names(facet_labels))]) %>%
     kbl(col.names = c("sample", rep(c("n", "p"), times = 2))) %>%
     kable_styling(
         bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
