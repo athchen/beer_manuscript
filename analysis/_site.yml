@@ -16,7 +16,7 @@ navbar:
   right: 
   - text: "Manuscript"
     icon: fa-file-alt
-    href: "templink"
+    href: "https://www.biorxiv.org/content/10.1101/2022.01.19.476926v1"
   - text: "Source Code"
     icon: fa-github
     href: "https://github.com/athchen/beer_manuscript"
