@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-This webpage details all analyses and methods used to produce the work presented in _Detecting Antibody Reactivities in Phage ImmunoPrecipitation Sequencing Data_. Though all figures and tables can be found on this site, scripts to generate the manuscript figures and tables and this website can also be found in the [source code](https://github.com/athchen/beer_manuscript) (also linked in the top right). 
+This webpage details all analyses and methods used to produce the work presented in [_Detecting Antibody Reactivities in Phage ImmunoPrecipitation Sequencing Data_](https://www.biorxiv.org/content/10.1101/2022.01.19.476926v1). Though all figures and tables can be found on this site, scripts to generate the manuscript figures and tables and this website can also be found in the [source code](https://github.com/athchen/beer_manuscript) (also linked in the top right). 
 
 ## Mapping of manuscript contents to site pages
 
