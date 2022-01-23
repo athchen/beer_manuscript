@@ -504,16 +504,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree924ae62e2b84adb934a49370ea92576b8196811atargetblank924ae62a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/924ae62e2b84adb934a49370ea92576b8196811a" target="_blank">924ae62</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree01612f1d0ce7dd333592a3b08f2b3f75fd03d0f8targetblank01612f1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/01612f1d0ce7dd333592a3b08f2b3f75fd03d0f8" target="_blank">01612f1</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree924ae62e2b84adb934a49370ea92576b8196811atargetblank924ae62a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree01612f1d0ce7dd333592a3b08f2b3f75fd03d0f8targetblank01612f1a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/924ae62e2b84adb934a49370ea92576b8196811a" target="_blank">924ae62</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/01612f1d0ce7dd333592a3b08f2b3f75fd03d0f8" target="_blank">01612f1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -571,6 +571,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/01612f1d0ce7dd333592a3b08f2b3f75fd03d0f8/analysis/beer.Rmd" target="_blank">01612f1</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-23
+</td>
+<td>
+updated model
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/athchen/beer_manuscript/3b06e484ffb5e477ff839bf86f222da54f3a6bd7/docs/beer.html" target="_blank">3b06e48</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -751,11 +785,10 @@ Added simulation output
 <p>BEER is a Bayesian hierarchical model for identifying enriched antibody responses from phage-immunoprecipitation sequencing (PhIP-Seq) data. Here, we introduce the notation and describe the BEER model and implementation in the <code>R</code> package <a href="https://github.com/athchen/beer"><code>beer</code></a>.</p>
 <div id="notation" class="section level2">
 <h2>Notation</h2>
-<p>Let <span class="math inline">\(i = 1, 2, \ldots, P\)</span> and <span class="math inline">\(j = 1, 2, \ldots, N\)</span> index the peptides and samples, respectively. We observe,</p>
+<p>Let <span class="math inline">\(i = 1, 2, \ldots, P\)</span> and <span class="math inline">\(j = 1, 2, \ldots, 96\)</span> index the peptides and samples, respectively. Without loss of generality, assume samples <span class="math inline">\(\{1, 2, \ldots, N\}\)</span> are mock IP (beads-only) samples. We observe,</p>
 <p><span class="math display">\[\begin{align*}
 Y_{ij} &amp;= \text{ observed # reads mapped to peptide } i \text{ in sample } j\\
-n_j &amp;= \sum_{i=1}^P Y_{ij} \text{ total # of reads in sample }j\\
-B_{j} &amp;= \unicode{x1D7D9} (\text{sample } j \text{ is a beads-only sample})\\
+n_j &amp;= \sum_{i=1}^P Y_{ij} \text{ total # of reads in sample }j
 \end{align*}\]</span></p>
 <p>Define,</p>
 <p><span class="math display">\[\begin{align*}
@@ -781,19 +814,20 @@ f_b(\mu, \sigma^2) &amp;= f_a(\mu, \sigma^2) \left(\frac{1}{\mu} - 1\right)
 </div>
 <div id="model" class="section level2">
 <h2>Model</h2>
-<p>Let <span class="math inline">\(\mu_{i0}\)</span> and <span class="math inline">\(\sigma^2{i0}\)</span> denote the mean and variance for peptide <span class="math inline">\(i\)</span> in a beads-only sample where,</p>
+<p>Let <span class="math inline">\(\mu_{i0}\)</span> and <span class="math inline">\(\sigma^2_{i0}\)</span> denote the mean and variance for peptide <span class="math inline">\(i\)</span> in a beads-only sample where,</p>
 <p><span class="math display">\[\begin{align*}
 \mu_{ij} &amp;= \frac{a_{i0}}{a_{i0} + b_{i0}}\\
 \sigma^2_{i0} &amp;= \frac{a_{i0}b_{i0}}{(a_{i0} + b_{i0})^2 (a_{i0} + b_{i0} + 1)}.
 \end{align*}\]</span></p>
-<p>Our model for detecting antibody enriched is described as follows:</p>
+<p>To infer reactivity, we compare one sample to all beads-only samples on the same plate. Our hierarchical model given a sample <span class="math inline">\(j \in \{N+1, \ldots, 96\}\)</span> is described as follows.</p>
 <p><span class="math display">\[\begin{align*}
-Y_{ij}|\theta_{ij} &amp; \sim \text{Binomial}(n_j, \theta_{ij}) \\
-\theta_{ij}| a_{i0}, b_{i0} c_j, \phi_{ij} &amp; \sim \text{Beta}(f_a(c_j\phi_{ij} \mu_{i0}, \sigma^2_{i0}), f_b(c_j\phi_{ij} \mu_{i0}, \sigma^2_{i0})) \\
-c_j|B_j &amp; \sim B_j \cdot 1 + (1 - B_j) \cdot \text{Beta}(a_c, b_c)\\
-\phi_{ij}|Z_{ij} &amp; \sim (1 - Z_{ij}) \cdot 1 + Z_{ij} (\phi_{min} + \text{Gamma}(a_\phi, b_\phi))\\
-Z_{ij}|\pi_{j} &amp; \sim \text{Bernoulli}(\pi_j)\\
-\pi_j &amp; \sim B_j \cdot \text{Beta}(a_\pi, b_\pi)
+    Y_{ij}|\theta_{ij} &amp;\sim \text{Binomial}(n_j, \theta_{ij}) \\
+    \theta_{ij}|a_{i0}, b_{i0}, c_j, \phi_{ij} &amp;\sim \text{Beta}(f_a(c_j \phi_{ij} \mu_{i0}, \sigma^2_{i0}), f_b(c_j \phi_{ij} \mu_{i0}, \sigma^2_{i0})) \\
+%    c_j|B_j &amp; \sim B_j\cdot 1 + (1 - B_j) \cdot \text{Beta}(a_c, b_c) \\
+    c_j &amp; \sim \text{Beta}(a_c, b_c) \\
+    \phi_{ij}|Z_{ij} &amp; \sim (1 - Z_{ij}) \cdot 1 + Z_{ij}(\phi_{min} + \text{Gamma}(a_\phi, b_\phi)) \\
+    Z_{ij}|\pi_j &amp; \sim \text{Bernoulli}(\pi_j)\\
+    \pi_j &amp;\sim \text{Beta}(a_\pi, b_\pi) 
 \end{align*}\]</span></p>
 </div>
 <div id="prior-parameters" class="section level2">
