@@ -4,8 +4,9 @@
 # BEER Manuscript
 
 This repository contains all of the data and code to reproduce the work
-presented in, *Detecting Antibody Reactivities in Phage
-Immunoprecipitation Sequencing Data*.
+presented in, [*Detecting Antibody Reactivities in Phage
+Immunoprecipitation Sequencing
+Data*](https://www.biorxiv.org/content/10.1101/2022.01.19.476926v1).
 
 The session info, including all packages used in the analyses and their
 respective versions can be found in the [Session Info](#session-info)
@@ -160,67 +161,68 @@ figure files in `figures`.
 devtools::session_info()
 #> ─ Session info ───────────────────────────────────────────────────────────────
 #>  setting  value
-#>  version  R Under development (unstable) (2022-01-12 r81477)
-#>  os       macOS Big Sur/Monterey 10.16
+#>  version  R version 4.1.2 (2021-11-01)
+#>  os       macOS Big Sur 10.16
 #>  system   x86_64, darwin17.0
 #>  ui       X11
 #>  language (EN)
 #>  collate  en_US.UTF-8
 #>  ctype    en_US.UTF-8
 #>  tz       America/New_York
-#>  date     2022-01-18
+#>  date     2022-01-23
 #>  pandoc   2.16.2 @ /Applications/RStudio.app/Contents/MacOS/quarto/bin/ (via rmarkdown)
 #> 
 #> ─ Packages ───────────────────────────────────────────────────────────────────
 #>  package     * version date (UTC) lib source
-#>  cachem        1.0.6   2021-08-19 [1] CRAN (R 4.2.0)
-#>  callr         3.7.0   2021-04-20 [1] CRAN (R 4.2.0)
-#>  cli           3.1.0   2021-10-27 [1] CRAN (R 4.2.0)
-#>  crayon        1.4.2   2021-10-29 [1] CRAN (R 4.2.0)
-#>  desc          1.4.0   2021-09-28 [1] CRAN (R 4.2.0)
-#>  devtools      2.4.3   2021-11-30 [1] CRAN (R 4.2.0)
-#>  digest        0.6.29  2021-12-01 [1] CRAN (R 4.2.0)
-#>  ellipsis      0.3.2   2021-04-29 [1] CRAN (R 4.2.0)
-#>  evaluate      0.14    2019-05-28 [1] CRAN (R 4.2.0)
-#>  fastmap       1.1.0   2021-01-25 [1] CRAN (R 4.2.0)
-#>  fs            1.5.2   2021-12-08 [1] CRAN (R 4.2.0)
-#>  getPass       0.2-2   2017-07-21 [1] CRAN (R 4.2.0)
-#>  git2r         0.29.0  2021-11-22 [1] CRAN (R 4.2.0)
-#>  glue          1.6.0   2021-12-17 [1] CRAN (R 4.2.0)
-#>  htmltools     0.5.2   2021-08-25 [1] CRAN (R 4.2.0)
-#>  httpuv        1.6.5   2022-01-05 [1] CRAN (R 4.2.0)
-#>  httr          1.4.2   2020-07-20 [1] CRAN (R 4.2.0)
-#>  knitr         1.37    2021-12-16 [1] CRAN (R 4.2.0)
-#>  later         1.3.0   2021-08-18 [1] CRAN (R 4.2.0)
-#>  lifecycle     1.0.1   2021-09-24 [1] CRAN (R 4.2.0)
-#>  magrittr      2.0.1   2020-11-17 [1] CRAN (R 4.2.0)
-#>  memoise       2.0.1   2021-11-26 [1] CRAN (R 4.2.0)
-#>  pkgbuild      1.3.1   2021-12-20 [1] CRAN (R 4.2.0)
-#>  pkgload       1.2.4   2021-11-30 [1] CRAN (R 4.2.0)
-#>  prettyunits   1.1.1   2020-01-24 [1] CRAN (R 4.2.0)
-#>  processx      3.5.2   2021-04-30 [1] CRAN (R 4.2.0)
-#>  promises      1.2.0.1 2021-02-11 [1] CRAN (R 4.2.0)
-#>  ps            1.6.0   2021-02-28 [1] CRAN (R 4.2.0)
-#>  purrr         0.3.4   2020-04-17 [1] CRAN (R 4.2.0)
-#>  R6            2.5.1   2021-08-19 [1] CRAN (R 4.2.0)
-#>  Rcpp          1.0.8   2022-01-13 [1] CRAN (R 4.2.0)
-#>  remotes       2.4.2   2021-11-30 [1] CRAN (R 4.2.0)
-#>  rlang         0.4.12  2021-10-18 [1] CRAN (R 4.2.0)
-#>  rmarkdown     2.11    2021-09-14 [1] CRAN (R 4.2.0)
-#>  rprojroot     2.0.2   2020-11-15 [1] CRAN (R 4.2.0)
-#>  rstudioapi    0.13    2020-11-12 [1] CRAN (R 4.2.0)
-#>  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.2.0)
-#>  stringi       1.7.6   2021-11-29 [1] CRAN (R 4.2.0)
-#>  stringr       1.4.0   2019-02-10 [1] CRAN (R 4.2.0)
-#>  testthat      3.1.1   2021-12-03 [1] CRAN (R 4.2.0)
-#>  usethis       2.1.5   2021-12-09 [1] CRAN (R 4.2.0)
-#>  whisker       0.4     2019-08-28 [1] CRAN (R 4.2.0)
-#>  withr         2.4.3   2021-11-30 [1] CRAN (R 4.2.0)
-#>  workflowr   * 1.7.0   2021-12-21 [1] CRAN (R 4.2.0)
-#>  xfun          0.29    2021-12-14 [1] CRAN (R 4.2.0)
-#>  yaml          2.2.1   2020-02-01 [1] CRAN (R 4.2.0)
+#>  brio          1.1.3   2021-11-30 [1] CRAN (R 4.1.0)
+#>  cachem        1.0.6   2021-08-19 [1] CRAN (R 4.1.0)
+#>  callr         3.7.0   2021-04-20 [1] CRAN (R 4.1.0)
+#>  cli           3.1.1   2022-01-20 [1] CRAN (R 4.1.2)
+#>  crayon        1.4.2   2021-10-29 [1] CRAN (R 4.1.0)
+#>  desc          1.4.0   2021-09-28 [1] CRAN (R 4.1.0)
+#>  devtools      2.4.3   2021-11-30 [1] CRAN (R 4.1.0)
+#>  digest        0.6.29  2021-12-01 [1] CRAN (R 4.1.0)
+#>  ellipsis      0.3.2   2021-04-29 [1] CRAN (R 4.1.0)
+#>  evaluate      0.14    2019-05-28 [1] CRAN (R 4.1.0)
+#>  fastmap       1.1.0   2021-01-25 [1] CRAN (R 4.1.0)
+#>  fs            1.5.2   2021-12-08 [1] CRAN (R 4.1.0)
+#>  getPass       0.2-2   2017-07-21 [1] CRAN (R 4.1.0)
+#>  git2r         0.29.0  2021-11-22 [1] CRAN (R 4.1.0)
+#>  glue          1.6.0   2021-12-17 [1] CRAN (R 4.1.0)
+#>  htmltools     0.5.2   2021-08-25 [1] CRAN (R 4.1.0)
+#>  httpuv        1.6.5   2022-01-05 [1] CRAN (R 4.1.2)
+#>  httr          1.4.2   2020-07-20 [1] CRAN (R 4.1.0)
+#>  knitr         1.37    2021-12-16 [1] CRAN (R 4.1.0)
+#>  later         1.3.0   2021-08-18 [1] CRAN (R 4.1.0)
+#>  lifecycle     1.0.1   2021-09-24 [1] CRAN (R 4.1.0)
+#>  magrittr      2.0.1   2020-11-17 [1] CRAN (R 4.1.0)
+#>  memoise       2.0.1   2021-11-26 [1] CRAN (R 4.1.0)
+#>  pkgbuild      1.3.1   2021-12-20 [1] CRAN (R 4.1.0)
+#>  pkgload       1.2.4   2021-11-30 [1] CRAN (R 4.1.0)
+#>  prettyunits   1.1.1   2020-01-24 [1] CRAN (R 4.1.0)
+#>  processx      3.5.2   2021-04-30 [1] CRAN (R 4.1.0)
+#>  promises      1.2.0.1 2021-02-11 [1] CRAN (R 4.1.0)
+#>  ps            1.6.0   2021-02-28 [1] CRAN (R 4.1.0)
+#>  purrr         0.3.4   2020-04-17 [1] CRAN (R 4.1.0)
+#>  R6            2.5.1   2021-08-19 [1] CRAN (R 4.1.0)
+#>  Rcpp          1.0.8   2022-01-13 [1] CRAN (R 4.1.2)
+#>  remotes       2.4.2   2021-11-30 [1] CRAN (R 4.1.0)
+#>  rlang         0.4.12  2021-10-18 [1] CRAN (R 4.1.0)
+#>  rmarkdown     2.11    2021-09-14 [1] CRAN (R 4.1.0)
+#>  rprojroot     2.0.2   2020-11-15 [1] CRAN (R 4.1.0)
+#>  rstudioapi    0.13    2020-11-12 [1] CRAN (R 4.1.0)
+#>  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.1.0)
+#>  stringi       1.7.6   2021-11-29 [1] CRAN (R 4.1.0)
+#>  stringr       1.4.0   2019-02-10 [1] CRAN (R 4.1.0)
+#>  testthat      3.1.2   2022-01-20 [1] CRAN (R 4.1.2)
+#>  usethis       2.1.5   2021-12-09 [1] CRAN (R 4.1.0)
+#>  whisker       0.4     2019-08-28 [1] CRAN (R 4.1.0)
+#>  withr         2.4.3   2021-11-30 [1] CRAN (R 4.1.0)
+#>  workflowr   * 1.7.0   2021-12-21 [1] CRAN (R 4.1.0)
+#>  xfun          0.29    2021-12-14 [1] CRAN (R 4.1.0)
+#>  yaml          2.2.1   2020-02-01 [1] CRAN (R 4.1.0)
 #> 
-#>  [1] /Library/Frameworks/R.framework/Versions/4.2/Resources/library
+#>  [1] /Library/Frameworks/R.framework/Versions/4.1/Resources/library
 #> 
 #> ──────────────────────────────────────────────────────────────────────────────
 ```

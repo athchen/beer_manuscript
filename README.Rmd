@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 
 # BEER Manuscript
 
-This repository contains all of the data and code to reproduce the work presented in, _Detecting Antibody Reactivities in Phage Immunoprecipitation Sequencing Data_.
+This repository contains all of the data and code to reproduce the work presented in, [_Detecting Antibody Reactivities in Phage Immunoprecipitation Sequencing Data_](https://www.biorxiv.org/content/10.1101/2022.01.19.476926v1).
 
 The session info, including all packages used in the analyses and their respective versions can be found in the [Session Info](#session-info) section of this README.md. All code used to generate the figures and tables of the manuscript are mapped in the [section below](#mapping-of-figures-and-tables). The contents of each file in the repository are provided in the [Directory Structure](#directory-structure) section. 
 
