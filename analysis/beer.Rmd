@@ -9,12 +9,11 @@ BEER is a Bayesian hierarchical model for identifying enriched antibody response
 
 ## Notation
 
-Let $i = 1, 2, \ldots, P$ and $j = 1, 2, \ldots, N$ index the peptides and samples, respectively. We observe, 
+Let $i = 1, 2, \ldots, P$ and $j = 1, 2, \ldots, 96$ index the peptides and samples, respectively. Without loss of generality, assume samples $\{1, 2, \ldots, N\}$ are mock IP (beads-only) samples. We observe, 
 
 \begin{align*}
 Y_{ij} &= \text{ observed # reads mapped to peptide } i \text{ in sample } j\\
-n_j &= \sum_{i=1}^P Y_{ij} \text{ total # of reads in sample }j\\
-B_{j} &= \unicode{x1D7D9} (\text{sample } j \text{ is a beads-only sample})\\
+n_j &= \sum_{i=1}^P Y_{ij} \text{ total # of reads in sample }j
 \end{align*}
 
 Define, 
@@ -47,22 +46,23 @@ f_b(\mu, \sigma^2) &= f_a(\mu, \sigma^2) \left(\frac{1}{\mu} - 1\right)
 
 ## Model
 
-Let $\mu_{i0}$ and $\sigma^2{i0}$ denote the mean and variance for peptide $i$ in a beads-only sample where, 
+Let $\mu_{i0}$ and $\sigma^2_{i0}$ denote the mean and variance for peptide $i$ in a beads-only sample where, 
 
 \begin{align*}
 \mu_{ij} &= \frac{a_{i0}}{a_{i0} + b_{i0}}\\
 \sigma^2_{i0} &= \frac{a_{i0}b_{i0}}{(a_{i0} + b_{i0})^2 (a_{i0} + b_{i0} + 1)}.
 \end{align*}
 
-Our model for detecting antibody enriched is described as follows: 
+To infer reactivity, we compare one sample to all beads-only samples on the same plate. Our hierarchical model given a sample $j \in \{N+1, \ldots, 96\}$ is described as follows.
 
 \begin{align*}
-Y_{ij}|\theta_{ij} & \sim \text{Binomial}(n_j, \theta_{ij}) \\
-\theta_{ij}| a_{i0}, b_{i0} c_j, \phi_{ij} & \sim \text{Beta}(f_a(c_j\phi_{ij} \mu_{i0}, \sigma^2_{i0}), f_b(c_j\phi_{ij} \mu_{i0}, \sigma^2_{i0})) \\
-c_j|B_j & \sim B_j \cdot 1 + (1 - B_j) \cdot \text{Beta}(a_c, b_c)\\
-\phi_{ij}|Z_{ij} & \sim (1 - Z_{ij}) \cdot 1 + Z_{ij} (\phi_{min} + \text{Gamma}(a_\phi, b_\phi))\\
-Z_{ij}|\pi_{j} & \sim \text{Bernoulli}(\pi_j)\\
-\pi_j & \sim B_j \cdot \text{Beta}(a_\pi, b_\pi)
+    Y_{ij}|\theta_{ij} &\sim \text{Binomial}(n_j, \theta_{ij}) \\
+    \theta_{ij}|a_{i0}, b_{i0}, c_j, \phi_{ij} &\sim \text{Beta}(f_a(c_j \phi_{ij} \mu_{i0}, \sigma^2_{i0}), f_b(c_j \phi_{ij} \mu_{i0}, \sigma^2_{i0})) \\
+%    c_j|B_j & \sim B_j\cdot 1 + (1 - B_j) \cdot \text{Beta}(a_c, b_c) \\
+    c_j & \sim \text{Beta}(a_c, b_c) \\
+    \phi_{ij}|Z_{ij} & \sim (1 - Z_{ij}) \cdot 1 + Z_{ij}(\phi_{min} + \text{Gamma}(a_\phi, b_\phi)) \\
+    Z_{ij}|\pi_j & \sim \text{Bernoulli}(\pi_j)\\
+    \pi_j &\sim \text{Beta}(a_\pi, b_\pi) 
 \end{align*}
 
 ## Prior parameters
