@@ -29,7 +29,7 @@ hiv_beads <- hiv_virscan[, hiv_virscan$group == "beads"]
 
 ## Figures
 
-### Figure S13
+### Figure S14
 
 Evidence for a strong peptide effect in PhIP-Seq data, demonstrated using data from five plates of a previous experiment using HIV samples, analyzed in [Eshleman et. al 2019](https://doi.org/10.1016/j.celrep.2019.03.097) and [Chen et. al 2021](https://doi.org/10.1002/sim.8920).
 **Left:** observed read counts per million reads for 95,242 peptides from two "beads only" samples from different plates. For these two samples, the Spearman correlation is 0.875. 
@@ -151,7 +151,7 @@ ggarrange(plot_pepeff, plot_avgcpm, plot_corr, ncol = 3,
           align = "v")    
 ```
 
-### Figure S14
+### Figure S15
 
 Evidence for larger than binomial variability in the PhIP-Seq data analyzed in [Eshleman et. al 2019](https://doi.org/10.1016/j.celrep.2019.03.097) and [Chen et. al 2021](https://doi.org/10.1002/sim.8920).
 **Left:** library size (reads in millions) for 36 control ("bead only") samples from 5 plates. 
@@ -285,7 +285,7 @@ ggarrange(lib_size, binom_large, binom_small, nrow = 1,
           align = "v")
 ```
 
-### Figure S15
+### Figure S16
 
 Expected versus observed read counts for 95,242 peptides from a randomly selected serum sample. Expected read counts for each peptide were derived using maximum likelihood estimates from the negative controls on the same plate. Each point represents one peptide from one sample, and peptides were considered enriched (red) if the observed read count was over 2 times (left) and 5 times (right) the expected number of reads. Linear regression lines (blue) were fitted using the non-enriched peptides and compared to the line where observed and expected reads are equal (black). The observed counts were truncated at 250 observed reads to enhance the display.
 

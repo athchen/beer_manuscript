@@ -1,7 +1,7 @@
 #' figure_attnconstant.R
 #' 
 #' Code to generate figures:
-#' - Figure S15: attnconstant.png
+#' - Figure S16: attnconstant.png
 
 # Set-up --------------
 if(!"here" %in% installed.packages()){
@@ -31,7 +31,7 @@ hiv_tidy <- as(hiv[, hiv$plate == 3], "DataFrame") %>%
 set.seed(123)
 sample_id <- sample(colnames(hiv[, hiv$group != "beads" & hiv$plate == 3]), 1)
 
-# Figure S15: attnconstant.png ----------
+# Figure S16: attnconstant.png ----------
 hiv_tidy %>%
     filter(counts <= 250 & expected_rc <= 250 & sample == sample_id) %>%
     pivot_longer(cols = contains("hit_"), 

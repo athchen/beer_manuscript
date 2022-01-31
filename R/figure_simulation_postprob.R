@@ -21,7 +21,7 @@ sim_tidy <- as(sim_out, "DataFrame") %>%
            expected_rc = expected_prop*n) %>%
     ungroup()
 
-# Figure: simulation_postprob.png ------------
+# Figure S4: simulation_postprob.png ------------
 # Peptides from beads-only samples are excluded below. Super-enriched peptides 
 # are colored in grey. 
 sample_names <- c("beads-only", paste0("sample ", 1:10), "replicate of 10")

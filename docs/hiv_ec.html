@@ -415,7 +415,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-23
+<strong>Last updated:</strong> 2022-01-30
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -506,16 +506,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree335b31c3e8cab7f61effe5766b43c397c6ed2973targetblank335b31ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/335b31c3e8cab7f61effe5766b43c397c6ed2973" target="_blank">335b31c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree335b31c3e8cab7f61effe5766b43c397c6ed2973targetblank335b31ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/335b31c3e8cab7f61effe5766b43c397c6ed2973" target="_blank">335b31c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -535,6 +535,10 @@ Ignored files:
     Ignored:    data_processed/simulation_curves.rda
     Ignored:    data_raw/.DS_Store
     Ignored:    figures/.DS_Store
+
+Unstaged changes:
+    Modified:   R/figure_postpred.R
+    Modified:   figures/postpred.png
 
 </code></pre>
 <p>
@@ -573,6 +577,74 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/335b31c3e8cab7f61effe5766b43c397c6ed2973/analysis/hiv_ec.Rmd" target="_blank">335b31c</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+updated axis label for S13
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/athchen/beer_manuscript/a20486888efa5a56573f965516be5b9740bd4843/docs/hiv_ec.html" target="_blank">a204868</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/c46876e86dc9288a409eb1777629ff4613a1ae5f/analysis/hiv_ec.Rmd" target="_blank">c46876e</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+added Figure S13, moved figure
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/athchen/beer_manuscript/bbf7cba43c848a8c3c239a1ebce9c229941a1999/docs/hiv_ec.html" target="_blank">bbf7cba</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-23
+</td>
+<td>
+rebuilt webpage
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1446,6 +1518,109 @@ p_values &lt;- hiv_tidy %&gt;%
           title = element_text(size = 10), 
           legend.background = element_rect(color = &quot;black&quot;, size = 0.3), 
           legend.position = c(0.725, 0.825))</code></pre>
+</div>
+<div id="figure-s13" class="section level3">
+<h3>Figure S13</h3>
+<p>Posterior predictive checks for HIV EC 1. <strong>Left:</strong> Histogram of p-values corresponding to the probability of seeing a more extreme value under the posited model. <strong>Right:</strong> 95% credible intervals (lines) and medians (black circles) from the posterior predictive distribution for 67 of 3,394 HIV peptides. The peptides were selected by ordering the peptides by the observed read counts and taking every 50th peptide. Observed read counts are shown in blue points.</p>
+<pre class="r"><code>hiv &lt;- readRDS(here(&quot;data_processed&quot;, &quot;hiv_results.rds&quot;))
+hiv_samples &lt;- readRDS(here(&quot;data_processed&quot;, &quot;hiv_samples.rds&quot;))
+
+thetas &lt;- as.matrix(hiv_samples)
+thetas &lt;- thetas[, grepl(&quot;theta&quot;, colnames(thetas))]
+
+sample_num &lt;- which(hiv$group != &quot;beads&quot;)[1]
+n &lt;- librarySize(hiv)[sample_num]
+
+# Sample from the posterior predictive distribution
+postpred_samples &lt;- apply(thetas, 2, function(chain){
+    as.vector(sapply(chain, function(x){rbinom(10, n, x)}))
+}) 
+
+# Get 95% credible intervals
+ci &lt;- map_dfr(1:nrow(hiv), function(row_number){
+    row &lt;- postpred_samples[, row_number]
+    obs_count &lt;- counts(hiv)[row_number, 7]
+    
+    output &lt;- c(obs_count, 
+      quantile(row, c(0.025, 0.5, 0.975)), 
+      min(sum(row &lt;= obs_count)/length(row), sum(row &gt; obs_count)/length(row)))
+    names(output) &lt;-  c(&quot;counts&quot;,&quot;low&quot;, &quot;med&quot;, &quot;upper&quot;, &quot;p_value&quot;)
+    output
+})
+
+p_hist &lt;- ci %&gt;%
+    ggplot(aes(x = p_value)) + 
+    geom_histogram(binwidth = 0.01, boundary = 0, color = &quot;white&quot;) +
+    labs(x = &quot;posterior predictive p-value&quot;, 
+         y = &quot;# peptides&quot;) +
+    theme_bw() +
+    theme(aspect.ratio = 1)
+
+p_interval &lt;- ci %&gt;%
+    arrange(counts) %&gt;%
+    mutate(peptide = 1:n()) %&gt;%
+    filter(peptide %% 50 == 0) %&gt;%
+    ggplot(aes(y = peptide)) +
+    geom_errorbarh(aes(xmin = low, xmax = upper, color = &quot;95% interval&quot;)) +
+    geom_point(aes(x = counts, color = &quot;observed count&quot;)) + 
+    geom_point(aes(x = med, color = &quot;median&quot;), fill = NA, shape = 21) +
+    coord_cartesian(xlim = c(0, 160), ylim = c(1, 3300)) +
+    scale_x_continuous(breaks = seq(0, 160, by = 20)) +
+    labs(x = &quot;read counts&quot;, y = &quot;&quot;, color = &quot;&quot;) +
+    scale_color_manual(breaks = c(&quot;95% interval&quot;, &quot;median&quot;, &quot;observed count&quot;), 
+                       values = c(&quot;black&quot;, &quot;black&quot;, &quot;blue&quot;)) +
+    guides(colour = guide_legend(
+        override.aes = list(linetype = c(&quot;solid&quot;, &quot;blank&quot;, &quot;blank&quot;), 
+                            shape = c(NA, 21, 16)))) +
+    theme_bw() + 
+    theme(aspect.ratio = 1, 
+          legend.title = element_blank(), 
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank(), 
+          axis.ticks.y = element_blank(), 
+          axis.text.y = element_blank(), 
+          legend.background = element_rect(color = &quot;black&quot;), 
+          legend.position = c(0.75, 0.17)) 
+
+ggarrange(p_hist, p_interval, nrow = 1, align = &quot;v&quot;)</code></pre>
+<p><img src="figure/hiv_ec.Rmd/figure_postpred-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-figure_postpred-1">
+Past versions of figure_postpred-1.png
+</button>
+</p>
+<div id="fig-figure_postpred-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/a20486888efa5a56573f965516be5b9740bd4843/docs/figure/hiv_ec.Rmd/figure_postpred-1.png" target="_blank">a204868</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="tables" class="section level2">

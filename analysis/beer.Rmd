@@ -67,7 +67,7 @@ To infer reactivity, we compare one sample to all beads-only samples on the same
 
 ## Prior parameters
 
-### Figure S16
+### Figure S17
 
 **Left:** the prior distribution for the proportion of reactive peptides in sample $j$, $\pi_j$, modeled as a Beta distribution Beta($a_\pi$ = 2, $b_\pi$ = 300), reflecting peptide enrichment seen in previous studies.
 **Middle:** a Gamma($a_\phi$ = 1.25, $b_\phi$ = 0.1) distribution, used in the prior distribution for the fold change $\phi_{ij}$ for peptide $i$ in sample $j$, if reactive.

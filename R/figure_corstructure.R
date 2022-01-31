@@ -1,8 +1,8 @@
 #' figure_corstructure.R
 #' 
 #' Code to generate figure:
-#' - Figure S13: corstructure.png
-#' - Figure S14: figdatastructurebinom.png
+#' - Figure S14: corstructure.png
+#' - Figure S15: figdatastructurebinom.png
 
 # Set-up --------------
 if(!"here" %in% installed.packages()){

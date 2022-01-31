@@ -413,7 +413,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-23
+<strong>Last updated:</strong> 2022-01-30
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -504,16 +504,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreec46876e86dc9288a409eb1777629ff4613a1ae5ftargetblankc46876ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/c46876e86dc9288a409eb1777629ff4613a1ae5f" target="_blank">c46876e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreec46876e86dc9288a409eb1777629ff4613a1ae5ftargetblankc46876ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/c46876e86dc9288a409eb1777629ff4613a1ae5f" target="_blank">c46876e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -533,6 +533,18 @@ Ignored files:
     Ignored:    data_processed/simulation_curves.rda
     Ignored:    data_raw/.DS_Store
     Ignored:    figures/.DS_Store
+
+Untracked files:
+    Untracked:  R/figure_postpred.R
+    Untracked:  R/run_hiv_custom.R
+    Untracked:  data_processed/hiv_samples.rds
+    Untracked:  figures/postpred.png
+
+Unstaged changes:
+    Modified:   R/figure_attnconstant.R
+    Modified:   R/figure_corstructure.R
+    Modified:   R/figure_simulation_postprob.R
+    Modified:   README.Rmd
 
 </code></pre>
 <p>
@@ -571,6 +583,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/c46876e86dc9288a409eb1777629ff4613a1ae5f/analysis/hiv_discussion.Rmd" target="_blank">c46876e</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+added Figure S13, moved figure
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/athchen/beer_manuscript/bbf7cba43c848a8c3c239a1ebce9c229941a1999/docs/hiv_discussion.html" target="_blank">bbf7cba</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-23
+</td>
+<td>
+rebuilt webpage
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -819,8 +865,8 @@ hiv_beads &lt;- hiv_virscan[, hiv_virscan$group == &quot;beads&quot;]</code></pr
 </div>
 <div id="figures" class="section level2">
 <h2>Figures</h2>
-<div id="figure-s13" class="section level3">
-<h3>Figure S13</h3>
+<div id="figure-s14" class="section level3">
+<h3>Figure S14</h3>
 <p>Evidence for a strong peptide effect in PhIP-Seq data, demonstrated using data from five plates of a previous experiment using HIV samples, analyzed in <a href="https://doi.org/10.1016/j.celrep.2019.03.097">Eshleman et. al 2019</a> and <a href="https://doi.org/10.1002/sim.8920">Chen et. al 2021</a>. <strong>Left:</strong> observed read counts per million reads for 95,242 peptides from two “beads only” samples from different plates. For these two samples, the Spearman correlation is 0.875. <strong>Middle:</strong> observed average read counts per million reads for 95,242 peptides from all “beads only” samples from two different plates. For these two plates, the Spearman correlation is 0.975. <strong>Right:</strong> within and between plate sample correlations as a function of sequencing depth. For each pair of bead only samples from the same plate (red dots, 117 pairs total), the Spearman correlation (y-axis) is related to the minimum of the respective two sequencing depths (x-axis). For each pair of plates (blue dots, 10 pairs total), the Spearman correlation between the average read counts of the bead only samples (y-axis) is also related to the minimum of the two median sequencing depths (x-axis), and substantially higher than the correlations of the bead only samples.</p>
 <pre class="r"><code>## Left panel: peptide effect in beads-only samples
 cpm &lt;- propReads(hiv_beads)*1e6
@@ -973,8 +1019,8 @@ Athena Chen
 </div>
 </div>
 </div>
-<div id="figure-s14" class="section level3">
-<h3>Figure S14</h3>
+<div id="figure-s15" class="section level3">
+<h3>Figure S15</h3>
 <p>Evidence for larger than binomial variability in the PhIP-Seq data analyzed in <a href="https://doi.org/10.1016/j.celrep.2019.03.097">Eshleman et. al 2019</a> and <a href="https://doi.org/10.1002/sim.8920">Chen et. al 2021</a>. <strong>Left:</strong> library size (reads in millions) for 36 control (“bead only”) samples from 5 plates. <strong>Middle:</strong> expected read counts per million reads aligned based on the estimated Binomial probabilities (dots, colored by plate) and respective 95% confidence intervals for a peptide with large expected read counts, for each of the control samples. Highlighted are samples 3 and 6 from plate 1, showing large discrepancies between the Binomial probabilities for this peptide between the two bead only samples. <strong>Right:</strong> the same statistics as in the middle panel, for a peptide with smaller expected read counts. Highlighted are samples 10 and 12 from plate 2, again showing a large discrepancy between the Binomial probabilities for this peptide between the two bead only samples.</p>
 <pre class="r"><code># Plot library size
 lib_size &lt;- data.frame(libsize = librarySize(hiv_beads)) %&gt;%
@@ -1140,8 +1186,8 @@ Athena Chen
 </div>
 </div>
 </div>
-<div id="figure-s15" class="section level3">
-<h3>Figure S15</h3>
+<div id="figure-s16" class="section level3">
+<h3>Figure S16</h3>
 <p>Expected versus observed read counts for 95,242 peptides from a randomly selected serum sample. Expected read counts for each peptide were derived using maximum likelihood estimates from the negative controls on the same plate. Each point represents one peptide from one sample, and peptides were considered enriched (red) if the observed read count was over 2 times (left) and 5 times (right) the expected number of reads. Linear regression lines (blue) were fitted using the non-enriched peptides and compared to the line where observed and expected reads are equal (black). The observed counts were truncated at 250 observed reads to enhance the display.</p>
 <pre class="r"><code># Convert to tidy format at add expected prop/counts
 hiv_tidy &lt;- as(hiv_virscan[, hiv_virscan$plate == 3], &quot;DataFrame&quot;) %&gt;%

@@ -14,7 +14,7 @@ This webpage details all analyses and methods used to produce the work presented
 
 #### BEER
 
-* [Figure S16](https://athchen.github.io/beer_manuscript/beer.html#Figure_S16)
+* [Figure S17](https://athchen.github.io/beer_manuscript/beer.html#Figure_S16)
 
 #### Simulated Data
 
@@ -35,6 +35,7 @@ This webpage details all analyses and methods used to produce the work presented
 * [Figure S7](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S7)
 * [Figure S8](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S8)
 * [Figure S9](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S9)
+* [Figure S13](https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S13)
 * [Table S3](https://athchen.github.io/beer_manuscript/hiv_ec.html#Table_S3)
 
 #### CoronaScan Samples
@@ -46,6 +47,6 @@ This webpage details all analyses and methods used to produce the work presented
 
 #### HIV Discussion
 
-* [Figure S13](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S13)
-* [Figure S14](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S14)
-* [Figure S15](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S15)
+* [Figure S14](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S13)
+* [Figure S15](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S14)
+* [Figure S16](https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S15)

@@ -337,7 +337,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-23
+<strong>Last updated:</strong> 2022-01-30
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -368,16 +368,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreec46876e86dc9288a409eb1777629ff4613a1ae5ftargetblankc46876ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/c46876e86dc9288a409eb1777629ff4613a1ae5f" target="_blank">c46876e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreec46876e86dc9288a409eb1777629ff4613a1ae5ftargetblankc46876ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/c46876e86dc9288a409eb1777629ff4613a1ae5f" target="_blank">c46876e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -397,6 +397,18 @@ Ignored files:
     Ignored:    data_processed/simulation_curves.rda
     Ignored:    data_raw/.DS_Store
     Ignored:    figures/.DS_Store
+
+Untracked files:
+    Untracked:  R/figure_postpred.R
+    Untracked:  R/run_hiv_custom.R
+    Untracked:  data_processed/hiv_samples.rds
+    Untracked:  figures/postpred.png
+
+Unstaged changes:
+    Modified:   R/figure_attnconstant.R
+    Modified:   R/figure_corstructure.R
+    Modified:   R/figure_simulation_postprob.R
+    Modified:   README.Rmd
 
 </code></pre>
 <p>
@@ -435,6 +447,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/c46876e86dc9288a409eb1777629ff4613a1ae5f/analysis/index.Rmd" target="_blank">c46876e</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+added Figure S13, moved figure
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/athchen/beer_manuscript/bbf7cba43c848a8c3c239a1ebce9c229941a1999/docs/index.html" target="_blank">bbf7cba</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-23
+</td>
+<td>
+rebuilt webpage
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -788,7 +834,7 @@ Start workflowr project.
 <div id="beer" class="section level4">
 <h4>BEER</h4>
 <ul>
-<li><a href="https://athchen.github.io/beer_manuscript/beer.html#Figure_S16">Figure S16</a></li>
+<li><a href="https://athchen.github.io/beer_manuscript/beer.html#Figure_S16">Figure S17</a></li>
 </ul>
 </div>
 <div id="simulated-data" class="section level4">
@@ -813,6 +859,7 @@ Start workflowr project.
 <li><a href="https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S7">Figure S7</a></li>
 <li><a href="https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S8">Figure S8</a></li>
 <li><a href="https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S9">Figure S9</a></li>
+<li><a href="https://athchen.github.io/beer_manuscript/hiv_ec.html#Figure_S13">Figure S13</a></li>
 <li><a href="https://athchen.github.io/beer_manuscript/hiv_ec.html#Table_S3">Table S3</a></li>
 </ul>
 </div>
@@ -828,9 +875,9 @@ Start workflowr project.
 <div id="hiv-discussion" class="section level4">
 <h4>HIV Discussion</h4>
 <ul>
-<li><a href="https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S13">Figure S13</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S14">Figure S14</a></li>
-<li><a href="https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S15">Figure S15</a></li>
+<li><a href="https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S13">Figure S14</a></li>
+<li><a href="https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S14">Figure S15</a></li>
+<li><a href="https://athchen.github.io/beer_manuscript/hiv_discussion.html#Figure_S15">Figure S16</a></li>
 </ul>
 </div>
 </div>

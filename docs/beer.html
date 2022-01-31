@@ -413,7 +413,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-23
+<strong>Last updated:</strong> 2022-01-30
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -504,16 +504,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreec46876e86dc9288a409eb1777629ff4613a1ae5ftargetblankc46876ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/athchen/beer_manuscript/tree/c46876e86dc9288a409eb1777629ff4613a1ae5f" target="_blank">c46876e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttree94d8277c0ed8f77b374c25c3b5e02a592a1e4647targetblank94d8277a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomathchenbeermanuscripttreec46876e86dc9288a409eb1777629ff4613a1ae5ftargetblankc46876ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/94d8277c0ed8f77b374c25c3b5e02a592a1e4647" target="_blank">94d8277</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/athchen/beer_manuscript/tree/c46876e86dc9288a409eb1777629ff4613a1ae5f" target="_blank">c46876e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -533,6 +533,18 @@ Ignored files:
     Ignored:    data_processed/simulation_curves.rda
     Ignored:    data_raw/.DS_Store
     Ignored:    figures/.DS_Store
+
+Untracked files:
+    Untracked:  R/figure_postpred.R
+    Untracked:  R/run_hiv_custom.R
+    Untracked:  data_processed/hiv_samples.rds
+    Untracked:  figures/postpred.png
+
+Unstaged changes:
+    Modified:   R/figure_attnconstant.R
+    Modified:   R/figure_corstructure.R
+    Modified:   R/figure_simulation_postprob.R
+    Modified:   README.Rmd
 
 </code></pre>
 <p>
@@ -571,6 +583,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/athchen/beer_manuscript/blob/c46876e86dc9288a409eb1777629ff4613a1ae5f/analysis/beer.Rmd" target="_blank">c46876e</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-30
+</td>
+<td>
+added Figure S13, moved figure
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/athchen/beer_manuscript/bbf7cba43c848a8c3c239a1ebce9c229941a1999/docs/beer.html" target="_blank">bbf7cba</a>
+</td>
+<td>
+Athena Chen
+</td>
+<td>
+2022-01-23
+</td>
+<td>
+rebuilt webpage
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -849,8 +895,8 @@ f_b(\mu, \sigma^2) &amp;= f_a(\mu, \sigma^2) \left(\frac{1}{\mu} - 1\right)
 </div>
 <div id="prior-parameters" class="section level2">
 <h2>Prior parameters</h2>
-<div id="figure-s16" class="section level3">
-<h3>Figure S16</h3>
+<div id="figure-s17" class="section level3">
+<h3>Figure S17</h3>
 <p><strong>Left:</strong> the prior distribution for the proportion of reactive peptides in sample <span class="math inline">\(j\)</span>, <span class="math inline">\(\pi_j\)</span>, modeled as a Beta distribution Beta(<span class="math inline">\(a_\pi\)</span> = 2, <span class="math inline">\(b_\pi\)</span> = 300), reflecting peptide enrichment seen in previous studies. <strong>Middle:</strong> a Gamma(<span class="math inline">\(a_\phi\)</span> = 1.25, <span class="math inline">\(b_\phi\)</span> = 0.1) distribution, used in the prior distribution for the fold change <span class="math inline">\(\phi_{ij}\)</span> for peptide <span class="math inline">\(i\)</span> in sample <span class="math inline">\(j\)</span>, if reactive. <strong>Right:</strong> the prior distribution for the scaling constant in sample <span class="math inline">\(j\)</span>, <span class="math inline">\(c_j\)</span>, modeled as a Beta distribution Beta(<span class="math inline">\(a_c = 80\)</span>, <span class="math inline">\(b_c = 20\)</span>).</p>
 <pre class="r"><code>par(mfrow = c(1,3),las=1,yaxs=&quot;i&quot;,mar=c(5,1,3,1),cex.axis=1.3)
 curve(dbeta(x,2,300),from=0,to=0.05,n=501,
