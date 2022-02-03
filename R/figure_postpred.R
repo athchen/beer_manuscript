@@ -29,22 +29,17 @@ ci <- map_dfr(1:nrow(hiv), function(row_number){
     row <- postpred_samples[, row_number]
     obs_count <- counts(hiv)[row_number, sample_num]
     
-    output <- c(obs_count, 
-      quantile(row, c(0.025, 0.5, 0.975)), 
-      min(sum(row <= obs_count)/length(row), sum(row > obs_count)/length(row)))
+    # Calculate p-value, get empirical counts distribution
+    emp_dist <- table(row)/length(row)
+    dens_threshold <- emp_dist[names(emp_dist) == obs_count]
+    p_value <- sum(emp_dist[emp_dist <= dens_threshold])
+    
+    output <- c(obs_count, quantile(row, c(0.025, 0.5, 0.975)), p_value)
     names(output) <-  c("counts","low", "med", "upper", "p_value")
     output
 })
 
-p_hist <- ci %>%
-    ggplot(aes(x = p_value)) + 
-    geom_histogram(binwidth = 0.025, boundary = 0, color = "white") +
-    labs(x = "posterior predictive p-value", 
-         y = "# peptides") +
-    theme_bw() +
-    theme(aspect.ratio = 1)
-
-p_interval <- ci %>%
+ci %>%
     arrange(counts) %>%
     mutate(peptide = 1:n()) %>%
     filter(peptide %% 50 == 0) %>%
@@ -70,6 +65,4 @@ p_interval <- ci %>%
           legend.background = element_rect(color = "black"), 
           legend.position = c(0.75, 0.17)) 
 
-ggarrange(p_hist, p_interval, nrow = 1, align = "v")
-
-ggsave("figures/postpred.png", width = 8, height = 4)
+ggsave("figures/postpred.png", width = 4, height = 4)
