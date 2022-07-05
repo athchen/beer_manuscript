@@ -47,4 +47,4 @@ sim_tidy %>%
     theme_bw() +
     theme(legend.position = "bottom")
 
-ggsave("figures/simulation_postprob.png", units = "in", width = 7.5)
+ggsave("figures/simulation_postprob.png", units = "in", width = 7.5, dpi = 600)
