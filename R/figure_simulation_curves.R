@@ -17,6 +17,7 @@ if(!"here" %in% installed.packages()){
 
 if(file.exists(here::here("data_processed", "simulation_curves.rda"))){
     load(here::here("data_processed", "simulation_curves.rda"))
+    source(here::here("R", "load_packages.R"))
 } else {
     # Takes a while to run - only need to run once. 
     source(here::here("R", "load_curves.R"))
@@ -24,7 +25,7 @@ if(file.exists(here::here("data_processed", "simulation_curves.rda"))){
 
 curves_summary <- interpolate %>%
     group_by(group, group_lab, method, num_beads, x) %>%
-    summarize(n_point = n(), 
+    dplyr::summarize(n_point = n(), 
               sens_na = sum(is.na(sens)), 
               ppv_na = sum(is.na(ppv)), 
               mean_sens = mean(sens, na.rm = TRUE), 
@@ -93,7 +94,7 @@ roc_prc_interp <- ggarrange(roc_interp,
                             prc_interp + theme(legend.position = "none"), 
                             ncol = 1, nrow = 2)
 
-ggsave("figures/simulation_roc_prc_interp.png", roc_prc_interp, 
+ggsave("figures/simulation_roc_prc_interp.png", roc_prc_interp, dpi = 600, 
        units = "in", height = 9, width = 7)
 
 # Figure S1: simulation_roc_prc.png ------------
@@ -152,7 +153,7 @@ prc <- roc_by_fc %>%
 
 roc_prc <- ggarrange(roc, prc + theme(legend.position = "none"), ncol = 1, nrow = 2)
 
-ggsave("figures/simulation_roc_prc.png", roc_prc, 
+ggsave("figures/simulation_roc_prc.png", roc_prc, dpi = 600, 
        units = "in", height = 9, width = 8.5)
 
 # Figure S2: simulation_roc_bybeads.png ------------
@@ -184,7 +185,7 @@ curves_summary %>%
           axis.text = element_text(size = 8), 
           plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
 
-ggsave("figures/simulation_roc_bybeads.png", units = "in", 
+ggsave("figures/simulation_roc_bybeads.png", units = "in", dpi = 600,
        height = 5, width = 6)
 
 # Figure S3: simulation_prc_bybeads.png ------------
@@ -211,7 +212,7 @@ curves_summary %>%
           axis.text = element_text(size = 8), 
           plot.margin = unit(c(0, 0, 0.25, 0), "cm"))
 
-ggsave("figures/simulation_prc_bybeads.png", units = "in", 
+ggsave("figures/simulation_prc_bybeads.png", units = "in", dpi = 600, 
        height = 5, width = 6)
 
 # Table S1: simulation_auc_roc_interp ------------

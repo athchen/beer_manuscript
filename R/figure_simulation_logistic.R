@@ -10,6 +10,7 @@ if(!"here" %in% installed.packages()){
 
 if(file.exists(here::here("data_processed", "simulation_curves.rda"))){
     load(here::here("data_processed", "simulation_curves.rda"))
+    source(here::here("R", "load_packages.R"))
 } else {
     # Takes a while to run - only need to run once. 
     source(here::here("R", "load_curves.R"))
@@ -95,5 +96,5 @@ logistic_fc <- bind_rows(beer_pred, edgeR_05_pred) %>%
     theme_bw() +
     theme(aspect.ratio = 1)
 
-ggsave("figures/simulation_logistic_fc.png", logistic_fc,
+ggsave("figures/simulation_logistic_fc.png", logistic_fc, dpi = 600, 
        units = "in", width = 6, height = 4.5)
